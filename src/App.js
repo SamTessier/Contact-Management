@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
-import LoginForm from '../components/LoginForm';
-import SignupForm from '../components/SignupForm';
+import LoginForm from './components/LoginForm';
+import SignupForm from './components/SignupForm';
 import Button from '@mui/material/Button';
 import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
 
-function MainPage() {
+function App() {
   const [showLogin, setShowLogin] = useState(false);
   const [showSignup, setShowSignup] = useState(false);
 
@@ -49,5 +49,5 @@ function MainPage() {
   );
 }
 
-export default MainPage;
+export default App;
 
