@@ -41,12 +41,24 @@ function LoginForm({ onClose }) {
             />
           </Grid>
           <Grid item>
-            <Button type="submit" variant="contained" color="primary">
+            <Button
+              type="submit"
+              variant="contained"
+              color="primary"
+              fullWidth
+              sx={{ minWidth: 200 }}
+            >
               Login
             </Button>
           </Grid>
           <Grid item>
-            <Button type="button" variant="outlined" onClick={onClose}>
+            <Button
+              type="button"
+              variant="outlined"
+              fullWidth
+              sx={{ minWidth: 200 }}
+              onClick={onClose}
+            >
               Close
             </Button>
           </Grid>
