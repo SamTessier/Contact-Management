@@ -2,8 +2,9 @@ import React, { useState } from 'react';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import Grid from '@mui/material/Grid';
+import { Link } from 'react-router-dom';
 
-function AllSchools({ onCreateSchool }) { // Update the function arguments
+function AllSchools() {
   const [schools] = useState([]);
 
   return (
@@ -24,7 +25,8 @@ function AllSchools({ onCreateSchool }) { // Update the function arguments
           color="primary"
           fullWidth
           sx={{ minWidth: 200 }}
-          onClick={onCreateSchool}
+          component={Link}
+          to="/createschool"
         >
           Add School
         </Button>
