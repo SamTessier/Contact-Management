@@ -10,7 +10,7 @@ function MainScreen({ onNavigate }) {
           color="primary"
           fullWidth
           sx={{ width: 200 }}
-          onClick={() => onNavigate('schools')}
+          onClick={() => onNavigate('allschools')}
         >
           Schools
         </Button>
