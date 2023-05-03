@@ -11,7 +11,7 @@ function MainScreen() {
         </Button>
       </Grid>
       <Grid item>
-        <Button variant="contained" color="primary" fullWidth sx={{ width: 200 }}>
+        <Button variant="contained" color="primary" fullWidth sx={{ width: 200 }} component={Link} to="/staff">
           Staff
         </Button>
       </Grid>

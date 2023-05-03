@@ -4,6 +4,7 @@ import SignupForm from './components/SignupForm';
 import MainScreen from './components/MainScreen';
 import AllSchools from './components/AllSchools';
 import CreateSchool from './components/CreateSchool';
+import AllStaff from './components/AllStaff';
 import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
@@ -44,6 +45,7 @@ function App() {
           <Route path="/" element={<MainScreen />} />
           <Route path="/schools" element={<AllSchools />} />
           <Route path="/createschool" element={<CreateSchool />} />
+          <Route path="/staff" element={<AllStaff />} /> 
         </Routes>
       </Container>
     </Router>
