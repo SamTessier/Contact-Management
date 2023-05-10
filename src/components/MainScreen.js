@@ -2,7 +2,7 @@ import React from 'react';
 import { Button, Grid } from '@mui/material';
 import { Link } from 'react-router-dom';
 
-function MainScreen() {
+const MainScreen = () => {
   return (
     <Grid container direction="column" spacing={2} alignItems="center">
       <Grid item>
@@ -16,7 +16,7 @@ function MainScreen() {
         </Button>
       </Grid>
       <Grid item>
-        <Button variant="contained" color="primary" fullWidth sx={{ width: 200 }}>
+        <Button variant="contained" color="primary" fullWidth sx={{ width: 200 }} component={Link} to="/students">
           Students
         </Button>
       </Grid>

@@ -3,8 +3,9 @@ import theme from './theme';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './App';
+import { AuthProvider } from './AuthContext';
 
-function Root() {
+const Root = () => {
   return (
     <ThemeProvider theme={theme}>
       <App />
@@ -12,4 +13,4 @@ function Root() {
   );
 }
 
-ReactDOM.createRoot(document.getElementById("root")).render(<Root />);
+ReactDOM.render(<Root />, document.getElementById("root"));

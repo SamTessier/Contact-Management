@@ -1,60 +1,53 @@
-import React, { useState } from 'react';
-import Button from '@mui/material/Button';
+import React, { useState, useContext } from 'react';
+import { AuthContext } from '../AuthContext';
 import TextField from '@mui/material/TextField';
-import Grid from '@mui/material/Grid';
+import Button from '@mui/material/Button';
+import Alert from '@mui/material/Alert';
 
-function SignupForm({ onClose }) {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-
-  const handleUsernameChange = (event) => {
-    setUsername(event.target.value);
-  };
-
-  const handlePasswordChange = (event) => {
-    setPassword(event.target.value);
-  };
-
-  const handleConfirmPasswordChange = (event) => {
-    setConfirmPassword(event.target.value);
-  };
+const SignupForm = ({ onClose }) => {
+  const { signUp } = useContext(AuthContext);
+  console.log(signUp)
+  const [error, setError] = useState('');
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    // Here you can add logic to submit the signup form
+    const { email, password } = event.target.elements;
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{4,20}$/;
+
+    if (!emailRegex.test(email.value)) {
+      setError('Invalid email format.');
+    } else if (!passwordRegex.test(password.value)) {
+      setError(
+        'Password must be 4-20 characters, contain at least 1 uppercase and 1 lowercase letter, and 1 number.'
+      );
+    } else {
+      setError('');
+      signUp(email.value, password.value);
+      onClose();
+    }
   };
 
+
   return (
-    <div>
-      <form onSubmit={handleSubmit}>
-        <Grid container direction="column" spacing={2} alignItems="center">
-          <Grid item>
-            <TextField
-              label="Username"
-              type="text"
-              value={username}
-              onChange={handleUsernameChange}
-            />
-          </Grid>
-          <Grid item>
-            <TextField
-              label="Password"
-              type="password"
-              value={password}
-              onChange={handlePasswordChange}
-            />
-          </Grid>
-          <Grid item>
-            <TextField
-              label="Confirm Password"
-              type="password"
-              value={confirmPassword}
-              onChange={handleConfirmPasswordChange}
-            />
-          </Grid>
-          <Grid item>
-            <Button
+    <form onSubmit={handleSubmit}>
+      <TextField
+        label="Email"
+        type="email"
+        name="email"
+        required
+        fullWidth
+        autoFocus
+      />
+      <TextField
+        label="Password"
+        type="password"
+        name="password"
+        required
+        fullWidth
+      />
+      {error && <Alert severity="error">{error}</Alert>}
+      <Button
               type="submit"
               variant="contained"
               color="primary"
@@ -63,21 +56,9 @@ function SignupForm({ onClose }) {
             >
               Signup
             </Button>
-          </Grid>
-          <Grid item>
-            <Button
-              type="button"
-              variant="outlined"
-              fullWidth
-              sx={{ minWidth: 200 }}
-              onClick={onClose}
-            >
-              Close
-            </Button>
-          </Grid>
-        </Grid>
+          
       </form>
-    </div>
+    
   );
 }
 

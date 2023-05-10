@@ -4,19 +4,19 @@ import Typography from '@mui/material/Typography';
 import Grid from '@mui/material/Grid';
 import { Link } from 'react-router-dom';
 
-const AllStaff = () => {
-  const [staff] = useState([]);
+const AllStudents = () => {
+  const [students] = useState([]);
 
   return (
     <Grid container direction="column" spacing={2} alignItems="center">
       <Grid item>
-        {staff.length === 0 ? (
+        {students.length === 0 ? (
           <Typography variant="h5">
-            There are no staff members yet! Add a staff member to begin.
+            There are no students yet! Add a student to begin.
           </Typography>
         ) : (
-          // Display the list of staff members here
-          <></>
+ 
+         <></>
         )}
       </Grid>
       <Grid item>
@@ -26,13 +26,13 @@ const AllStaff = () => {
           fullWidth
           sx={{ minWidth: 200 }}
           component={Link}
-          to="/createstaff"
+          to="/createstudent"
         >
-          Add Staff
+          Add Student
         </Button>
       </Grid>
     </Grid>
   );
 }
 
-export default AllStaff;
+export default AllStudents;
