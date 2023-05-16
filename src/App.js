@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useContext } from 'react';
 import LoginForm from './components/LoginForm';
 import SignupForm from './components/SignupForm';
 import MainScreen from './components/MainScreen';
@@ -10,50 +10,39 @@ import CreateStudent from './components/CreateStudent';
 import CreateStaff from './components/CreateStaff';
 import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { AuthContext, AuthProvider } from './AuthContext';
 
 function App() {
-  const [showLogin, setShowLogin] = useState(false);
-  const [showSignup, setShowSignup] = useState(true);
-
-  const handleLoginClick = () => {
-    setShowLogin(true);
-    setShowSignup(false);
-  };
-
-  const handleSignupClick = () => {
-    setShowSignup(true);
-    setShowLogin(false);
-  };
-
-  const handleClose = () => {
-    setShowLogin(false);
-    setShowSignup(false);
-  };
+  const { currentUser } = useContext(AuthContext);
 
   return (
     <Router>
-      <Container maxWidth="sm">
-        <Typography variant="h3" align="center" gutterBottom>
-          Welcome to my app!
-        </Typography>
-        {!showLogin && !showSignup && (
-          <div style={{ display: 'grid', gap: '1rem', placeItems: 'center' }}>
-            {/* ... login and signup buttons */}
-          </div>
-        )}
-        {showLogin && <LoginForm onClose={handleClose} />}
-        {showSignup && <SignupForm onClose={handleClose} />}
-        <Routes>
-          <Route path="/" element={<MainScreen />} />
-          <Route path="/schools" element={<AllSchools />} />
-          <Route path="/createschool" element={<CreateSchool />} />
-          <Route path="/staff" element={<AllStaff />} /> 
-          <Route path="/students" element={<AllStudents />} />
-          <Route path="/createstudent" element={<CreateStudent />} />
-          <Route path="/createstaff" element={<CreateStaff />} />
-        </Routes>
-      </Container>
+      <AuthProvider>
+        <Container maxWidth="sm">
+          <Typography variant="h3" align="center" gutterBottom>
+            Welcome to my app!
+          </Typography>
+          {!currentUser ? (
+            <Routes>
+              <Route path="/login" element={<LoginForm />} />
+              <Route path="/signup" element={<SignupForm />} />
+              <Route path="*" element={<Navigate to="/login" />} />
+            </Routes>
+          ) : (
+            <Routes>
+              <Route path="/" element={<MainScreen />} />
+              <Route path="/schools" element={<AllSchools />} />
+              <Route path="/createschool" element={<CreateSchool />} />
+              <Route path="/staff" element={<AllStaff />} /> 
+              <Route path="/students" element={<AllStudents />} />
+              <Route path="/createstudent" element={<CreateStudent />} />
+              <Route path="/createstaff" element={<CreateStaff />} />
+              <Route path="*" element={<Navigate to="/" />} />
+            </Routes>
+          )}
+        </Container>
+      </AuthProvider>
     </Router>
   );
 }
