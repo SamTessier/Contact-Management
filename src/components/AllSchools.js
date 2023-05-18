@@ -1,14 +1,18 @@
-import React, { useState, useEffect } from 'react';
-import Button from '@mui/material/Button';
-import Typography from '@mui/material/Typography';
-import Grid from '@mui/material/Grid';
-import { useForm } from 'react-hook-form';
-import { TextField, Dialog, DialogTitle, DialogContent } from '@mui/material';
-import { saveSchool, getSchools } from '../localStorageDB';
-import SchoolDetails from './SchoolDetails';
+import React, { useState, useEffect } from "react";
+import Button from "@mui/material/Button";
+import Typography from "@mui/material/Typography";
+import Grid from "@mui/material/Grid";
+import { useForm } from "react-hook-form";
+import { TextField, Dialog, DialogTitle, DialogContent } from "@mui/material";
+import { saveSchool, getSchools } from "../localStorageDB";
+import SchoolDetails from "./SchoolDetails";
 
 const AllSchools = () => {
-  const { register, handleSubmit, formState: { errors } } = useForm();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
   const [schools, setSchools] = useState([]);
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedSchool, setSelectedSchool] = useState(null);
@@ -20,7 +24,7 @@ const AllSchools = () => {
 
   const onSubmit = (data) => {
     saveSchool(data);
-    setSchools(prevSchools => [...prevSchools, data]);
+    setSchools((prevSchools) => [...prevSchools, data]);
     setModalOpen(false);
   };
 
@@ -69,11 +73,83 @@ const AllSchools = () => {
         </Button>
       </Grid>
 
-      <Dialog open={modalOpen} onClose={handleModalClose} maxWidth="sm" fullWidth>
+      <Dialog
+        open={modalOpen}
+        onClose={handleModalClose}
+        maxWidth="sm"
+        fullWidth
+      >
         <DialogTitle>Add School</DialogTitle>
         <DialogContent>
           <form onSubmit={handleSubmit(onSubmit)}>
-            {/* Form Fields Here */}
+            <Grid container spacing={2}>
+              <Grid item xs={12}>
+                <TextField
+                  {...register("name", { required: "Name is required." })}
+                  label="School Name"
+                  fullWidth
+                  error={!!errors.name}
+                  helperText={errors.name?.message}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  {...register("street", { required: "Street is required." })}
+                  label="Street Address"
+                  fullWidth
+                  error={!!errors.street}
+                  helperText={errors.street?.message}
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  {...register("city", { required: "City is required." })}
+                  label="City"
+                  fullWidth
+                  error={!!errors.city}
+                  helperText={errors.city?.message}
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  {...register("state", { required: "State is required." })}
+                  label="State"
+                  fullWidth
+                  error={!!errors.state}
+                  helperText={errors.state?.message}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  {...register("zip", { required: "ZIP Code is required." })}
+                  label="ZIP Code"
+                  fullWidth
+                  error={!!errors.zip}
+                  helperText={errors.zip?.message}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  {...register("phone", {
+                    required: "Phone number is required.",
+                  })}
+                  label="Phone Number"
+                  fullWidth
+                  error={!!errors.phone}
+                  helperText={errors.phone?.message}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <Button
+                  type="submit"
+                  variant="contained"
+                  color="primary"
+                  fullWidth
+                >
+                  Save School
+                </Button>
+              </Grid>
+            </Grid>
           </form>
         </DialogContent>
       </Dialog>
@@ -85,6 +161,6 @@ const AllSchools = () => {
       />
     </Grid>
   );
-}
+};
 
 export default AllSchools;
