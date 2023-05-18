@@ -1,14 +1,18 @@
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useEffect, useState } from 'react';
 
 export const AuthContext = createContext({});
 
 // export const useAuth = () => useContext(AuthContext);
 
 export const AuthProvider = ({ children }) => {
-  const [currentUser, setCurrentUser] = useState(() => {
+  const [currentUser, setCurrentUser] = useState(null);
+
+  useEffect(() => {
     const user = localStorage.getItem('user');
-    return user ? JSON.parse(user) : null;
-  });
+    if (user) {
+      setCurrentUser(JSON.parse(user));
+    }
+  }, []);
 
   const logIn = (email, password) => {
     // here you would normally check the credentials against a real database

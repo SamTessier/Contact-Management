@@ -5,7 +5,7 @@ import Button from '@mui/material/Button';
 import Alert from '@mui/material/Alert';
 import Box from '@mui/material/Box';
 
-const LoginForm = ({ onClose }) => {
+const LoginForm = () => {
   const { logIn } = useContext(AuthContext);
   const [error, setError] = useState('');
 
@@ -24,7 +24,6 @@ const LoginForm = ({ onClose }) => {
     } else {
       setError('');
       logIn(email.value, password.value);
-      onClose();
     }
   };
 
