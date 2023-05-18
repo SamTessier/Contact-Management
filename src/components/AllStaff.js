@@ -11,11 +11,11 @@ const AllStaff = () => {
     <Grid container direction="column" spacing={2} alignItems="center">
       <Grid item>
         {staff.length === 0 ? (
-          <Typography variant="h5">
+          <Typography variant="h5" align="center" style={{ margin: '20px 0', fontWeight: 'bold' }}>
             There are no staff members yet! Add a staff member to begin.
           </Typography>
         ) : (
-          // Display the list of staff members here
+      
           <></>
         )}
       </Grid>

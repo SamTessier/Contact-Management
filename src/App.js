@@ -3,10 +3,8 @@ import LoginForm from './components/LoginForm';
 import SignupForm from './components/SignupForm';
 import MainScreen from './components/MainScreen';
 import AllSchools from './components/AllSchools';
-import CreateSchool from './components/CreateSchool';
 import AllStaff from './components/AllStaff';
 import AllStudents from './components/AllStudents';
-import CreateStudent from './components/CreateStudent';
 import CreateStaff from './components/CreateStaff';
 import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
@@ -41,10 +39,10 @@ function RoutesWithAuthentication() {
         <Routes>
           <Route path="/" element={<MainScreen />} />
           <Route path="/schools" element={<AllSchools />} />
-          <Route path="/createschool" element={<CreateSchool />} />
+          <Route path="/createschool" element={<AllSchools />} />
           <Route path="/staff" element={<AllStaff />} />
           <Route path="/students" element={<AllStudents />} />
-          <Route path="/createstudent" element={<CreateStudent />} />
+          <Route path="/createstudent" element={<AllStudents />} />
           <Route path="/createstaff" element={<CreateStaff />} />
           <Route path="*" element={<Navigate replace to="/" />} />
         </Routes>
