@@ -5,7 +5,6 @@ import MainScreen from './components/MainScreen';
 import AllSchools from './components/AllSchools';
 import AllStaff from './components/AllStaff';
 import AllStudents from './components/AllStudents';
-import CreateStaff from './components/CreateStaff';
 import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
@@ -43,7 +42,7 @@ function RoutesWithAuthentication() {
           <Route path="/staff" element={<AllStaff />} />
           <Route path="/students" element={<AllStudents />} />
           <Route path="/createstudent" element={<AllStudents />} />
-          <Route path="/createstaff" element={<CreateStaff />} />
+          <Route path="/createstaff" element={<AllStaff />} />
           <Route path="*" element={<Navigate replace to="/" />} />
         </Routes>
       )}

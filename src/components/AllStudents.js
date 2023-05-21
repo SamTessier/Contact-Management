@@ -13,8 +13,10 @@ import {
   MenuItem,
   FormControl,
   InputLabel,
-  IconButton,
 } from "@mui/material";
+import InfoIcon from '@mui/icons-material/Info';
+import IconButton from '@mui/material/IconButton';
+import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import {
   saveStudent,
   getStudents,
@@ -23,8 +25,7 @@ import {
   updateStudent,
 } from "../localStorageDB";
 import StudentDetails from "./StudentDetails";
-import EditIcon from "@mui/icons-material/Edit";
-import DeleteIcon from "@mui/icons-material/Delete";
+
 
 const AllStudents = () => {
   const {
@@ -76,6 +77,12 @@ const AllStudents = () => {
     setStudents(getStudents());
   };
 
+  const handleEditOpen = (studentName) => {
+    setEditStudentName(studentName);
+    handleModalOpen();
+  };
+  
+
   useEffect(() => {
     if (editStudentName) {
       const studentToEdit = students.find(
@@ -96,32 +103,27 @@ const AllStudents = () => {
           </Typography>
         ) : (
           students.map((student, index) => (
-            <Grid key={index} item>
-              <Typography variant="h6">
-                {student.name}
-                <Button
-                  variant="contained"
-                  color="primary"
-                  sx={{ marginLeft: 2 }}
-                  onClick={() => handleDetailsOpen(student)}
-                >
-                  View Details
-                </Button>
-              </Typography>
+            <Grid key={index} container justifyContent="space-between" alignItems="center">
+              <Grid item>
+                <Typography variant="h6">
+                  {student.name}
+                </Typography>
+              </Grid>
+              <Grid item>
+                <IconButton color="primary" onClick={() => handleDetailsOpen(student)}>
+                  <InfoIcon />
+                </IconButton>
+              </Grid>
             </Grid>
           ))
+          
         )}
       </Grid>
       <Grid item>
-        <Button
-          variant="contained"
-          color="primary"
-          fullWidth
-          sx={{ minWidth: 200 }}
-          onClick={handleModalOpen}
-        >
-          {editStudentName ? "Edit Student" : "Add Student"}
-        </Button>
+      <IconButton color="primary" onClick={handleModalOpen}>
+  <PersonAddIcon />
+</IconButton>
+
       </Grid>
 
       <Dialog
@@ -129,11 +131,11 @@ const AllStudents = () => {
         onClose={handleModalClose}
         aria-labelledby="form-dialog-title"
       >
-        <DialogTitle id="form-dialog-title">
+        <DialogTitle id="form-dialog-title" style={{ color: 'black' }}>
           {editStudentName ? "Edit Student" : "Add New Student"}
         </DialogTitle>
         <form onSubmit={handleSubmit(onSubmit)}>
-          <DialogContent>
+          <DialogContent >
             <Controller
               name="name"
               control={control}
@@ -277,10 +279,10 @@ const AllStudents = () => {
             />
           </DialogContent>
           <DialogActions>
-            <Button onClick={handleModalClose} color="primary">
+            <Button onClick={handleModalClose} style={{ color: 'black' }}>
               Cancel
             </Button>
-            <Button type="submit" color="primary">
+            <Button type="submit" style={{ color: 'black' }}>
               {editStudentName ? "Save Changes" : "Add Student"}
             </Button>
           </DialogActions>
@@ -291,6 +293,7 @@ const AllStudents = () => {
         open={detailsOpen}
         handleClose={handleDetailsClose}
         handleDelete={handleDelete}
+        handleEdit={handleEditOpen}
       />
     </Grid>
   );

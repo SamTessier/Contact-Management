@@ -1,12 +1,3 @@
-export const saveStaff = (staff) => {
-  const staffList = JSON.parse(localStorage.getItem('staff')) || [];
-  staffList.push(staff);
-  localStorage.setItem('staff', JSON.stringify(staffList));
-}
-
-export const getStaff = () => {
-  return JSON.parse(localStorage.getItem('staff')) || [];
-}
 
 export const saveStudent = (student) => {
   const studentList = JSON.parse(localStorage.getItem('students')) || [];
@@ -41,4 +32,33 @@ export const updateStudent = (updatedStudent) => {
     student.name === updatedStudent.name ? updatedStudent : student
   );
   localStorage.setItem('students', JSON.stringify(updatedStudents));
+};
+
+export const saveStaff = (staff) => {
+  let staffList = JSON.parse(localStorage.getItem("staff"));
+  if (!staffList) {
+    staffList = [];
+  }
+  staffList.push(staff);
+  localStorage.setItem("staff", JSON.stringify(staffList));
+};
+
+export const getStaff = () => {
+  const staffList = JSON.parse(localStorage.getItem("staff"));
+  return staffList ? staffList : [];
+};
+
+export const deleteStaff = (name) => {
+  let staffList = JSON.parse(localStorage.getItem("staff"));
+  staffList = staffList.filter((staff) => staff.name !== name);
+  localStorage.setItem("staff", JSON.stringify(staffList));
+};
+
+export const updateStaff = (updatedStaff) => {
+  let staffList = JSON.parse(localStorage.getItem("staff"));
+  const index = staffList.findIndex((staff) => staff.name === updatedStaff.name);
+  if (index !== -1) {
+    staffList[index] = updatedStaff;
+    localStorage.setItem("staff", JSON.stringify(staffList));
+  }
 };

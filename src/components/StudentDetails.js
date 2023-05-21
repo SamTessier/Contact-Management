@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Button, Dialog, DialogTitle, DialogContent, Typography } from '@mui/material';
+import { Button, Dialog, DialogTitle, DialogContent, DialogActions, Typography } from '@mui/material';
 import { Edit, Delete } from '@mui/icons-material';
 
 const StudentDetails = ({ student, open, handleClose, handleEdit, handleDelete }) => {
@@ -8,39 +8,37 @@ const StudentDetails = ({ student, open, handleClose, handleEdit, handleDelete }
   }
 
   const handleEditClick = () => {
-    handleEdit(student);
-  };
-
-  const handleDeleteClick = () => {
-    handleDelete(student.name);
-    handleClose();
+    handleEdit(student.name);
   };
   
+const handleDeleteClick = () => {
+  handleDelete(student.name);
+  handleClose();
+};
 
   return (
     <Dialog open={open} onClose={handleClose} maxWidth="sm" fullWidth>
       <DialogTitle>
-        <Typography variant="h5" component="div">
+        <Typography variant="h5" component="div"  style={{ color: 'black' }}>
           {student.name}
         </Typography>
-        <div>
-          <Button startIcon={<Edit />} onClick={handleEditClick}>
-            Edit
-          </Button>
-          <Button startIcon={<Delete />} onClick={handleDeleteClick}>
-            Delete
-          </Button>
-        </div>
       </DialogTitle>
       <DialogContent>
-        <Typography variant="h6">Grade: {student.grade}</Typography>
-        <Typography variant="h6">Parent/Guardian Info:</Typography>
-        <Typography variant="h6">Name: {student.parentGuardianName}</Typography>
-        <Typography variant="h6">Phone Number: {student.parentGuardianPhone}</Typography>
-        <Typography variant="h6">Email: {student.parentGuardianEmail}</Typography>
-        <Typography variant="h6">Notes, Requests, Allergies:</Typography>
-        <Typography variant="body1">{student.notes}</Typography>
+        <Typography variant="h6" style={{ color: 'black' }}>School: {student.school}</Typography>
+        <Typography variant="h6" style={{ color: 'black' }}>Grade: {student.grade}</Typography>
+        <Typography variant="h6" style={{ color: 'black' }}>Parent/Guardian Info:</Typography>
+        <Typography variant="body1" style={{ color: 'black' }}>Name: {student.parentName}</Typography>
+        <Typography variant="body1" style={{ color: 'black' }}>Phone Number: {student.parentPhone}</Typography>
+        <Typography variant="body1" style={{ color: 'black' }}>Email: {student.parentEmail}</Typography>
+        <Typography variant="h6" style={{ color: 'black' }}>Allergies/Medical Conditions:</Typography>
+        <Typography variant="body1" style={{ color: 'black' }}>{student.allergies}</Typography>
+        <Typography variant="h6" style={{ color: 'black' }}>Notes:</Typography>
+        <Typography variant="body1" style={{ color: 'black' }}>{student.notes}</Typography>
       </DialogContent>
+      <DialogActions>
+        <Button startIcon={<Edit />} onClick={handleEditClick} />
+        <Button startIcon={<Delete />} onClick={handleDeleteClick} />
+      </DialogActions>
     </Dialog>
   );
 };

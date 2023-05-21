@@ -1,24 +1,33 @@
 import React from 'react';
-import { Button, Grid } from '@mui/material';
+import { IconButton, Grid, Tooltip } from '@mui/material';
 import { Link } from 'react-router-dom';
+import HomeIcon from '@mui/icons-material/Home';
+import WorkIcon from '@mui/icons-material/Work';
+import PeopleIcon from '@mui/icons-material/People';
 
 const MainScreen = () => {
   return (
-    <Grid container direction="column" spacing={2} alignItems="center">
+    <Grid container direction="row" spacing={2} justifyContent="center">
       <Grid item>
-        <Button variant="contained" color="primary" fullWidth sx={{ width: 200 }} component={Link} to="/schools">
-          Schools
-        </Button>
+        <Tooltip title="Schools">
+          <IconButton color="primary" component={Link} to="/schools">
+            <HomeIcon fontSize="large" />
+          </IconButton>
+        </Tooltip>
       </Grid>
       <Grid item>
-        <Button variant="contained" color="primary" fullWidth sx={{ width: 200 }} component={Link} to="/staff">
-          Staff
-        </Button>
+        <Tooltip title="Staff">
+          <IconButton color="primary" component={Link} to="/staff">
+            <WorkIcon fontSize="large" />
+          </IconButton>
+        </Tooltip>
       </Grid>
       <Grid item>
-        <Button variant="contained" color="primary" fullWidth sx={{ width: 200 }} component={Link} to="/students">
-          Students
-        </Button>
+        <Tooltip title="Students">
+          <IconButton color="primary" component={Link} to="/students">
+            <PeopleIcon fontSize="large" />
+          </IconButton>
+        </Tooltip>
       </Grid>
     </Grid>
   );
