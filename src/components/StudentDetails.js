@@ -12,8 +12,10 @@ const StudentDetails = ({ student, open, handleClose, handleEdit, handleDelete }
   };
 
   const handleDeleteClick = () => {
-    handleDelete(student);
+    handleDelete(student.name);
+    handleClose();
   };
+  
 
   return (
     <Dialog open={open} onClose={handleClose} maxWidth="sm" fullWidth>

@@ -48,12 +48,11 @@ const AllStudents = () => {
 
   const onSubmit = (data) => {
     if (editStudentName) {
-      console.log("hi sam and pat")
+      console.log("hi sam and pat");
       const updatedStudent = { ...data, name: editStudentName };
       updateStudent(updatedStudent);
-  
     } else {
-      console.log("else block")
+      console.log("else block");
       const newStudent = { ...data };
       saveStudent(newStudent);
     }
@@ -61,7 +60,7 @@ const AllStudents = () => {
     setModalOpen(false);
     setEditStudentName(null);
   };
-  
+
   const handleModalOpen = () => setModalOpen(true);
   const handleModalClose = () => {
     setModalOpen(false);
@@ -133,8 +132,8 @@ const AllStudents = () => {
         <DialogTitle id="form-dialog-title">
           {editStudentName ? "Edit Student" : "Add New Student"}
         </DialogTitle>
-        <DialogContent>
-          <form onSubmit={handleSubmit(onSubmit)}>
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <DialogContent>
             <Controller
               name="name"
               control={control}
@@ -276,22 +275,22 @@ const AllStudents = () => {
                 />
               )}
             />
-          </form>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleModalClose} color="primary">
-            Cancel
-          </Button>
-          <Button type="submit" color="primary">
-            {editStudentName ? "Save Changes" : "Add Student"}
-          </Button>
-        </DialogActions>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleModalClose} color="primary">
+              Cancel
+            </Button>
+            <Button type="submit" color="primary">
+              {editStudentName ? "Save Changes" : "Add Student"}
+            </Button>
+          </DialogActions>
+        </form>
       </Dialog>
-
       <StudentDetails
         student={selectedStudent}
         open={detailsOpen}
         handleClose={handleDetailsClose}
+        handleDelete={handleDelete}
       />
     </Grid>
   );
