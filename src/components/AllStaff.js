@@ -14,9 +14,11 @@ import {
   FormControl,
   InputLabel,
 } from "@mui/material";
-import InfoIcon from '@mui/icons-material/Info';
-import IconButton from '@mui/material/IconButton';
-import PersonAddIcon from '@mui/icons-material/PersonAdd';
+import InfoIcon from "@mui/icons-material/Info";
+import IconButton from "@mui/material/IconButton";
+import PersonAddIcon from "@mui/icons-material/PersonAdd";
+  
+
 import {
   saveStaff,
   getStaff,
@@ -26,15 +28,16 @@ import {
 } from "../localStorageDB";
 import StaffDetails from "./StaffDetails";
 
-
 const AllStaff = () => {
   const {
     register,
     handleSubmit,
+    watch,
+    setValue,
     formState: { errors },
     reset,
     control,
-  } = useForm();
+  } = useForm();  
   const [staff, setStaff] = useState([]);
   const [schools, setSchools] = useState([]);
   const [modalOpen, setModalOpen] = useState(false);
@@ -79,13 +82,10 @@ const AllStaff = () => {
     setEditStaffName(staffName);
     handleModalOpen();
   };
-  
 
   useEffect(() => {
     if (editStaffName) {
-      const staffToEdit = staff.find(
-        (staff) => staff.name === editStaffName
-      );
+      const staffToEdit = staff.find((staff) => staff.name === editStaffName);
       reset(staffToEdit);
     } else {
       reset();
@@ -101,11 +101,14 @@ const AllStaff = () => {
           </Typography>
         ) : (
           staff.map((staff, index) => (
-            <Grid key={index} container justifyContent="space-between" alignItems="center">
+            <Grid
+              key={index}
+              container
+              justifyContent="space-between"
+              alignItems="center"
+            >
               <Grid item>
-                <Typography variant="h6">
-                  {staff.name}
-                </Typography>
+                <Typography variant="h6">{staff.name}</Typography>
               </Grid>
               <Grid item>
                 <IconButton onClick={() => handleDetailsOpen(staff)}>
@@ -138,7 +141,53 @@ const AllStaff = () => {
               fullWidth
               margin="dense"
             />
-            </DialogContent>
+            <TextField
+              {...register("phoneNumber", {
+                required: "Phone number is required",
+              })}
+              error={Boolean(errors.phoneNumber)}
+              helperText={errors.phoneNumber?.message}
+              label="Phone Number"
+              fullWidth
+              margin="dense"
+            />
+            <TextField
+              {...register("email", { required: "Email is required" })}
+              error={Boolean(errors.email)}
+              helperText={errors.email?.message}
+              label="Email"
+              fullWidth
+              margin="dense"
+            />
+            <FormControl fullWidth margin="dense">
+              <InputLabel id="school-label">School</InputLabel>
+              <Controller
+                name="school"
+                control={control}
+                defaultValue=""
+                rules={{ required: "School is required" }}
+                render={({ field }) => (
+                  <Select {...field} labelId="school-label">
+                    {schools.map((school, index) => (
+                      <MenuItem key={index} value={school.name}>
+                        {school.name}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                )}
+              />
+            </FormControl>
+            
+            <TextField
+              {...register("notes")}
+              label="Notes"
+              multiline
+              rows={4}
+              fullWidth
+              margin="dense"
+            />
+          </DialogContent>
+
           <DialogActions>
             <Button onClick={handleModalClose}>Cancel</Button>
             <Button type="submit">Submit</Button>
