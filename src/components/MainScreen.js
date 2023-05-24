@@ -1,5 +1,5 @@
 import React from 'react';
-import { IconButton, Grid, Tooltip } from '@mui/material';
+import { IconButton, Grid, Tooltip, Typography } from '@mui/material';
 import { Link } from 'react-router-dom';
 import HomeIcon from '@mui/icons-material/Home';
 import WorkIcon from '@mui/icons-material/Work';
@@ -14,6 +14,7 @@ const MainScreen = () => {
             <HomeIcon fontSize="large" />
           </IconButton>
         </Tooltip>
+        <Typography variant="caption" display="block" textAlign="center">Schools</Typography>
       </Grid>
       <Grid item>
         <Tooltip title="Staff">
@@ -21,6 +22,7 @@ const MainScreen = () => {
             <WorkIcon fontSize="large" />
           </IconButton>
         </Tooltip>
+        <Typography variant="caption" display="block" textAlign="center">Staff</Typography>
       </Grid>
       <Grid item>
         <Tooltip title="Students">
@@ -28,6 +30,7 @@ const MainScreen = () => {
             <PeopleIcon fontSize="large" />
           </IconButton>
         </Tooltip>
+        <Typography variant="caption" display="block" textAlign="center">Students</Typography>
       </Grid>
     </Grid>
   );
