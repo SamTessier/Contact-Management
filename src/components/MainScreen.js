@@ -5,6 +5,7 @@ import HomeIcon from '@mui/icons-material/Home';
 import WorkIcon from '@mui/icons-material/Work';
 import PeopleIcon from '@mui/icons-material/People';
 import InfoIcon from '@mui/icons-material/Info';
+import SearchIcon from '@mui/icons-material/Search';
 import StudentDetails from './StudentDetails';
 import { getStudents, getStaff } from "../localStorageDB"; 
 
@@ -12,6 +13,7 @@ const MainScreen = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedStudent, setSelectedStudent] = useState(null);
   const [detailsOpen, setDetailsOpen] = useState(false);
+  const [showSearch, setShowSearch] = useState(false);
 
   let data = searchTerm !== "" ? [...getStudents(), ...getStaff()] : [];
   data = data.filter(item =>
@@ -57,13 +59,20 @@ const MainScreen = () => {
       </Grid>
       <Grid item xs={12}>
         <Grid container justify="center">
-          <TextField 
-            variant="outlined" 
-            label="Search" 
-            value={searchTerm} 
-            onChange={e => setSearchTerm(e.target.value)}
-            style={{width: '80%'}}
-          />
+          {showSearch ? (
+            <TextField 
+              variant="outlined" 
+              label="Search" 
+              value={searchTerm} 
+              onChange={e => setSearchTerm(e.target.value)}
+              style={{width: '80%'}}
+              onBlur={() => setShowSearch(false)}
+            />
+          ) : (
+            <IconButton onClick={() => setShowSearch(true)}>
+              <SearchIcon />
+            </IconButton>
+          )}
         </Grid>
       </Grid>
       <Grid item>
@@ -82,13 +91,15 @@ const MainScreen = () => {
           ))}
         </Grid>
       </Grid>
-      <StudentDetails
-        student={selectedStudent}
-        open={detailsOpen}
-        handleClose={handleDetailsClose}
-        handleDelete={()=>{}}
-        handleEdit={()=>{}}
-      />
+      {selectedStudent && 
+        <StudentDetails
+          student={selectedStudent}
+          open={detailsOpen}
+          handleClose={handleDetailsClose}
+          handleDelete={()=>{}}
+          handleEdit={()=>{}}
+        />
+      }
     </Grid>
   );
 }
