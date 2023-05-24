@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import Grid from "@mui/material/Grid";
+import Box from "@mui/material/Box";
 import { useForm, Controller } from "react-hook-form";
 import {
   TextField,
@@ -13,12 +14,11 @@ import {
   MenuItem,
   FormControl,
   InputLabel,
+  IconButton
 } from "@mui/material";
-import InfoIcon from "@mui/icons-material/Info";
-import IconButton from "@mui/material/IconButton";
-import PersonAddIcon from "@mui/icons-material/PersonAdd";
-  
-
+import InfoIcon from '@mui/icons-material/Info';
+import PersonAddIcon from '@mui/icons-material/PersonAdd';
+import SearchIcon from '@mui/icons-material/Search';
 import {
   saveStaff,
   getStaff,
@@ -32,23 +32,30 @@ const AllStaff = () => {
   const {
     register,
     handleSubmit,
-    watch,
-    setValue,
     formState: { errors },
     reset,
     control,
-  } = useForm();  
+  } = useForm();
   const [staff, setStaff] = useState([]);
   const [schools, setSchools] = useState([]);
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedStaff, setSelectedStaff] = useState(null);
   const [detailsOpen, setDetailsOpen] = useState(false);
   const [editStaffName, setEditStaffName] = useState(null);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [showSearch, setShowSearch] = useState(false);
 
   useEffect(() => {
     setStaff(getStaff());
     setSchools(getSchools());
   }, []);
+
+  let filteredStaff = staff;
+  if (searchTerm !== "") {
+    filteredStaff = staff.filter(staffMember =>
+      staffMember.name.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+  }
 
   const onSubmit = (data) => {
     if (editStaffName) {
@@ -85,7 +92,9 @@ const AllStaff = () => {
 
   useEffect(() => {
     if (editStaffName) {
-      const staffToEdit = staff.find((staff) => staff.name === editStaffName);
+      const staffToEdit = staff.find(
+        (staff) => staff.name === editStaffName
+      );
       reset(staffToEdit);
     } else {
       reset();
@@ -94,28 +103,46 @@ const AllStaff = () => {
 
   return (
     <Grid container direction="column" spacing={2} alignItems="center">
+      <Grid item xs={12}>
+        {showSearch ? (
+          <TextField 
+            variant="outlined"
+            size="small"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            onBlur={() => setShowSearch(false)}
+            fullWidth
+            autoFocus
+          />
+        ) : (
+          <IconButton onClick={() => setShowSearch(true)}>
+            <SearchIcon />
+          </IconButton>
+        )}
+      </Grid>
       <Grid item>
-        {staff.length === 0 ? (
+        {filteredStaff.length === 0 ? (
           <Typography variant="h5" align="center">
-            There are no staff members yet! Add a staff member to begin.
+            No staff members found!
           </Typography>
         ) : (
-          staff.map((staff, index) => (
-            <Grid
-              key={index}
-              container
-              justifyContent="space-between"
-              alignItems="center"
-            >
-              <Grid item>
-                <Typography variant="h6">{staff.name}</Typography>
+          filteredStaff.map((staff, index) => (
+            <Box key={index} mb={2}>
+              <Grid
+                container
+                justifyContent="space-between"
+                alignItems="center"
+              >
+                <Grid item>
+                  <Typography variant="h6">{staff.name}</Typography>
+                </Grid>
+                <Grid item>
+                  <IconButton onClick={() => handleDetailsOpen(staff)}>
+                    <InfoIcon />
+                  </IconButton>
+                </Grid>
               </Grid>
-              <Grid item>
-                <IconButton onClick={() => handleDetailsOpen(staff)}>
-                  <InfoIcon />
-                </IconButton>
-              </Grid>
-            </Grid>
+            </Box>
           ))
         )}
       </Grid>
@@ -187,7 +214,6 @@ const AllStaff = () => {
               margin="dense"
             />
           </DialogContent>
-
           <DialogActions>
             <Button onClick={handleModalClose}>Cancel</Button>
             <Button type="submit">Submit</Button>
