@@ -3,6 +3,7 @@ import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
+import { styled } from "@mui/system";
 import { useForm, Controller } from "react-hook-form";
 import {
   TextField,
@@ -14,11 +15,11 @@ import {
   MenuItem,
   FormControl,
   InputLabel,
-  IconButton
+  IconButton,
 } from "@mui/material";
-import InfoIcon from '@mui/icons-material/Info';
-import PersonAddIcon from '@mui/icons-material/PersonAdd';
-import SearchIcon from '@mui/icons-material/Search';
+import InfoIcon from "@mui/icons-material/Info";
+import PersonAddIcon from "@mui/icons-material/PersonAdd";
+import SearchIcon from "@mui/icons-material/Search";
 import {
   saveStudent,
   getStudents,
@@ -52,7 +53,7 @@ const AllStudents = () => {
 
   let filteredStudents = students;
   if (searchTerm !== "") {
-    filteredStudents = students.filter(student =>
+    filteredStudents = students.filter((student) =>
       student.name.toLowerCase().includes(searchTerm.toLowerCase())
     );
   }
@@ -92,6 +93,14 @@ const AllStudents = () => {
     handleModalOpen();
   };
 
+  const CustomButton = styled(Button)(({ theme }) => ({
+    backgroundColor: "#EFBD26",
+    "&:hover": {
+      backgroundColor: "#EFBD26",
+    },
+    padding: theme.spacing(1),
+  }));
+
   useEffect(() => {
     if (editStudentName) {
       const studentToEdit = students.find(
@@ -107,12 +116,12 @@ const AllStudents = () => {
     <Grid container direction="column" spacing={2} alignItems="center">
       <Grid item xs={12}>
         {showSearch ? (
-          <TextField 
-            variant="outlined" 
-            label="Search" 
-            value={searchTerm} 
-            onChange={e => setSearchTerm(e.target.value)}
-            style={{width: '80%'}}
+          <TextField
+            variant="outlined"
+            label="Search"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            style={{ width: "80%" }}
             onBlur={() => setShowSearch(false)}
           />
         ) : (
@@ -157,13 +166,14 @@ const AllStudents = () => {
             </Grid>
           ))
         )}
-
-        <Grid item container justifyContent="center">
-          <IconButton color="primary" onClick={handleModalOpen}>
-            <PersonAddIcon />
-          </IconButton>
-        </Grid>
+       
       </Box>
+
+      <Grid item container justifyContent="center">
+          <CustomButton variant="contained" onClick={handleModalOpen}>
+            <PersonAddIcon sx={{ color: "black" }} />
+          </CustomButton>
+        </Grid>
 
       <Dialog
         open={modalOpen}

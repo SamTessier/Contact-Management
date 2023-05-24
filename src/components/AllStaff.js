@@ -3,6 +3,7 @@ import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
+import { styled } from "@mui/system";
 import { useForm, Controller } from "react-hook-form";
 import {
   TextField,
@@ -14,11 +15,11 @@ import {
   MenuItem,
   FormControl,
   InputLabel,
-  IconButton
+  IconButton,
 } from "@mui/material";
-import InfoIcon from '@mui/icons-material/Info';
-import PersonAddIcon from '@mui/icons-material/PersonAdd';
-import SearchIcon from '@mui/icons-material/Search';
+import InfoIcon from "@mui/icons-material/Info";
+import PersonAddIcon from "@mui/icons-material/PersonAdd";
+import SearchIcon from "@mui/icons-material/Search";
 import {
   saveStaff,
   getStaff,
@@ -52,7 +53,7 @@ const AllStaff = () => {
 
   let filteredStaff = staff;
   if (searchTerm !== "") {
-    filteredStaff = staff.filter(staffMember =>
+    filteredStaff = staff.filter((staffMember) =>
       staffMember.name.toLowerCase().includes(searchTerm.toLowerCase())
     );
   }
@@ -92,20 +93,26 @@ const AllStaff = () => {
 
   useEffect(() => {
     if (editStaffName) {
-      const staffToEdit = staff.find(
-        (staff) => staff.name === editStaffName
-      );
+      const staffToEdit = staff.find((staff) => staff.name === editStaffName);
       reset(staffToEdit);
     } else {
       reset();
     }
   }, [editStaffName]);
 
+  const CustomButton = styled(Button)(({ theme }) => ({
+    backgroundColor: "#EFBD26",
+    "&:hover": {
+      backgroundColor: "#EFBD26",
+    },
+    padding: theme.spacing(1),
+  }));
+
   return (
     <Grid container direction="column" spacing={2} alignItems="center">
       <Grid item xs={12}>
         {showSearch ? (
-          <TextField 
+          <TextField
             variant="outlined"
             size="small"
             value={searchTerm}
@@ -120,41 +127,49 @@ const AllStaff = () => {
           </IconButton>
         )}
       </Grid>
-      <Grid item>
+      <Box
+        border={1}
+        borderColor="grey.500"
+        borderRadius={2}
+        p={3}
+        m={2}
+        bgcolor="grey.100"
+        overflow="auto"
+        maxHeight={500}
+      >
         {filteredStaff.length === 0 ? (
           <Typography variant="h5" align="center">
             No staff members found!
           </Typography>
         ) : (
           filteredStaff.map((staff, index) => (
-            <Box key={index} mb={2}>
-              <Grid
-                container
-                justifyContent="space-between"
-                alignItems="center"
-              >
-                <Grid item>
-                  <Typography variant="h6">{staff.name}</Typography>
-                </Grid>
-                <Grid item>
-                  <IconButton onClick={() => handleDetailsOpen(staff)}>
-                    <InfoIcon />
-                  </IconButton>
-                </Grid>
+            <Grid
+              key={index}
+              container
+              justifyContent="space-between"
+              alignItems="center"
+            >
+              <Grid item>
+                <Typography variant="h6">{staff.name}</Typography>
               </Grid>
-            </Box>
+              <Grid item>
+                <IconButton
+                  color="primary"
+                  onClick={() => handleDetailsOpen(staff)}
+                >
+                  <InfoIcon />
+                </IconButton>
+              </Grid>
+            </Grid>
           ))
         )}
-      </Grid>
+      </Box>
       <Grid item>
-        <Button
-          variant="contained"
-          color="primary"
-          startIcon={<PersonAddIcon />}
-          onClick={handleModalOpen}
-        >
-          Add Staff Member
-        </Button>
+        <Grid item container justifyContent="center">
+          <CustomButton variant="contained" onClick={handleModalOpen}>
+            <PersonAddIcon sx={{ color: "black" }} />
+          </CustomButton>
+        </Grid>
       </Grid>
       <Dialog open={modalOpen} onClose={handleModalClose}>
         <form onSubmit={handleSubmit(onSubmit)}>
@@ -204,7 +219,7 @@ const AllStaff = () => {
                 )}
               />
             </FormControl>
-            
+
             <TextField
               {...register("notes")}
               label="Notes"
