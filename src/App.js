@@ -5,6 +5,7 @@ import MainScreen from './components/MainScreen';
 import AllSchools from './components/AllSchools';
 import AllStaff from './components/AllStaff';
 import AllStudents from './components/AllStudents';
+import SearchBar from './components/SearchBar';
 import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
