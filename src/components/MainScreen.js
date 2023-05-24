@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { IconButton, Grid, Tooltip, Typography, TextField } from '@mui/material';
+import { IconButton, Grid, Tooltip, Typography, TextField, Box } from '@mui/material';
 import { Link } from 'react-router-dom';
 import HomeIcon from '@mui/icons-material/Home';
 import WorkIcon from '@mui/icons-material/Work';
@@ -28,79 +28,81 @@ const MainScreen = () => {
   const handleDetailsClose = () => setDetailsOpen(false);
 
   return (
-    <Grid container direction="column" spacing={2} justifyContent="center" alignItems="center">
-      <Grid item>
-        <Grid container direction="row" spacing={2} justifyContent="center">
-          <Grid item>
-            <Tooltip title="Schools">
-              <IconButton color="primary" component={Link} to="/schools">
-                <HomeIcon fontSize="large" />
-              </IconButton>
-            </Tooltip>
-            <Typography variant="caption" display="block" textAlign="center">Schools</Typography>
-          </Grid>
-          <Grid item>
-            <Tooltip title="Staff">
-              <IconButton color="primary" component={Link} to="/staff">
-                <WorkIcon fontSize="large" />
-              </IconButton>
-            </Tooltip>
-            <Typography variant="caption" display="block" textAlign="center">Staff</Typography>
-          </Grid>
-          <Grid item>
-            <Tooltip title="Students">
-              <IconButton color="primary" component={Link} to="/students">
-                <PeopleIcon fontSize="large" />
-              </IconButton>
-            </Tooltip>
-            <Typography variant="caption" display="block" textAlign="center">Students</Typography>
-          </Grid>
-        </Grid>
-      </Grid>
-      <Grid item xs={12}>
-        <Grid container justify="center">
-          {showSearch ? (
-            <TextField 
-              variant="outlined" 
-              label="Search" 
-              value={searchTerm} 
-              onChange={e => setSearchTerm(e.target.value)}
-              style={{width: '80%'}}
-              onBlur={() => setShowSearch(false)}
-            />
-          ) : (
-            <IconButton onClick={() => setShowSearch(true)}>
-              <SearchIcon />
-            </IconButton>
-          )}
-        </Grid>
-      </Grid>
-      <Grid item>
-        <Grid container direction="column" spacing={2} alignItems="center">
-          {searchTerm && data.map((item, index) => (
-            <Grid key={index} container justifyContent="space-between" alignItems="center">
-              <Grid item>
-                <Typography variant="body1">{item.name}</Typography>
-              </Grid>
-              <Grid item>
-                <IconButton color="primary" onClick={() => handleDetailsOpen(item)}>
-                  <InfoIcon />
+    <Box border={1} borderColor="grey.500" borderRadius={2} p={3} m={2} bgcolor="grey.100">
+      <Grid container direction="column" spacing={2} justifyContent="center" alignItems="center">
+        <Grid item>
+          <Grid container direction="row" spacing={2} justifyContent="center">
+            <Grid item>
+              <Tooltip title="Schools">
+                <IconButton color="primary" component={Link} to="/schools">
+                  <HomeIcon fontSize="large" />
                 </IconButton>
-              </Grid>
+              </Tooltip>
+              <Typography variant="caption" display="block" textAlign="center">Schools</Typography>
             </Grid>
-          ))}
+            <Grid item>
+              <Tooltip title="Staff">
+                <IconButton color="primary" component={Link} to="/staff">
+                  <WorkIcon fontSize="large" />
+                </IconButton>
+              </Tooltip>
+              <Typography variant="caption" display="block" textAlign="center">Staff</Typography>
+            </Grid>
+            <Grid item>
+              <Tooltip title="Students">
+                <IconButton color="primary" component={Link} to="/students">
+                  <PeopleIcon fontSize="large" />
+                </IconButton>
+              </Tooltip>
+              <Typography variant="caption" display="block" textAlign="center">Students</Typography>
+            </Grid>
+          </Grid>
         </Grid>
+        <Grid item xs={12}>
+          <Grid container justify="center">
+            {showSearch ? (
+              <TextField 
+                variant="outlined" 
+                label="Search" 
+                value={searchTerm} 
+                onChange={e => setSearchTerm(e.target.value)}
+                style={{width: '80%'}}
+                onBlur={() => setShowSearch(false)}
+              />
+            ) : (
+              <IconButton onClick={() => setShowSearch(true)}>
+                <SearchIcon />
+              </IconButton>
+            )}
+          </Grid>
+        </Grid>
+        <Grid item>
+          <Grid container direction="column" spacing={2} alignItems="center">
+            {searchTerm && data.map((item, index) => (
+              <Grid key={index} container justifyContent="space-between" alignItems="center">
+                <Grid item>
+                  <Typography variant="body1">{item.name}</Typography>
+                </Grid>
+                <Grid item>
+                  <IconButton color="primary" onClick={() => handleDetailsOpen(item)}>
+                    <InfoIcon />
+                  </IconButton>
+                </Grid>
+              </Grid>
+            ))}
+          </Grid>
+        </Grid>
+        {selectedStudent && 
+          <StudentDetails
+            student={selectedStudent}
+            open={detailsOpen}
+            handleClose={handleDetailsClose}
+            handleDelete={()=>{}}
+            handleEdit={()=>{}}
+          />
+        }
       </Grid>
-      {selectedStudent && 
-        <StudentDetails
-          student={selectedStudent}
-          open={detailsOpen}
-          handleClose={handleDetailsClose}
-          handleDelete={()=>{}}
-          handleEdit={()=>{}}
-        />
-      }
-    </Grid>
+    </Box>
   );
 }
 

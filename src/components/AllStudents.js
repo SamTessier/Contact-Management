@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import Grid from "@mui/material/Grid";
+import Box from "@mui/material/Box";
 import { useForm, Controller } from "react-hook-form";
 import {
   TextField,
@@ -13,10 +14,11 @@ import {
   MenuItem,
   FormControl,
   InputLabel,
+  IconButton
 } from "@mui/material";
 import InfoIcon from '@mui/icons-material/Info';
-import IconButton from '@mui/material/IconButton';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
+import SearchIcon from '@mui/icons-material/Search';
 import {
   saveStudent,
   getStudents,
@@ -25,7 +27,6 @@ import {
   updateStudent,
 } from "../localStorageDB";
 import StudentDetails from "./StudentDetails";
-
 
 const AllStudents = () => {
   const {
@@ -41,11 +42,20 @@ const AllStudents = () => {
   const [selectedStudent, setSelectedStudent] = useState(null);
   const [detailsOpen, setDetailsOpen] = useState(false);
   const [editStudentName, setEditStudentName] = useState(null);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [showSearch, setShowSearch] = useState(false);
 
   useEffect(() => {
     setStudents(getStudents());
     setSchools(getSchools());
   }, []);
+
+  let filteredStudents = students;
+  if (searchTerm !== "") {
+    filteredStudents = students.filter(student =>
+      student.name.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+  }
 
   const onSubmit = (data) => {
     if (editStudentName) {
@@ -81,7 +91,6 @@ const AllStudents = () => {
     setEditStudentName(studentName);
     handleModalOpen();
   };
-  
 
   useEffect(() => {
     if (editStudentName) {
@@ -96,46 +105,76 @@ const AllStudents = () => {
 
   return (
     <Grid container direction="column" spacing={2} alignItems="center">
-      <Grid item>
-        {students.length === 0 ? (
+      <Grid item xs={12}>
+        {showSearch ? (
+          <TextField 
+            variant="outlined" 
+            label="Search" 
+            value={searchTerm} 
+            onChange={e => setSearchTerm(e.target.value)}
+            style={{width: '80%'}}
+            onBlur={() => setShowSearch(false)}
+          />
+        ) : (
+          <IconButton onClick={() => setShowSearch(true)}>
+            <SearchIcon />
+          </IconButton>
+        )}
+      </Grid>
+      <Box
+        border={1}
+        borderColor="grey.500"
+        borderRadius={2}
+        p={3}
+        m={2}
+        bgcolor="grey.100"
+        overflow="auto"
+        maxHeight={500}
+      >
+        {filteredStudents.length === 0 ? (
           <Typography variant="h5" align="center">
-            There are no students yet! Add a student to begin.
+            No students match your search!
           </Typography>
         ) : (
-          students.map((student, index) => (
-            <Grid key={index} container justifyContent="space-between" alignItems="center">
+          filteredStudents.map((student, index) => (
+            <Grid
+              key={index}
+              container
+              justifyContent="space-between"
+              alignItems="center"
+            >
               <Grid item>
-                <Typography variant="h6">
-                  {student.name}
-                </Typography>
+                <Typography variant="h6">{student.name}</Typography>
               </Grid>
               <Grid item>
-                <IconButton color="primary" onClick={() => handleDetailsOpen(student)}>
+                <IconButton
+                  color="primary"
+                  onClick={() => handleDetailsOpen(student)}
+                >
                   <InfoIcon />
                 </IconButton>
               </Grid>
             </Grid>
           ))
-          
         )}
-      </Grid>
-      <Grid item>
-      <IconButton color="primary" onClick={handleModalOpen}>
-  <PersonAddIcon />
-</IconButton>
 
-      </Grid>
+        <Grid item container justifyContent="center">
+          <IconButton color="primary" onClick={handleModalOpen}>
+            <PersonAddIcon />
+          </IconButton>
+        </Grid>
+      </Box>
 
       <Dialog
         open={modalOpen}
         onClose={handleModalClose}
         aria-labelledby="form-dialog-title"
       >
-        <DialogTitle id="form-dialog-title" style={{ color: 'black' }}>
+        <DialogTitle id="form-dialog-title" style={{ color: "black" }}>
           {editStudentName ? "Edit Student" : "Add New Student"}
         </DialogTitle>
         <form onSubmit={handleSubmit(onSubmit)}>
-          <DialogContent >
+          <DialogContent>
             <Controller
               name="name"
               control={control}
@@ -279,10 +318,10 @@ const AllStudents = () => {
             />
           </DialogContent>
           <DialogActions>
-            <Button onClick={handleModalClose} style={{ color: 'black' }}>
+            <Button onClick={handleModalClose} style={{ color: "black" }}>
               Cancel
             </Button>
-            <Button type="submit" style={{ color: 'black' }}>
+            <Button type="submit" style={{ color: "black" }}>
               {editStudentName ? "Save Changes" : "Add Student"}
             </Button>
           </DialogActions>
