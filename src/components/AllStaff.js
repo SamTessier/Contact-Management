@@ -164,51 +164,80 @@ const AllStaff = () => {
           ))
         )}
       </Box>
-      <Grid item>
-        <Grid item container justifyContent="center">
-          <CustomButton variant="contained" onClick={handleModalOpen}>
-            <PersonAddIcon sx={{ color: "black" }} />
-          </CustomButton>
-        </Grid>
+
+      <Grid item container justifyContent="center">
+        <CustomButton variant="contained" onClick={handleModalOpen}>
+          <PersonAddIcon sx={{ color: "black" }} />
+        </CustomButton>
       </Grid>
-      <Dialog open={modalOpen} onClose={handleModalClose}>
+
+      <Dialog
+        open={modalOpen}
+        onClose={handleModalClose}
+        aria-labelledby="form-dialog-title"
+      >
+        <DialogTitle id="form-dialog-title" style={{ color: "black" }}>
+          {editStaffName ? "Edit Staff" : "Add New Staff"}
+        </DialogTitle>
+
         <form onSubmit={handleSubmit(onSubmit)}>
-          <DialogTitle>Add New Staff Member</DialogTitle>
           <DialogContent>
-            <TextField
-              {...register("name", { required: "Name is required" })}
-              error={Boolean(errors.name)}
-              helperText={errors.name?.message}
-              label="Name"
-              fullWidth
-              margin="dense"
+            <Controller
+              name="name"
+              control={control}
+              defaultValue=""
+              rules={{ required: true }}
+              render={({ field }) => (
+                <TextField
+                  {...field}
+                  label="Full Name"
+                  fullWidth
+                  required
+                  onChange={(e) => field.onChange(e.target.value)}
+                />
+              )}
             />
-            <TextField
-              {...register("phoneNumber", {
-                required: "Phone number is required",
-              })}
-              error={Boolean(errors.phoneNumber)}
-              helperText={errors.phoneNumber?.message}
-              label="Phone Number"
-              fullWidth
-              margin="dense"
+
+            <Controller
+              name="staffPhone"
+              control={control}
+              defaultValue=""
+              rules={{ required: true }}
+              render={({ field }) => (
+                <TextField
+                  {...field}
+                  label="Phone Number"
+                  fullWidth
+                  required
+                  onChange={(e) => field.onChange(e.target.value)}
+                />
+              )}
             />
-            <TextField
-              {...register("email", { required: "Email is required" })}
-              error={Boolean(errors.email)}
-              helperText={errors.email?.message}
-              label="Email"
-              fullWidth
-              margin="dense"
+
+            <Controller
+              name="email"
+              control={control}
+              defaultValue=""
+              rules={{ required: true, pattern: /^\S+@\S+$/i }}
+              render={({ field }) => (
+                <TextField
+                  {...field}
+                  label="Email"
+                  fullWidth
+                  required
+                  onChange={(e) => field.onChange(e.target.value)}
+                />
+              )}
             />
-            <FormControl fullWidth margin="dense">
-              <InputLabel id="school-label">School</InputLabel>
-              <Controller
-                name="school"
-                control={control}
-                defaultValue=""
-                rules={{ required: "School is required" }}
-                render={({ field }) => (
+
+            <Controller
+              name="school"
+              control={control}
+              defaultValue=""
+              rules={{ required: true }}
+              render={({ field }) => (
+                <FormControl fullWidth>
+                  <InputLabel id="school-label">School</InputLabel>
                   <Select {...field} labelId="school-label">
                     {schools.map((school, index) => (
                       <MenuItem key={index} value={school.name}>
@@ -216,22 +245,31 @@ const AllStaff = () => {
                       </MenuItem>
                     ))}
                   </Select>
-                )}
-              />
-            </FormControl>
+                </FormControl>
+              )}
+            />
 
-            <TextField
-              {...register("notes")}
-              label="Notes"
-              multiline
-              rows={4}
-              fullWidth
-              margin="dense"
+            <Controller
+              name="notes"
+              control={control}
+              defaultValue=""
+              render={({ field }) => (
+                <TextField
+                  {...field}
+                  label="Allergies/Medical Conditions"
+                  multiline
+                  rows={4}
+                  fullWidth
+                  onChange={(e) => field.onChange(e.target.value)}
+                />
+              )}
             />
           </DialogContent>
           <DialogActions>
             <Button onClick={handleModalClose}>Cancel</Button>
-            <Button type="submit">Submit</Button>
+            <Button type="submit" style={{ color: "black" }}>
+              {editStaffName ? "Save Changes" : "Add Staff"}
+            </Button>
           </DialogActions>
         </form>
       </Dialog>
