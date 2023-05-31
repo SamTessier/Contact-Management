@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import {
   IconButton,
   Grid,
@@ -6,6 +6,7 @@ import {
   Typography,
   TextField,
   Box,
+  Button,
 } from "@mui/material";
 import { Link } from "react-router-dom";
 import HomeIcon from "@mui/icons-material/Home";
@@ -13,10 +14,13 @@ import WorkIcon from "@mui/icons-material/Work";
 import PeopleIcon from "@mui/icons-material/People";
 import InfoIcon from "@mui/icons-material/Info";
 import SearchIcon from "@mui/icons-material/Search";
+import ExitToAppIcon from '@mui/icons-material/ExitToApp';
 import StudentDetails from "./StudentDetails";
 import { getStudents, getStaff } from "../localStorageDB";
+import { AuthContext } from '../AuthContext';
 
 const MainScreen = () => {
+  const { logOut } = useContext(AuthContext);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedStudent, setSelectedStudent] = useState(null);
   const [detailsOpen, setDetailsOpen] = useState(false);
@@ -26,7 +30,9 @@ const MainScreen = () => {
   data = data.filter((item) =>
     item.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
-
+  const handleLogOut = () => {
+    logOut();
+  };
   const handleDetailsOpen = (student) => {
     setSelectedStudent(student);
     setDetailsOpen(true);
@@ -74,6 +80,16 @@ const MainScreen = () => {
               </IconButton>
               <Typography variant="caption" display="block" textAlign="center">
                 Students
+              </Typography>
+            </Grid>
+            <Grid item>
+              <Tooltip title="Log out">
+                <IconButton color="primary" onClick={handleLogOut}>
+                  <ExitToAppIcon fontSize="large" />
+                </IconButton>
+              </Tooltip>
+              <Typography variant="caption" display="block" textAlign="center">
+                Log Out
               </Typography>
             </Grid>
           </Grid>

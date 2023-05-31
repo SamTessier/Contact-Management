@@ -62,3 +62,13 @@ export const updateStaff = (updatedStaff) => {
     localStorage.setItem("staff", JSON.stringify(staffList));
   }
 };
+
+export const saveUser = (user) => {
+  const userList = JSON.parse(localStorage.getItem('users')) || [];
+  userList.push(user);
+  localStorage.setItem('users', JSON.stringify(userList));
+};
+
+export const getUsers = () => {
+  return JSON.parse(localStorage.getItem('users')) || [];
+};

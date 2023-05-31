@@ -1,8 +1,7 @@
 import React, { createContext, useEffect, useState } from 'react';
+import { saveUser, getUsers } from './localStorageDB';
 
 export const AuthContext = createContext({});
-
-// export const useAuth = () => useContext(AuthContext);
 
 export const AuthProvider = ({ children }) => {
   const [currentUser, setCurrentUser] = useState(null);
@@ -15,19 +14,19 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   const logIn = (email, password) => {
-    // here you would normally check the credentials against a real database
-    // for the sake of this project, any email and password will log you in
-    const user = { email };
-    setCurrentUser(user);
-    localStorage.setItem('user', JSON.stringify(user));
+    const users = getUsers();
+    const user = users.find(user => user.email === email && user.password === password);
+
+    if (user) {
+      setCurrentUser(user);
+      localStorage.setItem('user', JSON.stringify(user));
+    }
   };
 
   const signUp = (email, password) => {
-    // here you would normally create the user in a real database
-    // for the sake of this project, any email and password will create a user
-    const user = { email };
-    setCurrentUser(user);
-    localStorage.setItem('user', JSON.stringify(user));
+    const user = { email, password };
+    saveUser(user);  // save the user in the local storage
+
   };
 
   const logOut = () => {
