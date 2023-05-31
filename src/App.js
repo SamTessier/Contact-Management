@@ -27,8 +27,8 @@ function RoutesWithAuthentication() {
   return (
     <Container maxWidth="sm">
       <Typography variant="h3" align="center" gutterBottom>
-        Welcome to my app
-      </Typography>
+       
+Sammy's Contact App      </Typography>
       {currentUser === null ? (
         <Routes>
           <Route path="/login" element={<LoginForm />} />

@@ -31,7 +31,6 @@ import StudentDetails from "./StudentDetails";
 
 const AllStudents = () => {
   const {
-    register,
     handleSubmit,
     formState: { errors },
     reset,
@@ -183,6 +182,7 @@ const AllStudents = () => {
         <DialogTitle id="form-dialog-title" style={{ color: "black" }}>
           {editStudentName ? "Edit Student" : "Add New Student"}
         </DialogTitle>
+
         <form onSubmit={handleSubmit(onSubmit)}>
           <DialogContent>
             <Controller

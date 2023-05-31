@@ -31,7 +31,6 @@ import StaffDetails from "./StaffDetails";
 
 const AllStaff = () => {
   const {
-    register,
     handleSubmit,
     formState: { errors },
     reset,
