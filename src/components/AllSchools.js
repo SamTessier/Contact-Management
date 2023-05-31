@@ -30,19 +30,24 @@ const AllSchools = () => {
   }, []);
 
   const onSubmit = (data) => {
-    saveSchool(data);
-    setSchools((prevSchools) => [...prevSchools, data]);
+    const newSchool = { ...data };
+    saveSchool(newSchool);
+    setSchools(getSchools());
     setModalOpen(false);
     reset();
   };
 
   const handleModalOpen = () => setModalOpen(true);
-  const handleModalClose = () => setModalOpen(false);
+  const handleModalClose = () => {
+    setModalOpen(false);
+    reset();
+  };
   const handleDetailsOpen = (school) => {
     setSelectedSchool(school);
     setDetailsOpen(true);
   };
   const handleDetailsClose = () => setDetailsOpen(false);
+
 
   const CustomButton = styled(Button)(({ theme }) => ({
     backgroundColor: "#EFBD26",
@@ -98,43 +103,62 @@ const AllSchools = () => {
         </CustomButton>
       </Grid>
 
-      <Dialog
-        open={modalOpen}
-        onClose={handleModalClose}
-        maxWidth="sm"
-        fullWidth
-      >
-        <DialogTitle>Add School</DialogTitle>
-        <DialogContent>
-          <form onSubmit={handleSubmit(onSubmit)}>
-            <Grid container spacing={2}>
-              <Grid item xs={12}>
-                <Controller
-                  name="name"
-                  control={control}
-                  defaultValue=""
-                  rules={{ required: "Name is required." }}
-                  render={({ field }) => (
-                    <TextField {...field} label="School Name" fullWidth />
-                  )}
-                />
-              </Grid>
-              {/* ...repeat for each field... */}
-              <Grid item xs={12}>
-                <Button
-                  type="submit"
-                  variant="contained"
-                  style={{ color: "black" }}
-                  fullWidth
-                >
-                  Save School
-                </Button>
-              </Grid>
-            </Grid>
-          </form>
-        </DialogContent>
-      </Dialog>
-
+      <Dialog open={modalOpen} onClose={handleModalClose}>
+    <DialogTitle>Add New School</DialogTitle>
+    <form onSubmit={handleSubmit(onSubmit)}>
+      <DialogContent>
+        <Controller
+          name="name"
+          control={control}
+          defaultValue=""
+          rules={{ required: true }}
+          render={({ field }) => (
+            <TextField
+              {...field}
+              label="School Name"
+              fullWidth
+              required
+              onChange={(e) => field.onChange(e.target.value)}
+            />
+          )}
+        />
+        <Controller
+          name="phone"
+          control={control}
+          defaultValue=""
+          rules={{ required: true }}
+          render={({ field }) => (
+            <TextField
+              {...field}
+              label="Phone Number"
+              fullWidth
+              required
+              onChange={(e) => field.onChange(e.target.value)}
+            />
+          )}
+        />
+        <Controller
+          name="address"
+          control={control}
+          defaultValue=""
+          rules={{ required: true }}
+          render={({ field }) => (
+            <TextField
+              {...field}
+              label="Full Mailing Address"
+              fullWidth
+              required
+              onChange={(e) => field.onChange(e.target.value)}
+            />
+          )}
+        />
+      </DialogContent>
+      <DialogActions>
+        <Button onClick={handleModalClose}>Cancel</Button>
+        <Button type="submit">Add School</Button>
+      </DialogActions>
+    </form>
+  </Dialog>
       <SchoolDetails
         school={selectedSchool}
         open={detailsOpen}
