@@ -1,33 +1,20 @@
 import React, { useState, useEffect } from "react";
-import Button from "@mui/material/Button";
-import Typography from "@mui/material/Typography";
+import { useForm, Controller } from "react-hook-form";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import { styled } from "@mui/system";
-import { useForm, Controller } from "react-hook-form";
-import {
-  TextField,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-  Select,
-  MenuItem,
-  FormControl,
-  InputLabel,
-  IconButton,
-} from "@mui/material";
-import InfoIcon from "@mui/icons-material/Info";
+import Button from "@mui/material/Button";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
-import SearchIcon from "@mui/icons-material/Search";
+
 import {
-  saveStaff,
   getStaff,
   getSchools,
-  deleteStaff,
+  saveStaff,
   updateStaff,
 } from "../localStorageDB";
-import StaffDetails from "./StaffDetails";
+import StaffList from "./StaffList";
+import StaffDialogForm from "./StaffDialogForm";
+import StaffSearch from "./StaffSearch";
 
 const AllStaff = () => {
   const {
@@ -39,8 +26,6 @@ const AllStaff = () => {
   const [staff, setStaff] = useState([]);
   const [schools, setSchools] = useState([]);
   const [modalOpen, setModalOpen] = useState(false);
-  const [selectedStaff, setSelectedStaff] = useState(null);
-  const [detailsOpen, setDetailsOpen] = useState(false);
   const [editStaffName, setEditStaffName] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [showSearch, setShowSearch] = useState(false);
@@ -68,36 +53,20 @@ const AllStaff = () => {
     setStaff(getStaff());
     setModalOpen(false);
     setEditStaffName(null);
+    reset();
   };
 
   const handleModalOpen = () => setModalOpen(true);
   const handleModalClose = () => {
     setModalOpen(false);
     setEditStaffName(null);
-  };
-  const handleDetailsOpen = (staff) => {
-    setSelectedStaff(staff);
-    setDetailsOpen(true);
-  };
-  const handleDetailsClose = () => setDetailsOpen(false);
-  const handleDelete = (staffName) => {
-    deleteStaff(staffName);
-    setStaff(getStaff());
+    reset();
   };
 
   const handleEditOpen = (staffName) => {
     setEditStaffName(staffName);
     handleModalOpen();
   };
-
-  useEffect(() => {
-    if (editStaffName) {
-      const staffToEdit = staff.find((staff) => staff.name === editStaffName);
-      reset(staffToEdit);
-    } else {
-      reset();
-    }
-  }, [editStaffName]);
 
   const CustomButton = styled(Button)(({ theme }) => ({
     backgroundColor: "#EFBD26",
@@ -110,21 +79,7 @@ const AllStaff = () => {
   return (
     <Grid container direction="column" spacing={2} alignItems="center">
       <Grid item xs={12}>
-        {showSearch ? (
-          <TextField
-            variant="outlined"
-            size="small"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            onBlur={() => setShowSearch(false)}
-            fullWidth
-            autoFocus
-          />
-        ) : (
-          <IconButton onClick={() => setShowSearch(true)}>
-            <SearchIcon />
-          </IconButton>
-        )}
+      <StaffSearch searchTerm={searchTerm} onSearchChange={setSearchTerm} showSearch={showSearch} onSearchClick={() => setShowSearch(!showSearch)} />
       </Grid>
       <Box
         border={1}
@@ -136,32 +91,7 @@ const AllStaff = () => {
         overflow="auto"
         maxHeight={500}
       >
-        {filteredStaff.length === 0 ? (
-          <Typography variant="h5" align="center">
-            No staff members found!
-          </Typography>
-        ) : (
-          filteredStaff.map((staff, index) => (
-            <Grid
-              key={index}
-              container
-              justifyContent="space-between"
-              alignItems="center"
-            >
-              <Grid item>
-                <Typography variant="h6">{staff.name}</Typography>
-              </Grid>
-              <Grid item>
-                <IconButton
-                  color="primary"
-                  onClick={() => handleDetailsOpen(staff)}
-                >
-                  <InfoIcon />
-                </IconButton>
-              </Grid>
-            </Grid>
-          ))
-        )}
+        <StaffList staff={filteredStaff} onEdit={handleEditOpen} />
       </Box>
 
       <Grid item container justifyContent="center">
@@ -170,114 +100,14 @@ const AllStaff = () => {
         </CustomButton>
       </Grid>
 
-      <Dialog
+      <StaffDialogForm
         open={modalOpen}
-        onClose={handleModalClose}
-        aria-labelledby="form-dialog-title"
-      >
-        <DialogTitle id="form-dialog-title" style={{ color: "black" }}>
-          {editStaffName ? "Edit Staff" : "Add New Staff"}
-        </DialogTitle>
-
-        <form onSubmit={handleSubmit(onSubmit)}>
-          <DialogContent>
-            <Controller
-              name="name"
-              control={control}
-              defaultValue=""
-              rules={{ required: true }}
-              render={({ field }) => (
-                <TextField
-                  {...field}
-                  label="Full Name"
-                  fullWidth
-                  required
-                  onChange={(e) => field.onChange(e.target.value)}
-                />
-              )}
-            />
-
-            <Controller
-              name="staffPhone"
-              control={control}
-              defaultValue=""
-              rules={{ required: true }}
-              render={({ field }) => (
-                <TextField
-                  {...field}
-                  label="Phone Number"
-                  fullWidth
-                  required
-                  onChange={(e) => field.onChange(e.target.value)}
-                />
-              )}
-            />
-
-            <Controller
-              name="email"
-              control={control}
-              defaultValue=""
-              rules={{ required: true, pattern: /^\S+@\S+$/i }}
-              render={({ field }) => (
-                <TextField
-                  {...field}
-                  label="Email"
-                  fullWidth
-                  required
-                  onChange={(e) => field.onChange(e.target.value)}
-                />
-              )}
-            />
-
-            <Controller
-              name="school"
-              control={control}
-              defaultValue=""
-              rules={{ required: true }}
-              render={({ field }) => (
-                <FormControl fullWidth>
-                  <InputLabel id="school-label">School</InputLabel>
-                  <Select {...field} labelId="school-label">
-                    {schools.map((school, index) => (
-                      <MenuItem key={index} value={school.name}>
-                        {school.name}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
-              )}
-            />
-
-            <Controller
-              name="notes"
-              control={control}
-              defaultValue=""
-              render={({ field }) => (
-                <TextField
-                  {...field}
-                  label="Allergies/Medical Conditions"
-                  multiline
-                  rows={4}
-                  fullWidth
-                  onChange={(e) => field.onChange(e.target.value)}
-                />
-              )}
-            />
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={handleModalClose}>Cancel</Button>
-            <Button type="submit" style={{ color: "black" }}>
-              {editStaffName ? "Save Changes" : "Add Staff"}
-            </Button>
-          </DialogActions>
-        </form>
-      </Dialog>
-      <StaffDetails
-        staff={selectedStaff}
-        open={detailsOpen}
-        handleClose={handleDetailsClose}
-        handleEdit={handleEditOpen}
-        handleDelete={handleDelete}
+        handleClose={handleModalClose}
+        onSubmit={handleSubmit(onSubmit)}
+        control={control}
+        errors={errors}
+        schools={schools}
+        staffName={editStaffName}
       />
     </Grid>
   );
