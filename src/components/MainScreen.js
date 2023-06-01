@@ -43,7 +43,7 @@ const MainScreen = () => {
   return (
     <Box
       border={1}
-      borderColor="grey.500"
+      borderColor="#EFBD26"
       borderRadius={2}
       p={3}
       m={2}
