@@ -3,6 +3,7 @@ import { useForm, Controller } from "react-hook-form";
 import { styled } from "@mui/system";
 import Grid from "@mui/material/Grid";
 import Button from "@mui/material/Button";
+import PersonAddIcon from "@mui/icons-material/PersonAdd";
 
 import {
   saveStudent,
@@ -111,6 +112,11 @@ const AllStudents = () => {
         students={filteredStudents}
         handleDetailsOpen={handleDetailsOpen}
       />
+      <Grid item container justifyContent="center">
+        <CustomButton variant="contained" onClick={handleModalOpen}>
+          <PersonAddIcon sx={{ color: "black" }} />
+        </CustomButton>
+      </Grid>
       <StudentDialogForm
         control={control}
         handleSubmit={handleSubmit}
