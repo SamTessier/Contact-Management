@@ -1,25 +1,9 @@
 import React, { useState, useEffect } from "react";
-import Button from "@mui/material/Button";
-import Typography from "@mui/material/Typography";
-import Grid from "@mui/material/Grid";
-import Box from "@mui/material/Box";
-import { styled } from "@mui/system";
 import { useForm, Controller } from "react-hook-form";
-import {
-  TextField,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-  Select,
-  MenuItem,
-  FormControl,
-  InputLabel,
-  IconButton,
-} from "@mui/material";
-import InfoIcon from "@mui/icons-material/Info";
-import PersonAddIcon from "@mui/icons-material/PersonAdd";
-import SearchIcon from "@mui/icons-material/Search";
+import { styled } from "@mui/system";
+import Grid from "@mui/material/Grid";
+import Button from "@mui/material/Button";
+
 import {
   saveStudent,
   getStudents,
@@ -27,7 +11,11 @@ import {
   deleteStudent,
   updateStudent,
 } from "../localStorageDB";
+
 import StudentDetails from "./StudentDetails";
+import StudentSearch from "./StudentSearch";
+import StudentList from "./StudentList";
+import StudentDialogForm from "./StudentDialogForm";
 
 const AllStudents = () => {
   const {
@@ -113,230 +101,26 @@ const AllStudents = () => {
 
   return (
     <Grid container direction="column" spacing={2} alignItems="center">
-      <Grid item xs={12}>
-        {showSearch ? (
-          <TextField
-            variant="outlined"
-            label="Search"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            style={{ width: "80%" }}
-            onBlur={() => setShowSearch(false)}
-          />
-        ) : (
-          <IconButton onClick={() => setShowSearch(true)}>
-            <SearchIcon />
-          </IconButton>
-        )}
-      </Grid>
-      <Box
-        border={1}
-        borderColor="grey.500"
-        borderRadius={2}
-        p={3}
-        m={2}
-        bgcolor="grey.100"
-        overflow="auto"
-        maxHeight={500}
-      >
-        {filteredStudents.length === 0 ? (
-          <Typography variant="h5" align="center">
-            No students match your search!
-          </Typography>
-        ) : (
-          filteredStudents.map((student, index) => (
-            <Grid
-              key={index}
-              container
-              justifyContent="space-between"
-              alignItems="center"
-            >
-              <Grid item>
-                <Typography variant="h6">{student.name}</Typography>
-              </Grid>
-              <Grid item>
-                <IconButton
-                  color="primary"
-                  onClick={() => handleDetailsOpen(student)}
-                >
-                  <InfoIcon />
-                </IconButton>
-              </Grid>
-            </Grid>
-          ))
-        )}
-       
-      </Box>
-
-      <Grid item container justifyContent="center">
-          <CustomButton variant="contained" onClick={handleModalOpen}>
-            <PersonAddIcon sx={{ color: "black" }} />
-          </CustomButton>
-        </Grid>
-
-      <Dialog
-        open={modalOpen}
-        onClose={handleModalClose}
-        aria-labelledby="form-dialog-title"
-      >
-        <DialogTitle id="form-dialog-title" style={{ color: "black" }}>
-          {editStudentName ? "Edit Student" : "Add New Student"}
-        </DialogTitle>
-
-        <form onSubmit={handleSubmit(onSubmit)}>
-          <DialogContent>
-            <Controller
-              name="name"
-              control={control}
-              defaultValue=""
-              rules={{ required: true }}
-              render={({ field }) => (
-                <TextField
-                  {...field}
-                  label="Full Name"
-                  fullWidth
-                  required
-                  onChange={(e) => field.onChange(e.target.value)}
-                />
-              )}
-            />
-            <Controller
-              name="school"
-              control={control}
-              defaultValue=""
-              rules={{ required: true }}
-              render={({ field }) => (
-                <FormControl fullWidth>
-                  <InputLabel id="school-label">School</InputLabel>
-                  <Select {...field} labelId="school-label">
-                    {schools.map((school, index) => (
-                      <MenuItem key={index} value={school.name}>
-                        {school.name}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
-              )}
-            />
-            <Controller
-              name="grade"
-              control={control}
-              defaultValue=""
-              rules={{ required: true }}
-              render={({ field }) => (
-                <FormControl fullWidth>
-                  <InputLabel id="grade-label">Grade</InputLabel>
-                  <Select {...field} labelId="grade-label">
-                    {[...Array(12).keys()].map((_, index) => (
-                      <MenuItem key={index} value={index + 1}>
-                        {index + 1}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
-              )}
-            />
-            <Controller
-              name="parentName"
-              control={control}
-              defaultValue=""
-              rules={{ required: true }}
-              render={({ field }) => (
-                <TextField
-                  {...field}
-                  label="Parent/Guardian Name"
-                  fullWidth
-                  required
-                  onChange={(e) => field.onChange(e.target.value)}
-                />
-              )}
-            />
-            <Controller
-              name="parentPhone"
-              control={control}
-              defaultValue=""
-              rules={{ required: true }}
-              render={({ field }) => (
-                <TextField
-                  {...field}
-                  label="Parent/Guardian Phone"
-                  fullWidth
-                  required
-                  onChange={(e) => field.onChange(e.target.value)}
-                />
-              )}
-            />
-            <Controller
-              name="parentEmail"
-              control={control}
-              defaultValue=""
-              rules={{ required: true, pattern: /^\S+@\S+$/i }}
-              render={({ field }) => (
-                <TextField
-                  {...field}
-                  label="Parent/Guardian Email"
-                  fullWidth
-                  required
-                  onChange={(e) => field.onChange(e.target.value)}
-                />
-              )}
-            />
-            <Controller
-              name="allergies"
-              control={control}
-              defaultValue=""
-              render={({ field }) => (
-                <TextField
-                  {...field}
-                  label="Allergies/Medical Conditions"
-                  multiline
-                  rows={4}
-                  fullWidth
-                  onChange={(e) => field.onChange(e.target.value)}
-                />
-              )}
-            />
-            <Controller
-              name="enrollmentDates"
-              control={control}
-              defaultValue=""
-              render={({ field }) => (
-                <TextField
-                  {...field}
-                  label="Enrollment Date"
-                  multiline
-                  rows={4}
-                  fullWidth
-                  onChange={(e) => field.onChange(e.target.value)}
-                />
-              )}
-            />
-            <Controller
-              name="notes"
-              control={control}
-              defaultValue=""
-              render={({ field }) => (
-                <TextField
-                  {...field}
-                  label="Notes"
-                  multiline
-                  rows={4}
-                  fullWidth
-                  onChange={(e) => field.onChange(e.target.value)}
-                />
-              )}
-            />
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={handleModalClose} style={{ color: "black" }}>
-              Cancel
-            </Button>
-            <Button type="submit" style={{ color: "black" }}>
-              {editStudentName ? "Save Changes" : "Add Student"}
-            </Button>
-          </DialogActions>
-        </form>
-      </Dialog>
+      <StudentSearch
+        searchTerm={searchTerm}
+        setSearchTerm={setSearchTerm}
+        showSearch={showSearch}
+        setShowSearch={setShowSearch}
+      />
+      <StudentList
+        students={filteredStudents}
+        handleDetailsOpen={handleDetailsOpen}
+      />
+      <StudentDialogForm
+        control={control}
+        handleSubmit={handleSubmit}
+        modalOpen={modalOpen}
+        handleModalClose={handleModalClose}
+        editStudentName={editStudentName}
+        reset={reset}
+        errors={errors}
+        schools={schools}
+      />
       <StudentDetails
         student={selectedStudent}
         open={detailsOpen}
