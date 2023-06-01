@@ -53,7 +53,7 @@ const AllSchools = () => {
     <Grid container direction="column" spacing={2} alignItems="center">
       <Box
         border={1}
-        borderColor="grey.500"
+        borderColor="#EFBD26"
         borderRadius={2}
         p={3}
         m={2}

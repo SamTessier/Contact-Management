@@ -20,7 +20,21 @@ const SchoolDetails = ({ school, open, handleClose }) => {
         </Button>
         <Typography variant="h6">Address: </Typography>
         <Typography variant="body1">{school.street}</Typography>
-        <Typography variant="body1">{school.city}, {school.state} {school.zip}</Typography>
+        <Typography variant="body1">{school.city}, {school.province} {school.postalCode}</Typography>
+
+        {school.contactName && (
+          <>
+            <Typography variant="h6">School Contact Name: {school.contactName}</Typography>
+          </>
+        )}
+        {school.contactPhone && (
+          <>
+            <Typography variant="h6">Contact Phone Number: {school.contactPhone}</Typography>
+            <Button color="primary" href={`tel:${school.contactPhone}`}>
+              Call Contact
+            </Button>
+          </>
+        )}
       </DialogContent>
     </Dialog>
   );
