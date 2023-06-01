@@ -13,12 +13,17 @@ const SignupForm = ({ onSuccess }) => {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    const { email, password } = event.target.elements;
+    const { email, password, companyId } = event.target.elements;
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{4,20}$/;
     const users = getUsers();
     const userExists = users.some((user) => user.email === email.value);
-
+    const user = {
+      email: email.value,
+      password: password.value,
+      companyId: companyId.value
+    }
+    saveUser(user);
     if (userExists) {
       setError("User with this email already exists.");
     } else if (!emailRegex.test(email.value)) {
@@ -55,6 +60,16 @@ const SignupForm = ({ onSuccess }) => {
           fullWidth
         />
       </Box>
+      <Box mb={2}>
+        <TextField
+          label="Company ID"
+          type="text"
+          name="companyId"
+          required
+          fullWidth
+        />
+      </Box>
+
       {error && (
         <Box mb={2}>
           <Alert severity="error">{error}</Alert>

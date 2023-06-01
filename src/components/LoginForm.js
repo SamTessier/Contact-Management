@@ -38,6 +38,7 @@ const LoginForm = () => {
     }
     if (user) {
       setError("");
+      localStorage.setItem("companyId", user.companyId); // save companyId to localStorage
       logIn(email.value, password.value);
     } else {
       setError("Invalid email or password.");

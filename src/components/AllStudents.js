@@ -6,11 +6,11 @@ import Button from "@mui/material/Button";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
 
 import {
-  saveStudent,
   getStudents,
-  getSchools,
-  deleteStudent,
+  saveStudent,
   updateStudent,
+  deleteStudent,
+  getSchools,
 } from "../localStorageDB";
 
 import StudentDetails from "./StudentDetails";
@@ -47,16 +47,19 @@ const AllStudents = () => {
   }
 
   const onSubmit = (data) => {
+    const companyId = localStorage.getItem("companyId"); // fetch companyId from localStorage
+    if (companyId) {
+      data.companyId = companyId; // add companyId to student's data
+    }
+
     if (editStudentName) {
-      console.log("hi sam and pat");
       const updatedStudent = { ...data, name: editStudentName };
       updateStudent(updatedStudent);
     } else {
-      console.log("else block");
-      const newStudent = { ...data };
-      saveStudent(newStudent);
+      saveStudent(data);
     }
-    setStudents(getStudents());
+
+    setStudents(getStudents()); // Refresh the list of students after saving
     setModalOpen(false);
     setEditStudentName(null);
   };

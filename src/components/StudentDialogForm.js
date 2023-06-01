@@ -1,11 +1,36 @@
-import React from 'react';
-import { Controller } from 'react-hook-form';
-import { Dialog, DialogTitle, DialogContent, TextField, DialogActions, Button, FormControl, InputLabel, Select, MenuItem, Grid } from '@mui/material';
+import React from "react";
+import { Controller } from "react-hook-form";
+import {
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  TextField,
+  DialogActions,
+  Button,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+  Grid,
+} from "@mui/material";
 import { saveStudent, updateStudent } from "../localStorageDB";
-  
-const StudentDialogForm = ({ control, handleSubmit, modalOpen, handleModalClose, editStudentName, reset, errors, schools }) => {
 
+const StudentDialogForm = ({
+  control,
+  handleSubmit,
+  modalOpen,
+  handleModalClose,
+  editStudentName,
+  reset,
+  errors,
+  schools,
+}) => {
   const onSubmit = (data) => {
+    const companyId = localStorage.getItem("companyId"); // fetch companyId from localStorage
+    if (companyId) {
+      data.companyId = companyId; // add companyId to student's data
+    }
+
     if (editStudentName) {
       updateStudent(editStudentName, data);
     } else {
