@@ -58,72 +58,104 @@ return (
             />
           </Box>
           <Box mb={2}>
-            <Controller
-              name="street"
-              control={control}
-              defaultValue=""
-              rules={{ required: true }}
-              render={({ field }) => (
-                <TextField
-                  {...field}
-                  label="Street Address"
-                  fullWidth
-                  required
-                  onChange={(e) => field.onChange(e.target.value)}
-                />
-              )}
-            />
+            <Box display="flex" justifyContent="space-between">
+              <Controller
+                name="street"
+                control={control}
+                defaultValue=""
+                rules={{ required: true }}
+                render={({ field }) => (
+                  <TextField
+                    {...field}
+                    label="Street Address"
+                    required
+                    style={{ flex: 1, marginRight: "5px" }}
+                    onChange={(e) => field.onChange(e.target.value)}
+                  />
+                )}
+              />
+              <Controller
+                name="suite"
+                control={control}
+                defaultValue=""
+                render={({ field }) => (
+                  <TextField
+                    {...field}
+                    label="Room # (Optional)"
+                    style={{ flex: 1, marginLeft: "5px" }}
+                    onChange={(e) => field.onChange(e.target.value)}
+                  />
+                )}
+              />
+            </Box>
           </Box>
           <Box mb={2}>
-            <Controller
-              name="city"
-              control={control}
-              defaultValue=""
-              rules={{ required: true }}
-              render={({ field }) => (
-                <TextField
-                  {...field}
-                  label="City"
-                  fullWidth
-                  required
-                  onChange={(e) => field.onChange(e.target.value)}
-                />
-              )}
-            />
+            <Box display="flex" justifyContent="space-between">
+              <Controller
+                name="city"
+                control={control}
+                defaultValue=""
+                rules={{ required: true }}
+                render={({ field }) => (
+                  <TextField
+                    {...field}
+                    label="City"
+                    required
+                    style={{ flex: 1, marginRight: "5px" }}
+                    onChange={(e) => field.onChange(e.target.value)}
+                  />
+                )}
+              />
+              <Controller
+                name="province"
+                control={control}
+                defaultValue=""
+                rules={{ required: true }}
+                render={({ field }) => (
+                  <TextField
+                    {...field}
+                    label="Province"
+                    required
+                    style={{ flex: 1, marginLeft: "5px" }}
+                    onChange={(e) => field.onChange(e.target.value)}
+                  />
+                )}
+              />
+            </Box>
           </Box>
           <Box mb={2}>
-            <Controller
-              name="province"
-              control={control}
-              defaultValue=""
-              rules={{ required: true }}
-              render={({ field }) => (
-                <TextField
-                  {...field}
-                  label="Province"
-                  fullWidth
-                  required
-                  onChange={(e) => field.onChange(e.target.value)}
-                />
-              )}
-            />
-          </Box>
-          <Box mb={2}>
-            <Controller
-              name="postalCode"
-              control={control}
-              defaultValue=""
-              rules={{ required: true }}
-              render={({ field }) => (
-                <TextField
-                  {...field}
-                  label="Postal Code"
-                  fullWidth
-                  required
-                  onChange={(e) => field.onChange(e.target.value)}
-                />
-              )}
-            />
+            <Box display="flex" justifyContent="space-between">
+              <Controller
+                name="postalCode"
+                control={control}
+                defaultValue=""
+                rules={{ required: true }}
+                render={({ field }) => (
+                  <TextField
+                    {...field}
+                    label="Postal Code"
+                    required
+                    style={{ flex: 1, marginRight: "5px" }}
+                    onChange={(e) => field.onChange(e.target.value)}
+                  />
+                )}
+              />
+              <Controller
+                name="country"
+                control={control}
+                defaultValue=""
+                rules={{ required: true }}
+                render={({ field }) => (
+                  <TextField
+                    {...field}
+                    label="Country"
+                    required
+                    style={{ flex: 1, marginLeft: "5px" }}
+                    onChange={(e) => field.onChange(e.target.value)}
+                  />
+                )}
+              />
+            </Box>
           </Box>
           <Box mb={2}>
           <Controller
@@ -133,7 +165,7 @@ return (
             render={({ field }) => (
               <TextField
                 {...field}
-                label="School Contact Name"
+                label="Contact Name (Optional)"
                 fullWidth
                 onChange={(e) => field.onChange(e.target.value)}
               />
@@ -149,7 +181,7 @@ return (
             render={({ field }) => (
               <TextField
                 {...field}
-                label="Contact Phone Number"
+                label="Contact Phone (Optional)"
                 fullWidth
                 onChange={(e) => field.onChange(e.target.value)}
               />
