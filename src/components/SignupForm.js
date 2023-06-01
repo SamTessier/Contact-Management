@@ -6,9 +6,10 @@ import Alert from "@mui/material/Alert";
 import Box from "@mui/material/Box";
 import { saveUser, getUsers } from "../localStorageDB";
 
-const SignupForm = () => {
+const SignupForm = ({ onSuccess }) => {
   const { signUp } = useContext(AuthContext);
   const [error, setError] = useState("");
+  const [open, setOpen] = useState(false);
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -16,7 +17,7 @@ const SignupForm = () => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{4,20}$/;
     const users = getUsers();
-    const userExists = users.some(user => user.email === email.value);
+    const userExists = users.some((user) => user.email === email.value);
 
     if (userExists) {
       setError("User with this email already exists.");
@@ -29,6 +30,7 @@ const SignupForm = () => {
     } else {
       setError("");
       signUp(email.value, password.value);
+      onSuccess("Account created successfully. Please log in");
     }
   };
 

@@ -44,6 +44,13 @@ const LoginForm = () => {
     }
   };
 
+  const [signupSuccess, setSignupSuccess] = useState("");
+
+  const handleSignupSuccess = (message) => {
+    handleClose();
+    setSignupSuccess(message);
+  };
+
   const handleOpen = () => {
     setOpen(true);
   };
@@ -55,37 +62,47 @@ const LoginForm = () => {
   return (
     <Box>
       <form onSubmit={handleSubmit}>
-      <Box mb={2}>
-        <TextField
-          label="Email"
-          type="email"
-          name="email"
-          required
-          fullWidth
-          autoFocus
-        />
-      </Box>
-      <Box mb={2}>
-        <TextField
-          label="Password"
-          type="password"
-          name="password"
-          required
-          fullWidth
-        />
-      </Box>
-      {error && (
         <Box mb={2}>
-          <Alert severity="error">{error}</Alert>
+          <TextField
+            label="Email"
+            type="email"
+            name="email"
+            required
+            fullWidth
+            autoFocus
+          />
+          {signupSuccess && (
+            <Box mb={2}>
+              <Alert severity="success">{signupSuccess}</Alert>
+            </Box>
+          )}
         </Box>
-      )}
-      <Box mb={2}>
+        <Box mb={2}>
+          <TextField
+            label="Password"
+            type="password"
+            name="password"
+            required
+            fullWidth
+          />
+        </Box>
+        {error && (
+          <Box mb={2}>
+            <Alert severity="error">{error}</Alert>
+          </Box>
+        )}
+        <Box mb={2}>
           <Button type="submit" variant="contained" color="primary" fullWidth>
             Log In
           </Button>
         </Box>
         <Box mb={2}>
-          <Button variant="outlined" color="primary" fullWidth onClick={handleOpen}>
+          <Button
+            variant="outlined"
+            color="primary"
+            fullWidth
+            onClick={handleOpen}
+          >
             Sign Up
           </Button>
         </Box>
@@ -93,7 +110,7 @@ const LoginForm = () => {
       <Dialog open={open} onClose={handleClose}>
         <DialogTitle>Sign Up</DialogTitle>
         <DialogContent>
-          <SignupForm />
+          <SignupForm onSuccess={handleSignupSuccess} />
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose} color="primary">
