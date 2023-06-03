@@ -8,19 +8,22 @@ import {
   Box,
 } from "@mui/material";
 import { Link } from "react-router-dom";
+
 import HomeIcon from "@mui/icons-material/Home";
 import WorkIcon from "@mui/icons-material/Work";
 import PeopleIcon from "@mui/icons-material/People";
 import InfoIcon from "@mui/icons-material/Info";
-import SearchIcon from "@mui/icons-material/Search";
 import ExitToAppIcon from "@mui/icons-material/ExitToApp";
+
 import StudentDetails from "./StudentDetails";
 import { getStudents, getStaff } from "../localStorageDB";
 import { AuthContext } from "../AuthContext";
+import { SearchContext } from './SearchContext'; // Make sure to import the SearchContext
 
 const MainScreen = () => {
   const { logOut } = useContext(AuthContext);
-  const [searchTerm, setSearchTerm] = useState("");
+  const [searchTerm] = useContext(SearchContext); // Consume the SearchContext
+
   const [selectedStudent, setSelectedStudent] = useState(null);
   const [detailsOpen, setDetailsOpen] = useState(false);
 
@@ -39,152 +42,115 @@ const MainScreen = () => {
   const handleDetailsClose = () => setDetailsOpen(false);
 
 
+
+
   return (
-    <Grid container direction="column" alignItems="center" spacing={2}>
-      <Grid item xs={12}>
-        <TextField
-          variant="filled"
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          fullWidth
-          InputProps={{
-            startAdornment: (
-              <IconButton>
-                <SearchIcon />
-              </IconButton>
-            ),
-            style: {
-              borderRadius: 50,
-              backgroundColor: "white",
-              height: "35px",
-            },
-            classes: { input: "input" },
-          }}
-          sx={{
-            ".input": {
-              paddingBottom: "20px",
-            },
-          }}
-          style={{ marginTop: "15px" }}
-        />
-      </Grid>
-      <Grid item xs={12}>
-        <Box
-          border={1}
-          borderColor="#EFBD26"
-          borderRadius={2}
-          p={3}
-          m={2}
-          bgcolor="grey.100"
+    <Grid item xs={12}>
+      <Box
+        border={1}
+        borderColor="#EFBD26"
+        borderRadius={2}
+        p={3}
+        m={2}
+        bgcolor="grey.100"
+      >
+        <Grid
+          container
+          direction="column"
+          spacing={2}
+          justifyContent="center"
+          alignItems="center"
         >
-          <Grid
-            container
-            direction="column"
-            spacing={2}
-            justifyContent="center"
-            alignItems="center"
-          >
-            <Grid item>
-              <Grid
-                container
-                direction="row"
-                spacing={2}
-                justifyContent="center"
-              >
-                <Grid item>
-                  <IconButton color="primary" component={Link} to="/schools">
-                    <HomeIcon fontSize="large" />
+          <Grid item>
+            <Grid container direction="row" spacing={2} justifyContent="center">
+              <Grid item>
+                <IconButton color="primary" component={Link} to="/schools">
+                  <HomeIcon fontSize="large" />
+                </IconButton>
+                <Typography
+                  variant="caption"
+                  display="block"
+                  textAlign="center"
+                >
+                  Schools
+                </Typography>
+              </Grid>
+              <Grid item>
+                <IconButton color="primary" component={Link} to="/staff">
+                  <WorkIcon fontSize="large" />
+                </IconButton>
+                <Typography
+                  variant="caption"
+                  display="block"
+                  textAlign="center"
+                >
+                  Staff
+                </Typography>
+              </Grid>
+              <Grid item>
+                <IconButton color="primary" component={Link} to="/students">
+                  <PeopleIcon fontSize="large" />
+                </IconButton>
+                <Typography
+                  variant="caption"
+                  display="block"
+                  textAlign="center"
+                >
+                  Students
+                </Typography>
+              </Grid>
+              <Grid item>
+                <Tooltip title="Log out">
+                  <IconButton color="primary" onClick={handleLogOut}>
+                    <ExitToAppIcon fontSize="large" />
                   </IconButton>
-                  <Typography
-                    variant="caption"
-                    display="block"
-                    textAlign="center"
-                  >
-                    Schools
-                  </Typography>
-                </Grid>
-                <Grid item>
-                  <IconButton color="primary" component={Link} to="/staff">
-                    <WorkIcon fontSize="large" />
-                  </IconButton>
-                  <Typography
-                    variant="caption"
-                    display="block"
-                    textAlign="center"
-                  >
-                    Staff
-                  </Typography>
-                </Grid>
-                <Grid item>
-                  <IconButton color="primary" component={Link} to="/students">
-                    <PeopleIcon fontSize="large" />
-                  </IconButton>
-                  <Typography
-                    variant="caption"
-                    display="block"
-                    textAlign="center"
-                  >
-                    Students
-                  </Typography>
-                </Grid>
-                <Grid item>
-                  <Tooltip title="Log out">
-                    <IconButton color="primary" onClick={handleLogOut}>
-                      <ExitToAppIcon fontSize="large" />
-                    </IconButton>
-                  </Tooltip>
-                  <Typography
-                    variant="caption"
-                    display="block"
-                    textAlign="center"
-                  >
-                    Log Out
-                  </Typography>
-                </Grid>
+                </Tooltip>
+                <Typography
+                  variant="caption"
+                  display="block"
+                  textAlign="center"
+                >
+                  Log Out
+                </Typography>
               </Grid>
             </Grid>
-            <Grid item>
-              <Grid
-                container
-                direction="column"
-                spacing={2}
-                alignItems="center"
-              >
-                {searchTerm &&
-                  data.map((item, index) => (
-                    <Grid
-                      key={index}
-                      container
-                      justifyContent="space-between"
-                      alignItems="center"
-                    >
-                      <Grid item>
-                        <Typography variant="body1">{item.name}</Typography>
-                      </Grid>
-                      <Grid item>
-                        <IconButton
-                          color="primary"
-                          onClick={() => handleDetailsOpen(item)}
-                        >
-                          <InfoIcon />
-                        </IconButton>
-                      </Grid>
-                    </Grid>
-                  ))}
-              </Grid>
-            </Grid>
-            {selectedStudent && (
-              <StudentDetails
-                student={selectedStudent}
-                open={detailsOpen}
-                handleClose={handleDetailsClose}
-                handleDelete={() => {}}
-                handleEdit={() => {}}
-              />
-            )}
           </Grid>
-        </Box>
-      </Grid>
+          <Grid item>
+            <Grid container direction="column" spacing={2} alignItems="center">
+              {searchTerm &&
+                data.map((item, index) => (
+                  <Grid
+                    key={index}
+                    container
+                    justifyContent="space-between"
+                    alignItems="center"
+                  >
+                    <Grid item>
+                      <Typography variant="body1">{item.name}</Typography>
+                    </Grid>
+                    <Grid item>
+                      <IconButton
+                        color="primary"
+                        onClick={() => handleDetailsOpen(item)}
+                      >
+                        <InfoIcon />
+                      </IconButton>
+                    </Grid>
+                  </Grid>
+                ))}
+            </Grid>
+          </Grid>
+          {selectedStudent && (
+            <StudentDetails
+              student={selectedStudent}
+              open={detailsOpen}
+              handleClose={handleDetailsClose}
+              handleDelete={() => {}}
+              handleEdit={() => {}}
+            />
+          )}
+        </Grid>
+      </Box>
     </Grid>
   );
 };

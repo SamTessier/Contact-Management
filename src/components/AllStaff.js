@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { useForm, Controller } from "react-hook-form";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
@@ -14,7 +14,7 @@ import {
 } from "../localStorageDB";
 import StaffList from "./StaffList";
 import StaffDialogForm from "./StaffDialogForm";
-import StaffSearch from "./StaffSearch";
+import { SearchContext } from './SearchContext'; // Import SearchContext
 
 const AllStaff = () => {
   const {
@@ -27,20 +27,26 @@ const AllStaff = () => {
   const [schools, setSchools] = useState([]);
   const [modalOpen, setModalOpen] = useState(false);
   const [editStaffName, setEditStaffName] = useState(null);
-  const [searchTerm, setSearchTerm] = useState("");
-  const [showSearch, setShowSearch] = useState(false);
+
+  // Get searchTerm from SearchContext
+  const [searchTerm] = useContext(SearchContext);
+
+  const [filteredStaff, setFilteredStaff] = useState([]);
 
   useEffect(() => {
     setStaff(getStaff());
     setSchools(getSchools());
   }, []);
 
-  let filteredStaff = staff;
-  if (searchTerm !== "") {
-    filteredStaff = staff.filter((staffMember) =>
-      staffMember.name.toLowerCase().includes(searchTerm.toLowerCase())
-    );
-  }
+  useEffect(() => {
+    let filtered = staff;
+    if (searchTerm !== "") {
+      filtered = staff.filter((staffMember) =>
+        staffMember.name.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+    }
+    setFilteredStaff(filtered);
+  }, [staff, searchTerm]);
 
   const onSubmit = (data) => {
     if (editStaffName) {
@@ -78,9 +84,6 @@ const AllStaff = () => {
 
   return (
     <Grid container direction="column" spacing={2} alignItems="center">
-      <Grid item xs={12}>
-      <StaffSearch searchTerm={searchTerm} onSearchChange={setSearchTerm} showSearch={showSearch} onSearchClick={() => setShowSearch(!showSearch)} />
-      </Grid>
       <Box
         border={1}
         borderColor="grey.500"
@@ -93,13 +96,11 @@ const AllStaff = () => {
       >
         <StaffList staff={filteredStaff} onEdit={handleEditOpen} />
       </Box>
-
       <Grid item container justifyContent="center">
         <CustomButton variant="contained" onClick={handleModalOpen}>
           <PersonAddIcon sx={{ color: "black" }} />
         </CustomButton>
       </Grid>
-
       <StaffDialogForm
         open={modalOpen}
         handleClose={handleModalClose}

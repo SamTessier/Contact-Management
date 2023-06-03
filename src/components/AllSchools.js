@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import Grid from "@mui/material/Grid";
@@ -9,23 +9,36 @@ import { saveSchool, getSchools } from "../localStorageDB";
 import SchoolDetails from "./SchoolDetails";
 import AddSchoolDialog from "./AddSchoolDialog";
 import SchoolItem from "./SchoolItem";
+import { SearchContext } from './SearchContext'; // Import SearchContext
 
 const AllSchools = () => {
-  
   const [schools, setSchools] = useState([]);
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedSchool, setSelectedSchool] = useState(null);
   const [detailsOpen, setDetailsOpen] = useState(false);
 
+  // Get searchTerm from SearchContext
+  const [searchTerm] = useContext(SearchContext);
+
+  const [filteredSchools, setFilteredSchools] = useState([]);
+
   useEffect(() => {
     setSchools(getSchools());
   }, []);
 
+  useEffect(() => {
+    let filtered = schools;
+    if (searchTerm !== "") {
+      filtered = schools.filter((school) =>
+        school.name.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+    }
+    setFilteredSchools(filtered);
+  }, [schools, searchTerm]);
 
   const handleModalOpen = () => setModalOpen(true);
   const handleModalClose = () => {
     setModalOpen(false);
-    
   };
   const handleDetailsOpen = (school) => {
     setSelectedSchool(school);
@@ -48,7 +61,6 @@ const AllSchools = () => {
     padding: theme.spacing(1),
   }));
 
-  
   return (
     <Grid container direction="column" spacing={2} alignItems="center">
       <Box
@@ -61,12 +73,12 @@ const AllSchools = () => {
         overflow="auto"
         maxHeight={500}
       >
-        {schools.length === 0 ? (
+        {filteredSchools.length === 0 ? (
           <Typography variant="h5" align="center">
             No schools found!
           </Typography>
         ) : (
-          schools.map((school, index) => (
+          filteredSchools.map((school, index) => (
             <SchoolItem 
               key={index}
               school={school}

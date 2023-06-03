@@ -1,26 +1,40 @@
-import React, { useContext } from 'react';
-import LoginForm from './components/LoginForm';
-import SignupForm from './components/SignupForm';
-import MainScreen from './components/MainScreen';
-import AllSchools from './components/AllSchools';
-import AllStaff from './components/AllStaff';
-import AllStudents from './components/AllStudents';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import { AuthProvider, AuthContext } from './AuthContext';
-import { AppBar, Toolbar, IconButton, Typography, Container, Box } from '@mui/material';
-import SettingsIcon from '@mui/icons-material/Settings';
-import { styled } from '@mui/system';
+import React, { useContext } from "react";
+import LoginForm from "./components/LoginForm";
+import SignupForm from "./components/SignupForm";
+import MainScreen from "./components/MainScreen";
+import AllSchools from "./components/AllSchools";
+import AllStaff from "./components/AllStaff";
+import AllStudents from "./components/AllStudents";
+import SearchBar from "./components/SearchBar";
+import { SearchProvider } from "./components/SearchContext";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from "react-router-dom";
+import { AuthProvider, AuthContext } from "./AuthContext";
+import {
+  AppBar,
+  Toolbar,
+  IconButton,
+  Typography,
+  Container,
+  Box,
+} from "@mui/material";
+import SettingsIcon from "@mui/icons-material/Settings";
+import { styled } from "@mui/system";
 import { useLocation } from "react-router-dom";
 
 const StyledApp = styled(Box)(({ theme }) => ({
   flexGrow: 1,
   backgroundColor: theme.palette.background.default,
-  width: '100vw',
-  height: '100vh',
+  width: "100vw",
+  height: "100vh",
   margin: 0,
   padding: 0,
-  display: 'flex',
-  flexDirection: 'column',
+  display: "flex",
+  flexDirection: "column",
 }));
 
 const StyledAppBar = styled(AppBar)(({ theme }) => ({
@@ -33,15 +47,15 @@ const App = () => {
       <Router>
         <StyledApp>
           <StyledAppBar position="static">
-          <Toolbar sx={{display: 'flex', justifyContent: 'space-between'}}>
-              <Typography variant="h6" sx={{ marginLeft: '10px' }}>
+            <Toolbar sx={{ display: "flex", justifyContent: "space-between" }}>
+              <Typography variant="h6" sx={{ marginLeft: "10px" }}>
                 EdNet
               </Typography>
               <Typography variant="subtitle1">
                 <CurrentPage />
               </Typography>
-              <Box sx={{display: 'flex', justifyContent: 'flex-end'}}>
-                <Typography variant="h6" sx={{opacity: 0}}>
+              <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
+                <Typography variant="h6" sx={{ opacity: 0 }}>
                   EdN
                 </Typography>
                 <IconButton edge="end" color="inherit" aria-label="settings">
@@ -50,12 +64,15 @@ const App = () => {
               </Box>
             </Toolbar>
           </StyledAppBar>
-          <RoutesWithAuthentication />
+          <SearchProvider>
+            <SearchBar />
+            <RoutesWithAuthentication />
+          </SearchProvider>
         </StyledApp>
       </Router>
     </AuthProvider>
   );
-}
+};
 
 const CurrentPage = () => {
   const location = useLocation();
@@ -94,6 +111,6 @@ const RoutesWithAuthentication = () => {
       )}
     </Container>
   );
-}
+};
 
 export default App;

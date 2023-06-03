@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { styled } from "@mui/system";
 import Grid from "@mui/material/Grid";
@@ -14,9 +14,10 @@ import {
 } from "../localStorageDB";
 
 import StudentDetails from "./StudentDetails";
-import StudentSearch from "./StudentSearch";
+
 import StudentList from "./StudentList";
 import StudentDialogForm from "./StudentDialogForm";
+import { SearchContext } from './SearchContext'; // Import SearchContext
 
 const AllStudents = () => {
   const {
@@ -31,25 +32,31 @@ const AllStudents = () => {
   const [selectedStudent, setSelectedStudent] = useState(null);
   const [detailsOpen, setDetailsOpen] = useState(false);
   const [editStudentName, setEditStudentName] = useState(null);
-  const [searchTerm, setSearchTerm] = useState("");
-  const [showSearch, setShowSearch] = useState(false);
+
+  // Get searchTerm from SearchContext
+  const [searchTerm] = useContext(SearchContext);
+
+  const [filteredStudents, setFilteredStudents] = useState([]);
 
   useEffect(() => {
     setStudents(getStudents());
     setSchools(getSchools());
   }, []);
 
-  let filteredStudents = students;
-  if (searchTerm !== "") {
-    filteredStudents = students.filter((student) =>
-      student.name.toLowerCase().includes(searchTerm.toLowerCase())
-    );
-  }
+  useEffect(() => {
+    let filtered = students;
+    if (searchTerm !== "") {
+      filtered = students.filter((student) =>
+        student.name.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+    }
+    setFilteredStudents(filtered);
+  }, [students, searchTerm]);
 
   const onSubmit = (data) => {
-    const companyId = localStorage.getItem("companyId"); // fetch companyId from localStorage
+    const companyId = localStorage.getItem("companyId");
     if (companyId) {
-      data.companyId = companyId; // add companyId to student's data
+      data.companyId = companyId;
     }
 
     if (editStudentName) {
@@ -59,7 +66,7 @@ const AllStudents = () => {
       saveStudent(data);
     }
 
-    setStudents(getStudents()); // Refresh the list of students after saving
+    setStudents(getStudents());
     setModalOpen(false);
     setEditStudentName(null);
   };
@@ -105,12 +112,6 @@ const AllStudents = () => {
 
   return (
     <Grid container direction="column" spacing={2} alignItems="center">
-      <StudentSearch
-        searchTerm={searchTerm}
-        setSearchTerm={setSearchTerm}
-        showSearch={showSearch}
-        setShowSearch={setShowSearch}
-      />
       <StudentList
         students={filteredStudents}
         handleDetailsOpen={handleDetailsOpen}
