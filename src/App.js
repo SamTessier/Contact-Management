@@ -2,9 +2,9 @@ import React, { useContext } from "react";
 import LoginForm from "./components/LoginForm";
 import SignupForm from "./components/SignupForm";
 import MainScreen from "./components/MainScreen";
-import AllSchools from "./components/AllSchools";
-import AllStaff from "./components/AllStaff";
-import AllStudents from "./components/AllStudents";
+import AllSchools from "./components/schools/AllSchools";
+import AllStaff from "./components/staff/AllStaff";
+import AllStudents from "./components/students/AllStudents";
 import SearchBar from "./components/SearchBar";
 import { SearchProvider } from "./components/SearchContext";
 import {

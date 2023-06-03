@@ -5,11 +5,11 @@ import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import { styled } from "@mui/system";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
-import { saveSchool, getSchools } from "../localStorageDB";
+import { saveSchool, getSchools } from "../../localStorageDB";
 import SchoolDetails from "./SchoolDetails";
 import AddSchoolDialog from "./AddSchoolDialog";
 import SchoolItem from "./SchoolItem";
-import { SearchContext } from './SearchContext'; // Import SearchContext
+import { SearchContext } from '../SearchContext'; // Import SearchContext
 
 const AllSchools = () => {
   const [schools, setSchools] = useState([]);

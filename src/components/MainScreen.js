@@ -15,7 +15,7 @@ import PeopleIcon from "@mui/icons-material/People";
 import InfoIcon from "@mui/icons-material/Info";
 import ExitToAppIcon from "@mui/icons-material/ExitToApp";
 
-import StudentDetails from "./StudentDetails";
+import StudentDetails from "./students/StudentDetails";
 import { getStudents, getStaff } from "../localStorageDB";
 import { AuthContext } from "../AuthContext";
 import { SearchContext } from './SearchContext'; // Make sure to import the SearchContext

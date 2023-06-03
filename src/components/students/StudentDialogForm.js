@@ -13,7 +13,7 @@ import {
   MenuItem,
   Grid,
 } from "@mui/material";
-import { saveStudent, updateStudent } from "../localStorageDB";
+import { saveStudent, updateStudent } from "../../localStorageDB";
 
 const StudentDialogForm = ({
   control,

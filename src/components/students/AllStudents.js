@@ -11,13 +11,13 @@ import {
   updateStudent,
   deleteStudent,
   getSchools,
-} from "../localStorageDB";
+} from "../../localStorageDB";
 
 import StudentDetails from "./StudentDetails";
 
 import StudentList from "./StudentList";
 import StudentDialogForm from "./StudentDialogForm";
-import { SearchContext } from './SearchContext'; // Import SearchContext
+import { SearchContext } from '../SearchContext'; // Import SearchContext
 
 const AllStudents = () => {
   const {

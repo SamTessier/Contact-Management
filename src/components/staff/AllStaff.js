@@ -11,10 +11,10 @@ import {
   getSchools,
   saveStaff,
   updateStaff,
-} from "../localStorageDB";
+} from "../../localStorageDB";
 import StaffList from "./StaffList";
 import StaffDialogForm from "./StaffDialogForm";
-import { SearchContext } from './SearchContext'; // Import SearchContext
+import { SearchContext } from '../SearchContext'; // Import SearchContext
 
 const AllStaff = () => {
   const {
