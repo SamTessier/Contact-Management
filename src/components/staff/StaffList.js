@@ -4,8 +4,9 @@ import Typography from "@mui/material/Typography";
 import IconButton from "@mui/material/IconButton";
 import InfoIcon from "@mui/icons-material/Info";
 
-const StaffList = ({ staff, onEdit }) => {
-  if (staff.length === 0) {
+const StaffList = ({ staff, onInfo }) => {
+  console.log(staff);
+  if (!Array.isArray(staff) || staff.length === 0) {
     return (
       <Typography variant="h5" align="center">
         No staff members found!
@@ -24,7 +25,7 @@ const StaffList = ({ staff, onEdit }) => {
         <Typography variant="h6">{staffMember.name}</Typography>
       </Grid>
       <Grid item>
-        <IconButton color="primary" onClick={() => onEdit(staffMember.name)}>
+        <IconButton color="primary" onClick={() => onInfo(staffMember)}>
           <InfoIcon />
         </IconButton>
       </Grid>

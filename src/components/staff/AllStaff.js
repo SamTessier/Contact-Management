@@ -1,36 +1,29 @@
 import React, { useState, useEffect, useContext } from "react";
-import { useForm, Controller } from "react-hook-form";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import { styled } from "@mui/system";
 import Button from "@mui/material/Button";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
-
 import {
-  getStaff,
-  getSchools,
   saveStaff,
+  deleteStaff,
+  getStaff,
   updateStaff,
+  getSchools,
 } from "../../localStorageDB";
 import StaffList from "./StaffList";
 import StaffDialogForm from "./StaffDialogForm";
-import { SearchContext } from '../SearchContext'; // Import SearchContext
+import StaffDetails from "./StaffDetails";
+import { SearchContext } from "../SearchContext";
 
 const AllStaff = () => {
-  const {
-    handleSubmit,
-    formState: { errors },
-    reset,
-    control,
-  } = useForm();
   const [staff, setStaff] = useState([]);
+  const [viewStaff, setViewStaff] = useState(null);
+  const [infoModalOpen, setInfoModalOpen] = useState(false);
   const [schools, setSchools] = useState([]);
   const [modalOpen, setModalOpen] = useState(false);
-  const [editStaffName, setEditStaffName] = useState(null);
-
-  // Get searchTerm from SearchContext
+  const [editStaff, setEditStaff] = useState(null);
   const [searchTerm] = useContext(SearchContext);
-
   const [filteredStaff, setFilteredStaff] = useState([]);
 
   useEffect(() => {
@@ -49,28 +42,39 @@ const AllStaff = () => {
   }, [staff, searchTerm]);
 
   const onSubmit = (data) => {
-    if (editStaffName) {
-      const updatedStaff = { ...data, name: editStaffName };
-      updateStaff(updatedStaff);
+    if (editStaff) {
+      updateStaff({ ...editStaff, ...data });
     } else {
-      const newStaff = { ...data };
-      saveStaff(newStaff);
+      saveStaff(data);
     }
     setStaff(getStaff());
     setModalOpen(false);
-    setEditStaffName(null);
-    reset();
+    setEditStaff(null);
+  };
+
+  const handleDelete = (staffId) => {
+    deleteStaff(staffId);
+    setStaff(getStaff());
   };
 
   const handleModalOpen = () => setModalOpen(true);
+
   const handleModalClose = () => {
     setModalOpen(false);
-    setEditStaffName(null);
-    reset();
+    setEditStaff(null);
   };
 
-  const handleEditOpen = (staffName) => {
-    setEditStaffName(staffName);
+  const handleInfoOpen = (staff) => {
+    setViewStaff(staff);
+    setInfoModalOpen(true);
+  };
+
+  const handleInfoClose = () => {
+    setInfoModalOpen(false);
+  };
+
+  const handleEditOpen = (staff) => {
+    setEditStaff(staff);
     handleModalOpen();
   };
 
@@ -94,7 +98,12 @@ const AllStaff = () => {
         overflow="auto"
         maxHeight={500}
       >
-        <StaffList staff={filteredStaff} onEdit={handleEditOpen} />
+        <StaffList
+          staff={filteredStaff}
+          onEdit={handleEditOpen}
+          onDelete={handleDelete}
+          onInfo={handleInfoOpen}
+        />
       </Box>
       <Grid item container justifyContent="center">
         <CustomButton variant="contained" onClick={handleModalOpen}>
@@ -104,11 +113,16 @@ const AllStaff = () => {
       <StaffDialogForm
         open={modalOpen}
         handleClose={handleModalClose}
-        onSubmit={handleSubmit(onSubmit)}
-        control={control}
-        errors={errors}
+        onSubmit={onSubmit}
         schools={schools}
-        staffName={editStaffName}
+        staff={editStaff}
+      />
+      <StaffDetails
+        open={infoModalOpen}
+        handleClose={handleInfoClose}
+        staff={viewStaff}
+        onDelete={handleDelete}
+        onEdit={handleEditOpen}
       />
     </Grid>
   );

@@ -9,26 +9,20 @@ import {
 } from "@mui/material";
 import { Edit, Delete } from "@mui/icons-material";
 
-const StaffDetails = ({
-  staff,
-  open,
-  handleClose,
-  handleEdit,
-  handleDelete,
-}) => {
+const StaffDetails = ({ staff, open, handleClose, onEdit, onDelete }) => {
   if (!staff) {
     return null;
   }
 
   const handleEditClick = () => {
-    handleEdit(staff.name);
+    onEdit(staff);
   };
 
   const handleDeleteClick = () => {
-    handleDelete(staff.name);
+    onDelete(staff.id);
     handleClose();
   };
-
+  
   return (
     <Dialog open={open} onClose={handleClose} maxWidth="sm" fullWidth>
       <DialogTitle>
