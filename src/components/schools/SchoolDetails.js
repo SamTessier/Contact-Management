@@ -1,42 +1,78 @@
-import React from 'react';
-import { Button, Dialog, DialogTitle, DialogContent, Typography } from '@mui/material';
+import React, { useState } from "react";
+import {
+  Button,
+  Card,
+  CardContent,
+  CardActions,
+  Typography,
+} from "@mui/material";
+import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
+import EditIcon from "@mui/icons-material/Edit";
+import SchoolDialogForm from "./SchoolDialogForm";
 
-const SchoolDetails = ({ school, open, handleClose }) => {
-  if (!school) {
-    return null;
-  }
+const SchoolDetails = ({
+  open,
+  handleClose,
+  school,
+  handleDelete,
+  handleUpdate,
+}) => {
+  const [editMode, setEditMode] = useState(false);
+
+  const handleEditClick = () => {
+    setEditMode(true);
+  };
+
+  const handleFormSubmit = (data) => {
+    handleUpdate({ ...school, ...data });
+    handleClose();
+  };
+
+  const handleFormCancel = () => {
+    setEditMode(false);
+  };
+
+  const handleDeleteClick = () => {
+    handleDelete(school.id);
+    handleClose();
+  };
 
   return (
-    <Dialog open={open} onClose={handleClose} maxWidth="sm" fullWidth>
-      <DialogTitle>{school.name}</DialogTitle>
-      <DialogContent>
-        <Typography variant="h6">Phone Number: {school.phone}</Typography>
-        <Button color="primary" href={`tel:${school.phone}`}>
-          Call
-        </Button>
-        <Typography variant="h6">Email Address: {school.email}</Typography>
-        <Button color="primary" href={`mailto:${school.email}`}>
-          Email
-        </Button>
-        <Typography variant="h6">Address: </Typography>
-        <Typography variant="body1">{school.street}</Typography>
-        <Typography variant="body1">{school.city}, {school.province} {school.postalCode}</Typography>
-
-        {school.contactName && (
-          <>
-            <Typography variant="h6">School Contact Name: {school.contactName}</Typography>
-          </>
-        )}
-        {school.contactPhone && (
-          <>
-            <Typography variant="h6">Contact Phone Number: {school.contactPhone}</Typography>
-            <Button color="primary" href={`tel:${school.contactPhone}`}>
-              Call Contact
+    <>
+      {editMode ? (
+        <SchoolDialogForm
+          open={open}
+          handleClose={handleClose}
+          onSubmit={handleFormSubmit}
+          school={school}
+        />
+      ) : (
+        <Card>
+          <CardContent>
+            <Typography variant="h5">{school.name}</Typography>
+            <Typography variant="subtitle1">Address: {school.address}</Typography>
+            <Typography variant="subtitle1">Phone Number: {school.phoneNumber}</Typography>
+            <Typography variant="subtitle1">Email: {school.email}</Typography>
+            <Typography variant="subtitle1">Contact Person: {school.contactPerson}</Typography>
+            <Typography variant="subtitle1">Notes: {school.notes}</Typography>
+          </CardContent>
+          <CardActions>
+            <Button
+              onClick={handleEditClick}
+              startIcon={<EditIcon />}
+            >
+              Edit
             </Button>
-          </>
-        )}
-      </DialogContent>
-    </Dialog>
+            <Button
+              onClick={handleDeleteClick}
+              startIcon={<DeleteOutlineIcon />}
+            >
+              Delete
+            </Button>
+          </CardActions>
+        </Card>
+      )}
+    </>
   );
 };
 

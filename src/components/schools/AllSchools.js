@@ -1,26 +1,25 @@
 import React, { useState, useEffect, useContext } from "react";
-import Button from "@mui/material/Button";
-import Typography from "@mui/material/Typography";
-import Grid from "@mui/material/Grid";
-import Box from "@mui/material/Box";
-import { styled } from "@mui/system";
+import { Button, Typography, Grid, Box } from "@mui/material";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
-import { saveSchool, getSchools } from "../../localStorageDB";
-import SchoolDetails from "./SchoolDetails";
-import AddSchoolDialog from "./AddSchoolDialog";
-import SchoolItem from "./SchoolItem";
-import { SearchContext } from '../SearchContext'; // Import SearchContext
+import {
+  getSchools,
+  saveSchool,
+  deleteSchool,
+  updateSchool,
+} from "../../localStorageDB";
+import SchoolDialogForm from "./SchoolDialogForm";
+import SchoolList from "./SchoolList";
+import SchoolDetails from "./SchoolDetails"; // Import the SchoolDetails component
+import { SearchContext } from "../SearchContext";
 
 const AllSchools = () => {
   const [schools, setSchools] = useState([]);
-  const [modalOpen, setModalOpen] = useState(false);
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [dialogMode, setDialogMode] = useState("create");
   const [selectedSchool, setSelectedSchool] = useState(null);
-  const [detailsOpen, setDetailsOpen] = useState(false);
-
-  // Get searchTerm from SearchContext
   const [searchTerm] = useContext(SearchContext);
-
   const [filteredSchools, setFilteredSchools] = useState([]);
+  const [detailsOpen, setDetailsOpen] = useState(false); // State for controlling school details card
 
   useEffect(() => {
     setSchools(getSchools());
@@ -36,30 +35,45 @@ const AllSchools = () => {
     setFilteredSchools(filtered);
   }, [schools, searchTerm]);
 
-  const handleModalOpen = () => setModalOpen(true);
-  const handleModalClose = () => {
-    setModalOpen(false);
+  const handleDialogOpen = () => {
+    setSelectedSchool(null);
+    setDialogMode("create");
+    setDialogOpen(true);
   };
+
+  const handleDialogClose = () => setDialogOpen(false);
+
+  const handleAddSchool = (school) => {
+    saveSchool(school);
+    setSchools((prevSchools) => [...prevSchools, school]);
+    setDialogOpen(false);
+  };
+
+  const handleDeleteSchool = (schoolId) => {
+    deleteSchool(schoolId);
+    setSchools(getSchools());
+  };
+
+  const handleUpdateSchool = (updatedSchool) => {
+    updateSchool(updatedSchool);
+    setSchools(getSchools());
+    setDialogOpen(false);
+  };
+
+  const handleSchoolSelect = (school) => {
+    setSelectedSchool(school);
+    setDialogMode("edit");
+    setDialogOpen(true);
+  };
+
   const handleDetailsOpen = (school) => {
     setSelectedSchool(school);
-    setDetailsOpen(true);
-  };
-  const handleDetailsClose = () => setDetailsOpen(false);
-
-  const onSubmit = (data) => {
-    const newSchool = { ...data };
-    saveSchool(newSchool);
-    setSchools(getSchools());
-    setModalOpen(false);
+    setDetailsOpen(true)
   };
 
-  const CustomButton = styled(Button)(({ theme }) => ({
-    backgroundColor: "#EFBD26",
-    "&:hover": {
-      backgroundColor: "#EFBD26",
-    },
-    padding: theme.spacing(1),
-  }));
+  const handleDetailsClose = () => {
+    setDetailsOpen(false);
+  };
 
   return (
     <Grid container direction="column" spacing={2} alignItems="center">
@@ -78,33 +92,47 @@ const AllSchools = () => {
             No schools found!
           </Typography>
         ) : (
-          filteredSchools.map((school, index) => (
-            <SchoolItem 
-              key={index}
-              school={school}
-              handleDetailsOpen={handleDetailsOpen}
-            />
-          ))
+          <SchoolList
+            schools={filteredSchools}
+            onSchoolSelect={handleSchoolSelect}
+            onInfo={handleDetailsOpen}
+          />
         )}
       </Box>
 
       <Grid item container justifyContent="center">
-        <CustomButton variant="contained" onClick={handleModalOpen}>
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={handleDialogOpen}
+          sx={{
+            bgcolor: "#EFBD26",
+            "&:hover": { bgcolor: "#EFBD26" },
+            padding: 1,
+          }}
+        >
           <AddCircleOutlineIcon sx={{ color: "black" }} />
-        </CustomButton>
+        </Button>
       </Grid>
 
-      <AddSchoolDialog 
-        open={modalOpen} 
-        handleClose={handleModalClose} 
-        onSubmit={onSubmit} 
+      <SchoolDialogForm
+        open={dialogOpen}
+        handleClose={handleDialogClose}
+        onSubmit={
+          dialogMode === "create" ? handleAddSchool : handleUpdateSchool
+        }
+        school={selectedSchool}
       />
 
-      <SchoolDetails
-        school={selectedSchool}
-        open={detailsOpen}
-        handleClose={handleDetailsClose}
-      />
+      {selectedSchool && (
+        <SchoolDetails
+          open={detailsOpen}
+          handleClose={handleDetailsClose}
+          school={selectedSchool}
+          handleDelete={handleDeleteSchool}
+          handleUpdate={handleUpdateSchool}
+        />
+      )}
     </Grid>
   );
 };
