@@ -1,38 +1,46 @@
-export function saveSchool(school) {
-  let schools = getSchools();
-  const highestId = Math.max(...schools.map((school) => school.id), 0);
-  const newId = highestId + 1;
-  const schoolWithId = { id: newId, ...school };
-  schools.push(schoolWithId);
-  localStorage.setItem("schools", JSON.stringify(schools));
+export const saveSchool = (school) => {
+  let schoolList = JSON.parse(localStorage.getItem("school")) || [];
+  let currentId = JSON.parse(localStorage.getItem("currentId")) || 0;
+  currentId++;
+  localStorage.setItem("currentId", JSON.stringify(currentId));
+  const newId = currentId;
+  school.id = newId;
+  schoolList.push(school);
+  localStorage.setItem("school", JSON.stringify(schoolList))
 }
 
 export function getSchools() {
-  const schools = JSON.parse(localStorage.getItem("schools"));
-  return schools ? schools : [];
+  const schoolList = JSON.parse(localStorage.getItem("school"));
+  return schoolList ? schoolList : [];
 }
 
 export function deleteSchool(schoolId) {
-  let schools = getSchools();
-  const updatedSchools = schools.filter((school) => school.id !== schoolId);
-  localStorage.setItem("schools", JSON.stringify(updatedSchools));
+  let schoolList = JSON.parse(localStorage.getItem("school"));
+  schoolList = schoolList.filter((school) => school.id !== schoolId);
+  localStorage.setItem("school", JSON.stringify(schoolList));
 }
 
 export function updateSchool(updatedSchool) {
-  let schools = getSchools();
-  const index = schools.findIndex((school) => school.id === updatedSchool.id);
+  let schoolList = JSON.parse(localStorage.getItem("school"));
+  const index = schoolList.findIndex(
+    (school) => school.id === updatedSchool.id
+  );
   if (index !== -1) {
-    schools[index] = updatedSchool;
-    localStorage.setItem("schools", JSON.stringify(schools));
+    schoolList[index] = updatedSchool;
+    localStorage.setItem("school", JSON.stringify(schoolList));
   }
 }
 
-
 export const saveStudent = (student) => {
-  const studentList = JSON.parse(localStorage.getItem("students")) || [];
+  let studentList = JSON.parse(localStorage.getItem("students")) || [];
+  let currentId = JSON.parse(localStorage.getItem("currentId")) || 0;
+  currentId++;
+  localStorage.setItem("currentId", JSON.stringify(currentId));
+  const newId = currentId;
+  student.id = newId;
   studentList.push(student);
-  localStorage.setItem("students", JSON.stringify(studentList));
-};
+  localStorage.setItem("students", JSON.stringify(studentList))
+}
 
 export const getStudents = () => {
   const students = JSON.parse(localStorage.getItem("students")) || [];
@@ -47,37 +55,33 @@ export const updateStudent = (updatedStudent) => {
     (student) => student.companyId === companyId
   );
   const updatedStudents = filteredStudents.map((student) =>
-    student.name === updatedStudent.name ? updatedStudent : student
+    student.id === updatedStudent.id ? updatedStudent : student
   );
   localStorage.setItem("students", JSON.stringify(updatedStudents));
 };
 
-export const deleteStudent = (studentName) => {
+export const deleteStudent = (studentId) => {
   const students = JSON.parse(localStorage.getItem("students")) || [];
   const companyId = localStorage.getItem("companyId");
   const filteredStudents = students.filter(
     (student) => student.companyId === companyId
   );
   const updatedStudents = filteredStudents.filter(
-    (student) => student.name !== studentName
+    (student) => student.id !== studentId
   );
   localStorage.setItem("students", JSON.stringify(updatedStudents));
 };
 
 export const saveStaff = (staff) => {
-  let staffList = JSON.parse(localStorage.getItem("staff"));
-  if (!staffList) {
-    staffList = [];
-  }
-
-  // Generate new ID
-  const newId =
-    staffList.length > 0 ? staffList[staffList.length - 1].id + 1 : 1;
+  let staffList = JSON.parse(localStorage.getItem("staff")) || [];
+  let currentId = JSON.parse(localStorage.getItem("currentId")) || 0;
+  currentId++;
+  localStorage.setItem("currentId", JSON.stringify(currentId));
+  const newId = currentId;
   staff.id = newId;
-
   staffList.push(staff);
-  localStorage.setItem("staff", JSON.stringify(staffList));
-};
+  localStorage.setItem("staff", JSON.stringify(staffList))
+}
 
 export const getStaff = () => {
   const staffList = JSON.parse(localStorage.getItem("staff"));
@@ -91,7 +95,6 @@ export const deleteStaff = (id) => {
 };
 
 export const updateStaff = (updatedStaff) => {
-  console.log("updating staff");
   let staffList = JSON.parse(localStorage.getItem("staff"));
   const index = staffList.findIndex((staff) => staff.id === updatedStaff.id);
   if (index !== -1) {

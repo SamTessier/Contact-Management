@@ -24,8 +24,10 @@ const SchoolDialogForm = ({ open, handleClose, onSubmit, school }) => {
   }, [school, setValue]);
 
   const handleFormSubmit = (data) => {
+    console.log('Form submission data: ', data);
     onSubmit(data);
   };
+  
 
   return (
     <Dialog open={open} onClose={handleClose}>

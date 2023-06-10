@@ -19,7 +19,7 @@ const AllSchools = () => {
   const [selectedSchool, setSelectedSchool] = useState(null);
   const [searchTerm] = useContext(SearchContext);
   const [filteredSchools, setFilteredSchools] = useState([]);
-  const [detailsOpen, setDetailsOpen] = useState(false); // State for controlling school details card
+  const [detailsOpen, setDetailsOpen] = useState(false);
 
   useEffect(() => {
     setSchools(getSchools());
@@ -55,16 +55,27 @@ const AllSchools = () => {
   };
 
   const handleUpdateSchool = (updatedSchool) => {
+    console.log('Updated school: ', updatedSchool);
     updateSchool(updatedSchool);
-    setSchools(getSchools());
+    setSchools(prevSchools => {
+      const index = prevSchools.findIndex(school => school.id === updatedSchool.id);
+      if (index !== -1) {
+        const updatedSchools = [...prevSchools];
+        updatedSchools[index] = updatedSchool;
+        return updatedSchools;
+      }
+      return prevSchools;
+    });
     setDialogOpen(false);
   };
-
+  
   const handleSchoolSelect = (school) => {
+    console.log('Selected school: ', school);
     setSelectedSchool(school);
     setDialogMode("edit");
     setDialogOpen(true);
   };
+  
 
   const handleDetailsOpen = (school) => {
     setSelectedSchool(school);
@@ -131,6 +142,8 @@ const AllSchools = () => {
           school={selectedSchool}
           handleDelete={handleDeleteSchool}
           handleUpdate={handleUpdateSchool}
+          handleSub
+          
         />
       )}
     </Grid>

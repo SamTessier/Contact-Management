@@ -123,7 +123,7 @@ const AllStudents = () => {
       </Grid>
       <StudentDialogForm
         control={control}
-        handleSubmit={handleSubmit}
+        onSubmit={handleSubmit}
         modalOpen={modalOpen}
         handleModalClose={handleModalClose}
         editStudentName={editStudentName}
