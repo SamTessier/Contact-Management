@@ -31,7 +31,7 @@ const AllStudents = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedStudent, setSelectedStudent] = useState(null);
   const [detailsOpen, setDetailsOpen] = useState(false);
-  const [editStudentName, setEditStudentName] = useState(null);
+  const [dialogMode, setDialogMode] = useState("create"); // Add dialogMode state
 
   // Get searchTerm from SearchContext
   const [searchTerm] = useContext(SearchContext);
@@ -58,38 +58,66 @@ const AllStudents = () => {
     if (companyId) {
       data.companyId = companyId;
     }
-
-    if (editStudentName) {
-      const updatedStudent = { ...data, name: editStudentName };
-      updateStudent(updatedStudent);
+  
+    if (dialogMode === "edit") {
+      updateStudent(selectedStudent.name, data); // update student in localStorage
+  
+      // update student in state
+      setStudents(prevStudents => {
+        const index = prevStudents.findIndex(student => student.name === selectedStudent.name);
+        if (index !== -1) {
+          const updatedStudents = [...prevStudents];
+          updatedStudents[index] = data;
+          return updatedStudents;
+        }
+        return prevStudents;
+      });
     } else {
-      saveStudent(data);
+      saveStudent(data); // save new student to localStorage
+  
+      // add new student to state
+      setStudents(prevStudents => [...prevStudents, data]);
     }
-
-    setStudents(getStudents());
-    setModalOpen(false);
-    setEditStudentName(null);
+  
+    handleModalClose();
+    reset();
   };
+  
+  const handleDelete = (studentName) => {
+    deleteStudent(studentName); // delete student from localStorage
+  
+    // remove student from state
+    setStudents(prevStudents => prevStudents.filter(student => student.name !== studentName));
+  };
+  
+  
 
   const handleModalOpen = () => setModalOpen(true);
+
   const handleModalClose = () => {
     setModalOpen(false);
-    setEditStudentName(null);
+    setDialogMode("create");  // Reset dialogMode to 'create'
+    setSelectedStudent(null);  // Reset selected student
   };
+
   const handleDetailsOpen = (student) => {
     setSelectedStudent(student);
     setDetailsOpen(true);
   };
+
   const handleDetailsClose = () => setDetailsOpen(false);
-  const handleDelete = (studentName) => {
-    deleteStudent(studentName);
-    setStudents(getStudents());
+
+
+  const handleStudentSelect = (student) => {  // handleStudentSelect function
+    setSelectedStudent(student);
+    setDialogMode("edit");
+    setModalOpen(true);
   };
 
-  const handleEditOpen = (studentName) => {
-    setEditStudentName(studentName);
-    handleModalOpen();
+  const updateStudentsList = () => {
+    setStudents(getStudents());
   };
+  
 
   const CustomButton = styled(Button)(({ theme }) => ({
     backgroundColor: "#EFBD26",
@@ -100,15 +128,12 @@ const AllStudents = () => {
   }));
 
   useEffect(() => {
-    if (editStudentName) {
-      const studentToEdit = students.find(
-        (student) => student.name === editStudentName
-      );
-      reset(studentToEdit);
+    if (selectedStudent) {
+      reset(selectedStudent);
     } else {
       reset();
     }
-  }, [editStudentName]);
+  }, [selectedStudent]);
 
   return (
     <Grid container direction="column" spacing={2} alignItems="center">
@@ -123,20 +148,22 @@ const AllStudents = () => {
       </Grid>
       <StudentDialogForm
         control={control}
-        onSubmit={handleSubmit}
+        handleSubmit={onSubmit}
         modalOpen={modalOpen}
         handleModalClose={handleModalClose}
-        editStudentName={editStudentName}
+        dialogMode={dialogMode}  // Pass dialogMode to StudentDialogForm
         reset={reset}
         errors={errors}
         schools={schools}
+        updateStudentsList={updateStudentsList}
+
       />
       <StudentDetails
         student={selectedStudent}
         open={detailsOpen}
         handleClose={handleDetailsClose}
         handleDelete={handleDelete}
-        handleEdit={handleEditOpen}
+        handleEdit={handleStudentSelect}  // Change handleEdit to use handleStudentSelect
       />
     </Grid>
   );

@@ -1,33 +1,31 @@
-import React, { useEffect } from "react";
+import React from "react";
 import {
   TextField,
   Dialog,
   DialogTitle,
   DialogContent,
   DialogActions,
-  FormControl,
-  InputLabel,
   Button,
   Box
 } from "@mui/material";
 import { useForm, Controller } from "react-hook-form";
 
 const SchoolDialogForm = ({ open, handleClose, onSubmit, school }) => {
-  const { handleSubmit, control, setValue } = useForm({});
+  const defaultValues = school || {
+    name: "",
+    address: "",
+    phoneNumber: "",
+    email: "",
+    contactPerson: "",
+    notes: ""
+  };
 
-  useEffect(() => {
-    if (school) {
-      Object.entries(school).forEach(([key, value]) => {
-        setValue(key, value, { shouldValidate: true, shouldDirty: true });
-      });
-    }
-  }, [school, setValue]);
+  const { handleSubmit, control } = useForm({ defaultValues });
 
   const handleFormSubmit = (data) => {
     console.log('Form submission data: ', data);
     onSubmit(data);
   };
-  
 
   return (
     <Dialog open={open} onClose={handleClose}>
@@ -40,7 +38,6 @@ const SchoolDialogForm = ({ open, handleClose, onSubmit, school }) => {
             <Controller
               name="name"
               control={control}
-              value={school ? school.name : ""}
               rules={{ required: true }}
               render={({ field }) => (
                 <TextField {...field} label="Full Name" fullWidth required />
@@ -51,7 +48,6 @@ const SchoolDialogForm = ({ open, handleClose, onSubmit, school }) => {
             <Controller
               name="address"
               control={control}
-              value={school ? school.address : ""}
               rules={{ required: true }}
               render={({ field }) => (
                 <TextField {...field} label="Address" fullWidth required />
@@ -62,7 +58,6 @@ const SchoolDialogForm = ({ open, handleClose, onSubmit, school }) => {
             <Controller
               name="phoneNumber"
               control={control}
-              value={school ? school.phoneNumber : ""}
               rules={{ required: true }}
               render={({ field }) => (
                 <TextField {...field} label="Phone Number" fullWidth required />
@@ -73,7 +68,6 @@ const SchoolDialogForm = ({ open, handleClose, onSubmit, school }) => {
             <Controller
               name="email"
               control={control}
-              value={school ? school.email : ""}
               rules={{ required: true }}
               render={({ field }) => (
                 <TextField
@@ -89,7 +83,6 @@ const SchoolDialogForm = ({ open, handleClose, onSubmit, school }) => {
             <Controller
               name="contactPerson"
               control={control}
-              value={school ? school.contactPerson : ""}
               render={({ field }) => (
                 <TextField
                   {...field}
@@ -103,7 +96,6 @@ const SchoolDialogForm = ({ open, handleClose, onSubmit, school }) => {
             <Controller
               name="notes"
               control={control}
-              value={school ? school.notes : ""}
               render={({ field }) => (
                 <TextField {...field} label="Notes (Optional)" fullWidth />
               )}

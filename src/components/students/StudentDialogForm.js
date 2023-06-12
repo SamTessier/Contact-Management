@@ -1,53 +1,54 @@
 import React from "react";
-import { Controller } from "react-hook-form";
 import {
+  TextField,
   Dialog,
   DialogTitle,
   DialogContent,
-  TextField,
   DialogActions,
-  Button,
-  FormControl,
-  InputLabel,
   Select,
   MenuItem,
+  FormControl,
+  InputLabel,
+  Button,
   Grid,
 } from "@mui/material";
+import { useForm, Controller } from "react-hook-form";
 import { saveStudent, updateStudent } from "../../localStorageDB";
 
-const StudentDialogForm = ({
-  control,
-  handleSubmit,
-  modalOpen,
-  handleModalClose,
-  editStudentName,
-  reset,
-  errors,
-  schools,
-}) => {
+const StudentDialogForm = ({ modalOpen, handleModalClose, schools, student, updateStudentsList }) => {
+  const defaultValues = student || {
+    name: "",
+    school: "",
+    grade: "",
+    parentName: "",
+    parentPhone: "",
+    parentEmail: "",
+    allergies: "",
+    enrollmentDates: "",
+    notes: "",
+  };
+
+  const { handleSubmit, control } = useForm({ defaultValues });
+
   const onSubmit = (data) => {
-    const companyId = localStorage.getItem("companyId"); // fetch companyId from localStorage
+    const companyId = localStorage.getItem("companyId");
     if (companyId) {
-      data.companyId = companyId; // add companyId to student's data
+      data.companyId = companyId;
     }
 
-    if (editStudentName) {
-      updateStudent(editStudentName, data);
+    if (student) {
+      updateStudent(student.name, data);
     } else {
       saveStudent(data);
     }
     handleModalClose();
-    reset();
+    updateStudentsList();
   };
 
   return (
-    <Dialog
-      open={modalOpen}
-      onClose={handleModalClose}
-      aria-labelledby="form-dialog-title"
-    >
-      <DialogTitle id="form-dialog-title">
-        {editStudentName ? "Edit Student" : "Add New Student"}
+    <Dialog open={modalOpen} onClose={handleModalClose}>
+      <DialogTitle style={{ color: "black" }}>
+        {student ? "Edit Student" : "Add New Student"}
       </DialogTitle>
       <form onSubmit={handleSubmit(onSubmit)}>
         <DialogContent>
@@ -212,13 +213,11 @@ const StudentDialogForm = ({
               />
             </Grid>
           </Grid>
-        </DialogContent>
+          </DialogContent>
         <DialogActions>
-          <Button onClick={handleModalClose} style={{ color: "black" }}>
-            Cancel
-          </Button>
+          <Button onClick={handleModalClose}>Cancel</Button>
           <Button type="submit" style={{ color: "black" }}>
-            {editStudentName ? "Save Changes" : "Add Student"}
+            {student ? "Save Changes" : "Add Student"}
           </Button>
         </DialogActions>
       </form>

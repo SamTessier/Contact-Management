@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import {
   TextField,
   Dialog,
@@ -13,16 +13,16 @@ import {
 } from "@mui/material";
 import { useForm, Controller } from "react-hook-form";
 
-const StaffDialogForm = ({ open, handleClose, onSubmit, schools, staff, onEdit }) => {
-  const { handleSubmit, control, setValue } = useForm({});
+const StaffDialogForm = ({ open, handleClose, onSubmit, schools, staff }) => {
+  const defaultValues = staff || {
+    name: "",
+    phoneNumber: "",
+    email: "",
+    school: "",
+    notes: "",
+  };
 
-  useEffect(() => {
-    if (staff) {
-      Object.entries(staff).forEach(([key, value]) => {
-        setValue(key, value, { shouldValidate: true, shouldDirty: true });
-      });
-    }
-  }, [staff, setValue]);
+  const { handleSubmit, control } = useForm({ defaultValues });
 
   const handleFormSubmit = (data) => {
     onSubmit(data);
@@ -39,7 +39,6 @@ const StaffDialogForm = ({ open, handleClose, onSubmit, schools, staff, onEdit }
           <Controller
             name="name"
             control={control}
-            defaultValue={staff ? staff.name : ""}
             rules={{ required: true }}
             render={({ field }) => (
               <TextField {...field} label="Full Name" fullWidth required />
@@ -49,7 +48,6 @@ const StaffDialogForm = ({ open, handleClose, onSubmit, schools, staff, onEdit }
           <Controller
             name="phoneNumber"
             control={control}
-            defaultValue={staff ? staff.phoneNumber : ""}
             rules={{ required: true }}
             render={({ field }) => (
               <TextField {...field} label="Phone Number" fullWidth required />
@@ -59,7 +57,6 @@ const StaffDialogForm = ({ open, handleClose, onSubmit, schools, staff, onEdit }
           <Controller
             name="email"
             control={control}
-            defaultValue={staff ? staff.email : ""}
             rules={{ required: true, pattern: /^\S+@\S+$/i }}
             render={({ field }) => (
               <TextField {...field} label="Email" fullWidth required />
@@ -69,7 +66,6 @@ const StaffDialogForm = ({ open, handleClose, onSubmit, schools, staff, onEdit }
           <Controller
             name="school"
             control={control}
-            defaultValue={staff ? staff.school : ""}
             rules={{ required: true }}
             render={({ field }) => (
               <FormControl fullWidth>
@@ -88,7 +84,6 @@ const StaffDialogForm = ({ open, handleClose, onSubmit, schools, staff, onEdit }
           <Controller
             name="notes"
             control={control}
-            defaultValue={staff ? staff.notes : ""}
             render={({ field }) => (
               <TextField
                 {...field}
