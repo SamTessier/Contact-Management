@@ -41,6 +41,7 @@ const AllStudents = () => {
   useEffect(() => {
     setStudents(getStudents());
     setSchools(getSchools());
+
   }, []);
 
   useEffect(() => {
@@ -58,13 +59,10 @@ const AllStudents = () => {
     if (companyId) {
       data.companyId = companyId;
     }
-  
     if (dialogMode === "edit") {
-      updateStudent(selectedStudent.name, data); // update student in localStorage
-  
-      // update student in state
+      updateStudent(selectedStudent.id, data); 
       setStudents(prevStudents => {
-        const index = prevStudents.findIndex(student => student.name === selectedStudent.name);
+        const index = prevStudents.findIndex(student => student.id === selectedStudent.id);
         if (index !== -1) {
           const updatedStudents = [...prevStudents];
           updatedStudents[index] = data;
@@ -73,9 +71,7 @@ const AllStudents = () => {
         return prevStudents;
       });
     } else {
-      saveStudent(data); // save new student to localStorage
-  
-      // add new student to state
+      saveStudent(data); 
       setStudents(prevStudents => [...prevStudents, data]);
     }
   
@@ -83,11 +79,9 @@ const AllStudents = () => {
     reset();
   };
   
-  const handleDelete = (studentName) => {
-    deleteStudent(studentName); // delete student from localStorage
-  
-    // remove student from state
-    setStudents(prevStudents => prevStudents.filter(student => student.name !== studentName));
+  const handleDelete = (studentId) => {
+    deleteStudent(studentId);
+    setStudents(getStudents());
   };
   
   
@@ -148,7 +142,8 @@ const AllStudents = () => {
       </Grid>
       <StudentDialogForm
         control={control}
-        handleSubmit={onSubmit}
+        handleSubmit={handleSubmit}
+        onSubmit={onSubmit}
         modalOpen={modalOpen}
         handleModalClose={handleModalClose}
         dialogMode={dialogMode}  // Pass dialogMode to StudentDialogForm

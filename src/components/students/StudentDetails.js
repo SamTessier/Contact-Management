@@ -8,11 +8,11 @@ const StudentDetails = ({ student, open, handleClose, handleEdit, handleDelete }
   }
 
   const handleEditClick = () => {
-    handleEdit(student.name);
+    handleEdit(student);
   };
   
 const handleDeleteClick = () => {
-  handleDelete(student.name);
+  handleDelete(student.id);
   handleClose();
 };
 

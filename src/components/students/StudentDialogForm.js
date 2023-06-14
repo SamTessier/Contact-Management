@@ -13,9 +13,8 @@ import {
   Grid,
 } from "@mui/material";
 import { useForm, Controller } from "react-hook-form";
-import { saveStudent, updateStudent } from "../../localStorageDB";
 
-const StudentDialogForm = ({ modalOpen, handleModalClose, schools, student, updateStudentsList }) => {
+const StudentDialogForm = ({ modalOpen, handleModalClose, schools, student, onSubmit }) => {
   const defaultValues = student || {
     name: "",
     school: "",
@@ -30,20 +29,7 @@ const StudentDialogForm = ({ modalOpen, handleModalClose, schools, student, upda
 
   const { handleSubmit, control } = useForm({ defaultValues });
 
-  const onSubmit = (data) => {
-    const companyId = localStorage.getItem("companyId");
-    if (companyId) {
-      data.companyId = companyId;
-    }
 
-    if (student) {
-      updateStudent(student.name, data);
-    } else {
-      saveStudent(data);
-    }
-    handleModalClose();
-    updateStudentsList();
-  };
 
   return (
     <Dialog open={modalOpen} onClose={handleModalClose}>
