@@ -26,10 +26,14 @@ const AllStaff = () => {
   const [searchTerm] = useContext(SearchContext);
   const [filteredStaff, setFilteredStaff] = useState([]);
 
+const companyId = localStorage.getItem("companyId");  
+
   useEffect(() => {
-    setStaff(getStaff());
-    setSchools(getSchools());
-  }, []);
+    if (companyId) {
+    setStaff(getStaff(companyId));
+    setSchools(getSchools(companyId));
+    }
+  }, [companyId]);
 
   useEffect(() => {
     let filtered = staff;
@@ -43,18 +47,22 @@ const AllStaff = () => {
 
   const onSubmit = (data) => {
     if (editStaff) {
-      updateStaff({ ...editStaff, ...data });
+      updateStaff({ ...editStaff, ...data }, companyId);
     } else {
-      saveStaff(data);
+      saveStaff(data, companyId);
     }
-    setStaff(getStaff());
+    if (companyId) {
+    setStaff(getStaff(companyId));
+    }
     setModalOpen(false);
     setEditStaff(null);
   };
 
   const handleDelete = (staffId) => {
-    deleteStaff(staffId);
-    setStaff(getStaff());
+    deleteStaff(staffId, companyId);
+    if (companyId) {
+    setStaff(getStaff(companyId));
+    }
   };
 
   const handleModalOpen = () => setModalOpen(true);

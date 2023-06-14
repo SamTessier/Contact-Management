@@ -21,9 +21,13 @@ const AllSchools = () => {
   const [filteredSchools, setFilteredSchools] = useState([]);
   const [detailsOpen, setDetailsOpen] = useState(false);
 
+  const companyId = localStorage.getItem("companyId");
+
   useEffect(() => {
-    setSchools(getSchools());
-  }, []);
+    if (companyId) {
+    setSchools(getSchools(companyId));
+    }
+  }, [companyId]);
 
   useEffect(() => {
     let filtered = schools;
@@ -44,19 +48,23 @@ const AllSchools = () => {
   const handleDialogClose = () => setDialogOpen(false);
 
   const handleAddSchool = (school) => {
-    saveSchool(school);
-    setSchools((prevSchools) => [...prevSchools, school]);
+    saveSchool(school, companyId);
+    if (companyId) {
+      setSchools(getSchools(companyId));
+    } 
     setDialogOpen(false);
   };
 
   const handleDeleteSchool = (schoolId) => {
-    deleteSchool(schoolId);
-    setSchools(getSchools());
+    deleteSchool(schoolId, companyId);
+    if (companyId) {
+      setSchools(getSchools(companyId));
+    } 
   };
 
   const handleUpdateSchool = (updatedSchool) => {
     console.log('Updated school: ', updatedSchool);
-    updateSchool(updatedSchool);
+    updateSchool(updatedSchool, companyId);
     setSchools(prevSchools => {
       const index = prevSchools.findIndex(school => school.id === updatedSchool.id);
       if (index !== -1) {
@@ -68,6 +76,7 @@ const AllSchools = () => {
     });
     setDialogOpen(false);
   };
+  
   
   const handleSchoolSelect = (school) => {
     console.log('Selected school: ', school);

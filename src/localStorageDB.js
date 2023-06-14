@@ -24,7 +24,7 @@ export function deleteSchool(schoolId, companyId) {
 export function updateSchool(updatedSchool, companyId) {
   let schoolList = JSON.parse(localStorage.getItem("school"));
   const index = schoolList.findIndex(
-    (school) => school.id === updatedSchool.id
+    (school) => school.id === updatedSchool.id && school.companyId === companyId    
   );
   if (index !== -1) {
     schoolList[index] = updatedSchool;
@@ -52,7 +52,8 @@ export const getStudents = (companyId) => {
 export const updateStudent = (updatedStudent, companyId) => {
   const students = JSON.parse(localStorage.getItem("students")) || [];
   const index = students.findIndex(
-    (student) => student.id === updatedStudent.id && student.companyId === companyId
+    (student) =>
+      student.id === updatedStudent.id && student.companyId === companyId
   );
   if (index !== -1) {
     students[index] = updatedStudent;
@@ -60,11 +61,11 @@ export const updateStudent = (updatedStudent, companyId) => {
   }
 };
 
-
-
 export const deleteStudent = (id, companyId) => {
   let studentList = JSON.parse(localStorage.getItem("students"));
-studentList = studentList.filter((student) => student.id !== id && student.companyId === companyId);  
+  studentList = studentList.filter(
+    (student) => student.id !== id && student.companyId === companyId
+  );
   localStorage.setItem("students", JSON.stringify(studentList));
 };
 
@@ -81,20 +82,23 @@ export const saveStaff = (staff, companyId) => {
 };
 
 export const getStaff = (companyId) => {
-  const staffList = JSON.parse(localStorage.getItem("staff")) || [];  
-  return staffList.filter((staff) => staff.companyId === companyId);  
-  
+  const staffList = JSON.parse(localStorage.getItem("staff")) || [];
+  return staffList.filter((staff) => staff.companyId === companyId);
 };
 
 export const deleteStaff = (id, companyId) => {
   let staffList = JSON.parse(localStorage.getItem("staff")) || [];
-  staffList = staffList.filter((staff) => staff.id !== id && staff.companyId === companyId  );
+  staffList = staffList.filter(
+    (staff) => staff.id !== id && staff.companyId === companyId
+  );
   localStorage.setItem("staff", JSON.stringify(staffList));
 };
 
 export const updateStaff = (updatedStaff, companyId) => {
   let staffList = JSON.parse(localStorage.getItem("staff"));
-  const index = staffList.findIndex((staff) => staff.id === updatedStaff.id && staff.companyId === companyId  );
+  const index = staffList.findIndex(
+    (staff) => staff.id === updatedStaff.id && staff.companyId === companyId
+  );
   if (index !== -1) {
     staffList[index] = updatedStaff;
     localStorage.setItem("staff", JSON.stringify(staffList));

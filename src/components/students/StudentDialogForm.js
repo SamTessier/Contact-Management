@@ -60,7 +60,7 @@ const StudentDialogForm = ({ modalOpen, handleModalClose, schools, student, onSu
               <Controller
                 name="school"
                 control={control}
-                defaultValue=""
+                defaultValue={defaultValues.school || ""}
                 rules={{ required: true }}
                 render={({ field }) => (
                   <FormControl fullWidth>

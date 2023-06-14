@@ -17,7 +17,7 @@ import StudentDetails from "./StudentDetails";
 
 import StudentList from "./StudentList";
 import StudentDialogForm from "./StudentDialogForm";
-import { SearchContext } from '../SearchContext'; // Import SearchContext
+import { SearchContext } from "../SearchContext"; // Import SearchContext
 
 const AllStudents = () => {
   const {
@@ -35,14 +35,15 @@ const AllStudents = () => {
 
   // Get searchTerm from SearchContext
   const [searchTerm] = useContext(SearchContext);
-
+  const companyId = localStorage.getItem("companyId");
   const [filteredStudents, setFilteredStudents] = useState([]);
 
   useEffect(() => {
-    setStudents(getStudents());
-    setSchools(getSchools());
-
-  }, []);
+    if (companyId) {
+      setStudents(getStudents(companyId));
+      setSchools(getSchools(companyId));
+    }
+  }, [companyId]);
 
   useEffect(() => {
     let filtered = students;
@@ -60,9 +61,11 @@ const AllStudents = () => {
       data.companyId = companyId;
     }
     if (dialogMode === "edit") {
-      updateStudent(selectedStudent.id, data); 
-      setStudents(prevStudents => {
-        const index = prevStudents.findIndex(student => student.id === selectedStudent.id);
+      updateStudent(selectedStudent.id, data);
+      setStudents((prevStudents) => {
+        const index = prevStudents.findIndex(
+          (student) => student.id === selectedStudent.id
+        );
         if (index !== -1) {
           const updatedStudents = [...prevStudents];
           updatedStudents[index] = data;
@@ -71,27 +74,25 @@ const AllStudents = () => {
         return prevStudents;
       });
     } else {
-      saveStudent(data); 
-      setStudents(prevStudents => [...prevStudents, data]);
+      saveStudent(data);
+      setStudents((prevStudents) => [...prevStudents, data]);
     }
-  
+
     handleModalClose();
     reset();
   };
-  
+
   const handleDelete = (studentId) => {
     deleteStudent(studentId);
     setStudents(getStudents());
   };
-  
-  
 
   const handleModalOpen = () => setModalOpen(true);
 
   const handleModalClose = () => {
     setModalOpen(false);
-    setDialogMode("create");  // Reset dialogMode to 'create'
-    setSelectedStudent(null);  // Reset selected student
+    setDialogMode("create"); // Reset dialogMode to 'create'
+    setSelectedStudent(null); // Reset selected student
   };
 
   const handleDetailsOpen = (student) => {
@@ -101,8 +102,8 @@ const AllStudents = () => {
 
   const handleDetailsClose = () => setDetailsOpen(false);
 
-
-  const handleStudentSelect = (student) => {  // handleStudentSelect function
+  const handleStudentSelect = (student) => {
+    // handleStudentSelect function
     setSelectedStudent(student);
     setDialogMode("edit");
     setModalOpen(true);
@@ -111,7 +112,6 @@ const AllStudents = () => {
   const updateStudentsList = () => {
     setStudents(getStudents());
   };
-  
 
   const CustomButton = styled(Button)(({ theme }) => ({
     backgroundColor: "#EFBD26",
@@ -146,19 +146,18 @@ const AllStudents = () => {
         onSubmit={onSubmit}
         modalOpen={modalOpen}
         handleModalClose={handleModalClose}
-        dialogMode={dialogMode}  // Pass dialogMode to StudentDialogForm
+        dialogMode={dialogMode}
         reset={reset}
         errors={errors}
         schools={schools}
         updateStudentsList={updateStudentsList}
-
       />
       <StudentDetails
         student={selectedStudent}
         open={detailsOpen}
         handleClose={handleDetailsClose}
         handleDelete={handleDelete}
-        handleEdit={handleStudentSelect}  // Change handleEdit to use handleStudentSelect
+        handleEdit={handleStudentSelect} // Change handleEdit to use handleStudentSelect
       />
     </Grid>
   );
