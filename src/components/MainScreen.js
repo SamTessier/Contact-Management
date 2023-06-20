@@ -14,35 +14,45 @@ import WorkIcon from "@mui/icons-material/Work";
 import PeopleIcon from "@mui/icons-material/People";
 import InfoIcon from "@mui/icons-material/Info";
 import ExitToAppIcon from "@mui/icons-material/ExitToApp";
-
+import StaffDetails from "./staff/StaffDetails";
+import SchoolDetails from "./schools/SchoolDetails";
 import StudentDetails from "./students/StudentDetails";
-import { getStudents, getStaff } from "../localStorageDB";
+import { getStudents, getStaff, getSchools } from "../localStorageDB";
 import { AuthContext } from "../AuthContext";
-import { SearchContext } from './SearchContext'; // Make sure to import the SearchContext
+import { SearchContext } from "./SearchContext"; // Make sure to import the SearchContext
 
 const MainScreen = () => {
   const { logOut } = useContext(AuthContext);
   const [searchTerm] = useContext(SearchContext); // Consume the SearchContext
-
+  const [selectedSchool, setSelectedSchool] = useState(null);
+  const [selectedStaff, setSelectedStaff] = useState(null);
   const [selectedStudent, setSelectedStudent] = useState(null);
   const [detailsOpen, setDetailsOpen] = useState(false);
-
-  let data = searchTerm !== "" ? [...getStudents(), ...getStaff()] : [];
+const companyId = localStorage.getItem("companyId");
+  let data =
+    searchTerm !== "" ? [...getStudents(companyId), ...getStaff(companyId), ...getSchools(companyId)] : [];
   data = data.filter((item) =>
     item.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
   const handleLogOut = () => {
     logOut();
   };
-  const handleDetailsOpen = (student) => {
-    setSelectedStudent(student);
+  const handleDetailsOpen = (item) => {
+    item.type === "student"
+      ? setSelectedStudent(item)
+      : item.type === "staff"
+      ? setSelectedStaff(item)
+      : setSelectedSchool(item);
     setDetailsOpen(true);
   };
+  
 
-  const handleDetailsClose = () => setDetailsOpen(false);
-
-
-
+  const handleDetailsClose = () => {
+    setDetailsOpen(false);
+    setSelectedStudent(null);
+    setSelectedStaff(null);
+    setSelectedSchool(null);
+  };
 
   return (
     <Grid item xs={12}>
@@ -145,8 +155,20 @@ const MainScreen = () => {
               student={selectedStudent}
               open={detailsOpen}
               handleClose={handleDetailsClose}
-              handleDelete={() => {}}
-              handleEdit={() => {}}
+            />
+          )}
+          {selectedStaff && (
+            <StaffDetails
+              staff={selectedStaff}
+              open={detailsOpen}
+              handleClose={handleDetailsClose}
+            />  
+          )}
+          {selectedSchool && (
+            <SchoolDetails
+              school={selectedSchool}
+              open={handleDetailsOpen}
+              handleClose={handleDetailsClose}
             />
           )}
         </Grid>

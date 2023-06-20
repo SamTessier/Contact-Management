@@ -6,7 +6,7 @@ import InfoIcon from "@mui/icons-material/Info";
 
 const StaffList = ({ staff, onInfo }) => {
   console.log(staff);
-  if (!Array.isArray(staff) || staff.length === 0) {
+  if (!Array.isArray(StaffList) || staff.length === 0) {
     return (
       <Typography variant="h5" align="center">
         No staff members found!

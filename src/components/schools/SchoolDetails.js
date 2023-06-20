@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import {
   Button,
-  Card,
-  CardContent,
-  CardActions,
+  Dialog,
+  DialogContent,
+  DialogActions,
   Typography,
 } from "@mui/material";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
@@ -15,7 +15,7 @@ const SchoolDetails = ({
   handleClose,
   school,
   handleDelete,
-  handleUpdate,
+  handleUpdateSchool,
 }) => {
   const [editMode, setEditMode] = useState(false);
 
@@ -24,12 +24,8 @@ const SchoolDetails = ({
   };
 
   const handleFormSubmit = (data) => {
-    handleUpdate({ ...school, ...data });
+    handleUpdateSchool({ ...school, ...data });
     handleClose();
-  };
-
-  const handleFormCancel = () => {
-    setEditMode(false);
   };
 
   const handleDeleteClick = () => {
@@ -47,16 +43,16 @@ const SchoolDetails = ({
           school={school}
         />
       ) : (
-        <Card>
-          <CardContent>
+        <Dialog open={open} onClose={handleClose}>
+          <DialogContent>
             <Typography variant="h5">{school.name}</Typography>
-            <Typography variant="subtitle1">Address: {school.address}</Typography>
-            <Typography variant="subtitle1">Phone Number: {school.phoneNumber}</Typography>
-            <Typography variant="subtitle1">Email: {school.email}</Typography>
-            <Typography variant="subtitle1">Contact Person: {school.contactPerson}</Typography>
+            <Typography variant="subtitle1">{school.address}</Typography>
+            <Typography variant="subtitle1">{school.phoneNumber}</Typography>
+            <Typography variant="subtitle1">{school.email}</Typography>
+            <Typography variant="subtitle1">Contact: {school.contactPerson}</Typography>
             <Typography variant="subtitle1">Notes: {school.notes}</Typography>
-          </CardContent>
-          <CardActions>
+          </DialogContent>
+          <DialogActions>
             <Button
               onClick={handleEditClick}
               startIcon={<EditIcon />}
@@ -69,8 +65,8 @@ const SchoolDetails = ({
             >
               Delete
             </Button>
-          </CardActions>
-        </Card>
+          </DialogActions>
+        </Dialog>
       )}
     </>
   );

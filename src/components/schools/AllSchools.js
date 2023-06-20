@@ -24,9 +24,7 @@ const AllSchools = () => {
   const companyId = localStorage.getItem("companyId");
 
   useEffect(() => {
-    if (companyId) {
-    setSchools(getSchools(companyId));
-    }
+      setSchools(getSchools(companyId));
   }, [companyId]);
 
   useEffect(() => {
@@ -45,54 +43,43 @@ const AllSchools = () => {
     setDialogOpen(true);
   };
 
-  const handleDialogClose = () => setDialogOpen(false);
+  const handleDialogClose = () => { 
+    setDialogOpen(false);
+  setSelectedSchool(null);
+  };  
 
   const handleAddSchool = (school) => {
     saveSchool(school, companyId);
-    if (companyId) {
-      setSchools(getSchools(companyId));
-    } 
+    setSchools(getSchools(companyId));
     setDialogOpen(false);
   };
 
   const handleDeleteSchool = (schoolId) => {
     deleteSchool(schoolId, companyId);
-    if (companyId) {
-      setSchools(getSchools(companyId));
-    } 
+    setSchools(getSchools(companyId));
   };
 
   const handleUpdateSchool = (updatedSchool) => {
-    console.log('Updated school: ', updatedSchool);
+    console.log("Updated school: ", updatedSchool);
     updateSchool(updatedSchool, companyId);
-    setSchools(prevSchools => {
-      const index = prevSchools.findIndex(school => school.id === updatedSchool.id);
-      if (index !== -1) {
-        const updatedSchools = [...prevSchools];
-        updatedSchools[index] = updatedSchool;
-        return updatedSchools;
-      }
-      return prevSchools;
-    });
+    setSchools(getSchools(companyId));
     setDialogOpen(false);
   };
-  
-  
+
   const handleSchoolSelect = (school) => {
-    console.log('Selected school: ', school);
+    console.log("Selected school: ", school);
     setSelectedSchool(school);
     setDialogMode("edit");
-    setDialogOpen(true);
   };
-  
 
   const handleDetailsOpen = (school) => {
     setSelectedSchool(school);
-    setDetailsOpen(true)
+    setDetailsOpen(true);
   };
 
   const handleDetailsClose = () => {
     setDetailsOpen(false);
+    setSelectedSchool(null);
   };
 
   return (
@@ -150,9 +137,7 @@ const AllSchools = () => {
           handleClose={handleDetailsClose}
           school={selectedSchool}
           handleDelete={handleDeleteSchool}
-          handleUpdate={handleUpdateSchool}
-          handleSub
-          
+          handleUpdateSchool={handleUpdateSchool}
         />
       )}
     </Grid>

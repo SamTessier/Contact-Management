@@ -4,34 +4,25 @@ import Typography from "@mui/material/Typography";
 import IconButton from "@mui/material/IconButton";
 import InfoIcon from "@mui/icons-material/Info";
 
-
 const SchoolList = ({ schools, onInfo }) => {
-  console.log(schools);
-  if (!Array.isArray(schools) || schools.length === 0) {
-    return (
-      <Typography variant="h5" align="center">
-        No schools found!
-      </Typography>
-    );
-  } else {
-    return schools.map((school, index) => (
-      <Grid
-        key={index}
-        container
-        justifyContent="space-between"
-        alignItems="center"
-      >
-        <Grid item>
-          <Typography variant="h6">{school.name}</Typography>
-        </Grid>
-        <Grid item>
-          <IconButton color="primary" onClick={() => onInfo(school)}>
-            <InfoIcon />
-          </IconButton>
-        </Grid>
+
+  return schools.map((school, index) => (
+    <Grid
+      key={index}
+      container
+      justifyContent="space-between"
+      alignItems="center"
+    >
+      <Grid item>
+        <Typography variant="h6">{school.name}</Typography>
       </Grid>
-    ));
-  }
+      <Grid item>
+        <IconButton color="primary" onClick={() => onInfo(school)}>
+          <InfoIcon />
+        </IconButton>
+      </Grid>
+    </Grid>
+  ));
 };
 
 export default SchoolList;

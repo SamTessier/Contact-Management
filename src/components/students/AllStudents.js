@@ -46,13 +46,13 @@ const AllStudents = () => {
   }, [companyId]);
 
   useEffect(() => {
-    let filtered = students;
+    let filteredStudents = students;
     if (searchTerm !== "") {
-      filtered = students.filter((student) =>
+      filteredStudents = students.filter((student) =>
         student.name.toLowerCase().includes(searchTerm.toLowerCase())
       );
     }
-    setFilteredStudents(filtered);
+    setFilteredStudents(filteredStudents);
   }, [students, searchTerm]);
 
   const onSubmit = (data) => {
@@ -93,6 +93,7 @@ const AllStudents = () => {
     setModalOpen(false);
     setDialogMode("create"); // Reset dialogMode to 'create'
     setSelectedStudent(null); // Reset selected student
+    
   };
 
   const handleDetailsOpen = (student) => {

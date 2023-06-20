@@ -19,7 +19,7 @@ import { SearchContext } from "../SearchContext";
 const AllStaff = () => {
   const [staff, setStaff] = useState([]);
   const [viewStaff, setViewStaff] = useState(null);
-  const [infoModalOpen, setInfoModalOpen] = useState(false);
+  const [detailsOpen, setDetailsOpen] = useState(false);  
   const [schools, setSchools] = useState([]);
   const [modalOpen, setModalOpen] = useState(false);
   const [editStaff, setEditStaff] = useState(null);
@@ -29,10 +29,8 @@ const AllStaff = () => {
 const companyId = localStorage.getItem("companyId");  
 
   useEffect(() => {
-    if (companyId) {
     setStaff(getStaff(companyId));
     setSchools(getSchools(companyId));
-    }
   }, [companyId]);
 
   useEffect(() => {
@@ -72,19 +70,16 @@ const companyId = localStorage.getItem("companyId");
     setEditStaff(null);
   };
 
-  const handleInfoOpen = (staff) => {
-    setViewStaff(staff);
-    setInfoModalOpen(true);
-  };
-
-  const handleInfoClose = () => {
-    setInfoModalOpen(false);
-  };
-
   const handleEditOpen = (staff) => {
     setEditStaff(staff);
     handleModalOpen();
   };
+
+const handleDetailsOpen = (staff) => {  
+    setViewStaff(staff);
+    setDetailsOpen(true);
+  };
+
 
   const CustomButton = styled(Button)(({ theme }) => ({
     backgroundColor: "#EFBD26",
@@ -107,10 +102,11 @@ const companyId = localStorage.getItem("companyId");
         maxHeight={500}
       >
         <StaffList
+          
           staff={filteredStaff}
           onEdit={handleEditOpen}
           onDelete={handleDelete}
-          onInfo={handleInfoOpen}
+          onInfo={handleDetailsOpen}
         />
       </Box>
       <Grid item container justifyContent="center">
@@ -126,8 +122,6 @@ const companyId = localStorage.getItem("companyId");
         staff={editStaff}
       />
       <StaffDetails
-        open={infoModalOpen}
-        handleClose={handleInfoClose}
         staff={viewStaff}
         onDelete={handleDelete}
         onEdit={handleEditOpen}
