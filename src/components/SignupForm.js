@@ -9,7 +9,6 @@ import { saveUser, getUsers } from "../localStorageDB";
 const SignupForm = ({ onSuccess }) => {
   const { signUp } = useContext(AuthContext);
   const [error, setError] = useState("");
-  const [open, setOpen] = useState(false);
 
   const handleSubmit = (event) => {
     event.preventDefault();

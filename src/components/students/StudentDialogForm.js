@@ -5,41 +5,47 @@ import {
   DialogTitle,
   DialogContent,
   DialogActions,
-  Select,
-  MenuItem,
+  Button,
+  Box,
   FormControl,
   InputLabel,
-  Button,
-  Grid,
+  Select,
+  MenuItem,
 } from "@mui/material";
+
 import { useForm, Controller } from "react-hook-form";
 
-const StudentDialogForm = ({ modalOpen, handleModalClose, schools, student, onSubmit }) => {
-  const defaultValues = student || {
-    name: "",
-    school: "",
-    grade: "",
-    parentName: "",
-    parentPhone: "",
-    parentEmail: "",
-    allergies: "",
-    enrollmentDates: "",
-    notes: "",
+const createEmptyObject = (keys) => {
+  return keys.reduce((obj, key) => ({ ...obj, [key]: "" }), {});
+};
+
+const StudentDialogForm = ({ open, handleClose, onSubmit, student, schools }) => {
+  const keys = [
+    "name",
+    "school",
+    "grade", 
+    "parentName",
+    "parentPhone",
+    "parentEmail",
+    "allergies",
+    "enrollmentDates",
+    "notes",
+  ];
+  const defaultValues = student || createEmptyObject(keys);
+  const { handleSubmit, control } = useForm({ defaultValues });
+  const handleFormSubmit = (data) => {
+    onSubmit(data);
+    handleClose();
   };
 
-  const { handleSubmit, control } = useForm({ defaultValues });
-
-
-
   return (
-    <Dialog open={modalOpen} onClose={handleModalClose}>
+    <Dialog open={open} onClose={handleClose}>
       <DialogTitle style={{ color: "black" }}>
         {student ? "Edit Student" : "Add New Student"}
       </DialogTitle>
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <DialogContent>
-          <Grid container spacing={2}>
-            <Grid item xs={12}>
+      <form onSubmit={handleSubmit(handleFormSubmit)}>
+      <DialogContent>
+            <Box mb={2}>
               <Controller
                 name="name"
                 control={control}
@@ -55,8 +61,8 @@ const StudentDialogForm = ({ modalOpen, handleModalClose, schools, student, onSu
                   />
                 )}
               />
-            </Grid>
-            <Grid item xs={12} sm={6}>
+            </Box>
+            <Box mb={2} sm={6}>
               <Controller
                 name="school"
                 control={control}
@@ -75,8 +81,8 @@ const StudentDialogForm = ({ modalOpen, handleModalClose, schools, student, onSu
                   </FormControl>
                 )}
               />
-            </Grid>
-            <Grid item xs={12} sm={6}>
+            </Box>
+            <Box mb={2} sm={6}>
               <Controller
                 name="grade"
                 control={control}
@@ -95,8 +101,8 @@ const StudentDialogForm = ({ modalOpen, handleModalClose, schools, student, onSu
                   </FormControl>
                 )}
               />
-            </Grid>
-            <Grid item xs={12} sm={6}>
+            </Box>
+            <Box mb={2} sm={6}>
               <Controller
                 name="parentName"
                 control={control}
@@ -112,8 +118,8 @@ const StudentDialogForm = ({ modalOpen, handleModalClose, schools, student, onSu
                   />
                 )}
               />
-            </Grid>
-            <Grid item xs={12} sm={6}>
+            </Box>
+            <Box mb={2} sm={6}>
               <Controller
                 name="parentPhone"
                 control={control}
@@ -129,8 +135,8 @@ const StudentDialogForm = ({ modalOpen, handleModalClose, schools, student, onSu
                   />
                 )}
               />
-            </Grid>
-            <Grid item xs={12}>
+            </Box>
+            <Box mb={2}>
               <Controller
                 name="parentEmail"
                 control={control}
@@ -146,8 +152,8 @@ const StudentDialogForm = ({ modalOpen, handleModalClose, schools, student, onSu
                   />
                 )}
               />
-            </Grid>
-            <Grid item xs={12}>
+            </Box>
+            <Box mb={2}>
               <Controller
                 name="allergies"
                 control={control}
@@ -163,8 +169,8 @@ const StudentDialogForm = ({ modalOpen, handleModalClose, schools, student, onSu
                   />
                 )}
               />
-            </Grid>
-            <Grid item xs={12}>
+            </Box>
+            <Box mb={2}>
               <Controller
                 name="enrollmentDates"
                 control={control}
@@ -180,8 +186,8 @@ const StudentDialogForm = ({ modalOpen, handleModalClose, schools, student, onSu
                   />
                 )}
               />
-            </Grid>
-            <Grid item xs={12}>
+            </Box>
+            <Box mb={2}>
               <Controller
                 name="notes"
                 control={control}
@@ -197,14 +203,13 @@ const StudentDialogForm = ({ modalOpen, handleModalClose, schools, student, onSu
                   />
                 )}
               />
-            </Grid>
-          </Grid>
+            </Box>
           </DialogContent>
         <DialogActions>
-          <Button onClick={handleModalClose}>Cancel</Button>
-          <Button type="submit" style={{ color: "black" }}>
-            {student ? "Save Changes" : "Add Student"}
-          </Button>
+          <DialogActions>
+            <Button onClick={handleClose}>Cancel</Button>
+            <Button type="submit">{student ? "Update" : "Add"}</Button>
+          </DialogActions>
         </DialogActions>
       </form>
     </Dialog>
@@ -212,3 +217,6 @@ const StudentDialogForm = ({ modalOpen, handleModalClose, schools, student, onSu
 };
 
 export default StudentDialogForm;
+
+
+

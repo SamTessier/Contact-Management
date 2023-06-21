@@ -6,25 +6,23 @@ import {
   DialogContent,
   DialogActions,
   Button,
-  Box
+  Box,
 } from "@mui/material";
 import { useForm, Controller } from "react-hook-form";
 
+const createEmptyObject = (keys) => {
+  return keys.reduce((obj, key) => ({ ...obj, [key]: "" }), {});
+};
+
 const SchoolDialogForm = ({ open, handleClose, onSubmit, school }) => {
-  const defaultValues = school || {
-    name: "",
-    address: "",
-    phoneNumber: "",
-    email: "",
-    contactPerson: "",
-    notes: ""
-  };
+  const keys = ["name", "address", "phoneNumber", "email", "contactPerson", "notes"];
+  const defaultValues = school || createEmptyObject(keys);
 
   const { handleSubmit, control } = useForm({ defaultValues });
 
   const handleFormSubmit = (data) => {
-    console.log('Form submission data: ', data);
     onSubmit(data);
+    handleClose();
   };
 
   return (
@@ -103,8 +101,10 @@ const SchoolDialogForm = ({ open, handleClose, onSubmit, school }) => {
           </Box>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose}>Cancel</Button>
-          <Button type="submit">{school ? "Update" : "Add"}</Button>
+          <DialogActions>
+            <Button onClick={handleClose}>Cancel</Button>
+            <Button type="submit">{school ? "Update" : "Add"}</Button>
+          </DialogActions>
         </DialogActions>
       </form>
     </Dialog>
