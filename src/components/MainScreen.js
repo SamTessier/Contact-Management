@@ -4,7 +4,6 @@ import {
   Grid,
   Tooltip,
   Typography,
-  TextField,
   Box,
 } from "@mui/material";
 import { Link } from "react-router-dom";
@@ -81,7 +80,10 @@ const MainScreen = () => {
         >
           <Grid item>
             <Grid container direction="row" spacing={2} justifyContent="center">
+            {currentUser.role !== "staff" && (
+                  <>
               <Grid item>
+           
                 <IconButton color="primary" component={Link} to="/schools">
                   <HomeIcon fontSize="large" />
                 </IconButton>
@@ -93,6 +95,8 @@ const MainScreen = () => {
                   Schools
                 </Typography>
               </Grid>
+              </>
+              )}
               <Grid item>
                 <IconButton color="primary" component={Link} to="/staff">
                   <WorkIcon fontSize="large" />
