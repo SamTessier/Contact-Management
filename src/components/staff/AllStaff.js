@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useContext } from "react";
 import { Button, Typography, Grid, Box } from "@mui/material";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
+import { AuthContext } from "../../AuthContext";
 import {
   getStaff,
   saveStaff,
@@ -14,6 +15,7 @@ import StaffDetails from "./StaffDetails";
 import { SearchContext } from "../SearchContext";
 
 const AllStaff = () => {
+  const { currentUser } = useContext(AuthContext);
   const [staffMembers, setStaffMembers] = useState([]);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [dialogMode, setDialogMode] = useState("create");
@@ -25,9 +27,13 @@ const AllStaff = () => {
   const companyId = localStorage.getItem("companyId");
 
   useEffect(() => {
-    setStaffMembers(getStaff(companyId));
+    let allStaff = getStaff(companyId);
+    if (currentUser.role === "staff") {
+      allStaff = allStaff.filter(staff => staff.school === currentUser.school);
+    }
+    setStaffMembers(allStaff);
     getSchools(companyId);
-  }, [companyId]);
+  }, [companyId, currentUser]);
 
   useEffect(() => {
     let filtered = staffMembers;
