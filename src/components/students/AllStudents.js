@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useContext } from "react";
 import { Button, Typography, Grid, Box } from "@mui/material";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
+import { AuthContext } from "../../AuthContext";
 import {
   getStudents,
   saveStudent,
@@ -14,6 +15,7 @@ import StudentDetails from "./StudentDetails";
 import { SearchContext } from "../SearchContext";
 
 const AllStudents = () => {
+  const { currentUser } = useContext(AuthContext);
   const [students, setStudents] = useState([]);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [dialogMode, setDialogMode] = useState("create");
@@ -25,9 +27,13 @@ const AllStudents = () => {
   const companyId = localStorage.getItem("companyId");
 
   useEffect(() => {
-    setStudents(getStudents(companyId));
+    let allStudents = getStudents(companyId);
+    if (currentUser.role === "staff") {
+      allStudents = allStudents.filter(student => student.school === currentUser.school); 
+    }
+    setStudents(allStudents);
     getSchools(companyId);
-  }, [companyId]);
+  }, [companyId, currentUser]);
 
   useEffect(() => {
     let filtered = students;
@@ -112,7 +118,9 @@ const AllStudents = () => {
         )}
       </Box>
 
-      <Grid item container justifyContent="center">
+      <Grid item container justifyContent="center"> 
+        {currentUser.role !== "staff" && (
+      <>
         <Button
           variant="contained"
           color="primary"
@@ -125,6 +133,8 @@ const AllStudents = () => {
         >
           <AddCircleOutlineIcon sx={{ color: "black" }} />
         </Button>
+        </>
+        )}
       </Grid>
       <StudentDialogForm
         open={dialogOpen}

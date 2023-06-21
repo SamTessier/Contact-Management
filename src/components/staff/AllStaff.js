@@ -119,6 +119,8 @@ const AllStaff = () => {
       </Box>
 
       <Grid item container justifyContent="center">
+        {currentUser.role !== "staff" && (
+          <>
         <Button
           variant="contained"
           color="primary"
@@ -131,6 +133,8 @@ const AllStaff = () => {
         >
           <AddCircleOutlineIcon sx={{ color: "black" }} />
         </Button>
+        </>
+        )}  
       </Grid>
       <StaffDialogForm
         open={dialogOpen}
