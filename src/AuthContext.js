@@ -23,11 +23,18 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  const signUp = (email, password) => {
-    const user = { email, password };
-    saveUser(user);  // save the user in the local storage
-
+  const signUp = (email, password, companyId, school = null) => {
+    const user = { email, password, companyId, school };
+    const users = getUsers();
+    const companyExists = users.some(user => user.companyId === companyId);
+  
+    if (companyExists) {
+      saveUser(user, 'staff', school);
+    } else {
+      saveUser(user, 'admin');
+    }
   };
+  
 
   const logOut = () => {
     setCurrentUser(null);

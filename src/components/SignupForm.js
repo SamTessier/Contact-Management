@@ -4,25 +4,24 @@ import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import Alert from "@mui/material/Alert";
 import Box from "@mui/material/Box";
-import { saveUser, getUsers } from "../localStorageDB";
+import { FormControl, MenuItem, InputLabel, Select } from "@mui/material";
+import { saveUser, getUsers, getSchools } from "../localStorageDB";
 
 const SignupForm = ({ onSuccess }) => {
+  const companyId = localStorage.getItem("companyId");
   const { signUp } = useContext(AuthContext);
   const [error, setError] = useState("");
+  const [school, setSchool] = useState("");
+  const schools = getSchools(companyId);
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    const { email, password, companyId } = event.target.elements;
+    const { email, password } = event.target.elements;
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{4,20}$/;
     const users = getUsers();
     const userExists = users.some((user) => user.email === email.value);
-    const user = {
-      email: email.value,
-      password: password.value,
-      companyId: companyId.value
-    }
-    saveUser(user);
+  
     if (userExists) {
       setError("User with this email already exists.");
     } else if (!emailRegex.test(email.value)) {
@@ -32,14 +31,24 @@ const SignupForm = ({ onSuccess }) => {
         "Password must be 4-20 characters, contain at least 1 uppercase and 1 lowercase letter, and 1 number."
       );
     } else {
+      const role = companyId ? "staff" : "admin"; // If companyId exists, role is staff. Else, role is admin.
+      const user = {
+        email: email.value,
+        password: password.value,
+        companyId: companyId,
+        role: role,
+        school: school,
+      };
+      saveUser(user);
       setError("");
-      signUp(email.value, password.value);
+      signUp(email.value, password.value, companyId, school);
       onSuccess("Account created successfully. Please log in");
     }
   };
+  
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit} noValidate>
       <Box mb={2}>
         <TextField
           label="Email"
@@ -60,15 +69,32 @@ const SignupForm = ({ onSuccess }) => {
         />
       </Box>
       <Box mb={2}>
-        <TextField
-          label="Company ID"
-          type="text"
-          name="companyId"
-          required
-          fullWidth
-        />
+        <FormControl fullWidth>
+          <InputLabel id="school-label">School</InputLabel>
+          <Select
+            labelId="school-label"
+            value={school}
+            onChange={(event) => setSchool(event.target.value)}
+          >
+            {schools.map((school, index) => (
+              <MenuItem key={index} value={school.name}>
+                {school.name}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
       </Box>
-
+      {!companyId && (
+        <Box mb={2}>
+          <TextField
+            label="Company ID"
+            type="text"
+            name="companyId"
+            required
+            fullWidth
+          />
+        </Box>
+      )}
       {error && (
         <Box mb={2}>
           <Alert severity="error">{error}</Alert>
