@@ -13,7 +13,7 @@ import StaffList from "./StaffList";
 import StaffDetails from "./StaffDetails";
 import { SearchContext } from "../SearchContext";
 
-const AllStaff= () => {
+const AllStaff = () => {
   const [staffMembers, setStaffMembers] = useState([]);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [dialogMode, setDialogMode] = useState("create");
@@ -25,8 +25,8 @@ const AllStaff= () => {
   const companyId = localStorage.getItem("companyId");
 
   useEffect(() => {
-      setStaffMembers(getStaff(companyId));
-      getSchools(companyId);
+    setStaffMembers(getStaff(companyId));
+    getSchools(companyId);
   }, [companyId]);
 
   useEffect(() => {
@@ -41,15 +41,15 @@ const AllStaff= () => {
 
   const handleDialogOpen = () => {
     setSelectedStaff(null);
-    getSchools(companyId);  
+    getSchools(companyId);
     setDialogMode("create");
     setDialogOpen(true);
   };
 
-  const handleDialogClose = () => { 
+  const handleDialogClose = () => {
     setDialogOpen(false);
-  setSelectedStaff(null);
-  };  
+    setSelectedStaff(null);
+  };
 
   const handleAddStaff = (staff) => {
     saveStaff(staff, companyId);
@@ -129,10 +129,7 @@ const AllStaff= () => {
       <StaffDialogForm
         open={dialogOpen}
         handleClose={handleDialogClose}
-        onSubmit={
-          dialogMode === "create" ? handleAddStaff : handleUpdateStaff
-        }
-        staff={selectedStaff}
+        onSubmit={dialogMode === "create" ? handleAddStaff : handleUpdateStaff}
         schools={getSchools(companyId)}
       />
       {selectedStaff && (
