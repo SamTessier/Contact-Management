@@ -1,99 +1,97 @@
 import React, { useState, useEffect, useContext } from "react";
-import Grid from "@mui/material/Grid";
-import Box from "@mui/material/Box";
-import { styled } from "@mui/system";
-import Button from "@mui/material/Button";
-import PersonAddIcon from "@mui/icons-material/PersonAdd";
+import { Button, Typography, Grid, Box } from "@mui/material";
+import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import {
+  getStaff,
   saveStaff,
   deleteStaff,
-  getStaff,
   updateStaff,
   getSchools,
 } from "../../localStorageDB";
-import StaffList from "./StaffList";
 import StaffDialogForm from "./StaffDialogForm";
+import StaffList from "./StaffList";
 import StaffDetails from "./StaffDetails";
 import { SearchContext } from "../SearchContext";
 
-const AllStaff = () => {
-  const [staff, setStaff] = useState([]);
-  const [viewStaff, setViewStaff] = useState(null);
-  const [detailsOpen, setDetailsOpen] = useState(false);  
-  const [schools, setSchools] = useState([]);
-  const [modalOpen, setModalOpen] = useState(false);
-  const [editStaff, setEditStaff] = useState(null);
+const AllStaff= () => {
+  const [staffMembers, setStaffMembers] = useState([]);
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [dialogMode, setDialogMode] = useState("create");
+  const [selectedStaff, setSelectedStaff] = useState(null);
   const [searchTerm] = useContext(SearchContext);
-  const [filteredStaff, setFilteredStaff] = useState([]);
+  const [filteredStaffMembers, setFilteredStaff] = useState([]);
+  const [detailsOpen, setDetailsOpen] = useState(false);
 
-const companyId = localStorage.getItem("companyId");  
+  const companyId = localStorage.getItem("companyId");
 
   useEffect(() => {
-    setStaff(getStaff(companyId));
-    setSchools(getSchools(companyId));
+      setStaffMembers(getStaff(companyId));
+      getSchools(companyId);
   }, [companyId]);
 
   useEffect(() => {
-    let filtered = staff;
+    let filtered = staffMembers;
     if (searchTerm !== "") {
-      filtered = staff.filter((staffMember) =>
-        staffMember.name.toLowerCase().includes(searchTerm.toLowerCase())
+      filtered = staffMembers.filter((staff) =>
+        staff.name.toLowerCase().includes(searchTerm.toLowerCase())
       );
     }
     setFilteredStaff(filtered);
-  }, [staff, searchTerm]);
+  }, [staffMembers, searchTerm]);
 
-  const onSubmit = (data) => {
-    if (editStaff) {
-      updateStaff({ ...editStaff, ...data }, companyId);
-    } else {
-      saveStaff(data, companyId);
-    }
-    if (companyId) {
-    setStaff(getStaff(companyId));
-    }
-    setModalOpen(false);
-    setEditStaff(null);
+  const handleDialogOpen = () => {
+    setSelectedStaff(null);
+    getSchools(companyId);  
+    setDialogMode("create");
+    setDialogOpen(true);
   };
 
-  const handleDelete = (staffId) => {
+  const handleDialogClose = () => { 
+    setDialogOpen(false);
+  setSelectedStaff(null);
+  };  
+
+  const handleAddStaff = (staff) => {
+    saveStaff(staff, companyId);
+    setStaffMembers(getStaff(companyId));
+    setDialogOpen(false);
+  };
+
+  const handleDeleteStaff = (staffId) => {
     deleteStaff(staffId, companyId);
-    if (companyId) {
-    setStaff(getStaff(companyId));
-    }
+    setStaffMembers(getStaff(companyId));
   };
 
-  const handleModalOpen = () => setModalOpen(true);
-
-  const handleModalClose = () => {
-    setModalOpen(false);
-    setEditStaff(null);
+  const handleUpdateStaff = (updatedStaff) => {
+    console.log("Updated staff: ", updatedStaff);
+    updateStaff(updatedStaff, companyId);
+    setStaffMembers(getStaff(companyId));
+    setDialogOpen(false);
   };
 
-  const handleEditOpen = (staff) => {
-    setEditStaff(staff);
-    handleModalOpen();
+  const handleStaffSelect = (staff) => {
+    console.log("Selected staff: ", staff);
+    setSelectedStaff(staff);
+    setDialogMode("edit");
+    getSchools(companyId);
   };
 
-const handleDetailsOpen = (staff) => {  
-    setViewStaff(staff);
+  const handleDetailsOpen = (staff) => {
+    setSelectedStaff(staff);
+    getSchools(companyId);
     setDetailsOpen(true);
   };
 
-
-  const CustomButton = styled(Button)(({ theme }) => ({
-    backgroundColor: "#EFBD26",
-    "&:hover": {
-      backgroundColor: "#EFBD26",
-    },
-    padding: theme.spacing(1),
-  }));
+  const handleDetailsClose = () => {
+    setDetailsOpen(false);
+    setSelectedStaff(null);
+  };
 
   return (
     <Grid container direction="column" spacing={2} alignItems="center">
       <Box
         border={1}
-        borderColor="grey.500"
+        borderColor="#EFBD26"
         borderRadius={2}
         p={3}
         m={2}
@@ -101,31 +99,52 @@ const handleDetailsOpen = (staff) => {
         overflow="auto"
         maxHeight={500}
       >
-        <StaffList
-          
-          staff={filteredStaff}
-          onEdit={handleEditOpen}
-          onDelete={handleDelete}
-          onInfo={handleDetailsOpen}
-        />
+        {filteredStaffMembers.length === 0 ? (
+          <Typography variant="h5" align="center">
+            No Staff found!
+          </Typography>
+        ) : (
+          <StaffList
+            staffMembers={filteredStaffMembers}
+            onStaffSelect={handleStaffSelect}
+            onInfo={handleDetailsOpen}
+          />
+        )}
       </Box>
+
       <Grid item container justifyContent="center">
-        <CustomButton variant="contained" onClick={handleModalOpen}>
-          <PersonAddIcon sx={{ color: "black" }} />
-        </CustomButton>
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={handleDialogOpen}
+          sx={{
+            bgcolor: "#EFBD26",
+            "&:hover": { bgcolor: "#EFBD26" },
+            padding: 1,
+          }}
+        >
+          <AddCircleOutlineIcon sx={{ color: "black" }} />
+        </Button>
       </Grid>
       <StaffDialogForm
-        open={modalOpen}
-        handleClose={handleModalClose}
-        onSubmit={onSubmit}
-        schools={schools}
-        staff={editStaff}
+        open={dialogOpen}
+        handleClose={handleDialogClose}
+        onSubmit={
+          dialogMode === "create" ? handleAddStaff : handleUpdateStaff
+        }
+        staff={selectedStaff}
+        schools={getSchools(companyId)}
       />
-      <StaffDetails
-        staff={viewStaff}
-        onDelete={handleDelete}
-        onEdit={handleEditOpen}
-      />
+      {selectedStaff && (
+        <StaffDetails
+          open={detailsOpen}
+          handleClose={handleDetailsClose}
+          staff={selectedStaff}
+          handleDelete={handleDeleteStaff}
+          handleUpdateStaff={handleUpdateStaff}
+          schools={getSchools(companyId)}
+        />
+      )}
     </Grid>
   );
 };
