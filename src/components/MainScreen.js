@@ -19,11 +19,11 @@ import SchoolDetails from "./schools/SchoolDetails";
 import StudentDetails from "./students/StudentDetails";
 import { getStudents, getStaff, getSchools } from "../localStorageDB";
 import { AuthContext } from "../AuthContext";
-import { SearchContext } from "./SearchContext"; // Make sure to import the SearchContext
+import { SearchContext } from "./SearchContext"; 
 
 const MainScreen = () => {
   const { logOut, currentUser } = useContext(AuthContext);
-  const [searchTerm] = useContext(SearchContext); // Consume the SearchContext
+  const [searchTerm] = useContext(SearchContext); 
   const [selectedSchool, setSelectedSchool] = useState(null);
   const [selectedStaff, setSelectedStaff] = useState(null);
   const [selectedStudent, setSelectedStudent] = useState(null);
@@ -37,11 +37,12 @@ const MainScreen = () => {
           ...getSchools(companyId),
         ]
       : [];
-  data = data.filter(
-    (item) =>
-      item.name.toLowerCase().includes(searchTerm.toLowerCase()) &&
-      item.school === currentUser.school
-  );
+      data = data.filter(
+        (item) =>
+          item.name.toLowerCase().includes(searchTerm.toLowerCase()) &&
+          (currentUser.role !== 'staff' || item.school === currentUser.school)
+      );
+      
   const handleLogOut = () => {
     logOut();
   };

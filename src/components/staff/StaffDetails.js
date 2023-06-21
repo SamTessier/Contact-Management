@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import {
   Button,
   Dialog,
@@ -9,6 +9,7 @@ import {
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import EditIcon from "@mui/icons-material/Edit";
 import StaffDialogForm from "./StaffDialogForm";
+import { AuthContext } from "../../AuthContext";
 
 const StaffDetails = ({
   open,
@@ -19,6 +20,8 @@ const StaffDetails = ({
   schools,
 }) => {
   const [editMode, setEditMode] = useState(false);
+  const { currentUser } = useContext(AuthContext);
+
 
   const handleEditClick = () => {
     setEditMode(true);
@@ -58,6 +61,8 @@ const StaffDetails = ({
             <Typography variant="subtitle1">Notes: {staff.notes}</Typography>
           </DialogContent>
           <DialogActions>
+          {currentUser.role !== "staff" && (
+            <>
             <Button onClick={handleEditClick} startIcon={<EditIcon />}>
               Edit
             </Button>
@@ -67,6 +72,8 @@ const StaffDetails = ({
             >
               Delete
             </Button>
+            </>
+          )}
           </DialogActions>
         </Dialog>
       )}
