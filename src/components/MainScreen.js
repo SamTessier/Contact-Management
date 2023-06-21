@@ -22,17 +22,25 @@ import { AuthContext } from "../AuthContext";
 import { SearchContext } from "./SearchContext"; // Make sure to import the SearchContext
 
 const MainScreen = () => {
-  const { logOut } = useContext(AuthContext);
+  const { logOut, currentUser } = useContext(AuthContext);
   const [searchTerm] = useContext(SearchContext); // Consume the SearchContext
   const [selectedSchool, setSelectedSchool] = useState(null);
   const [selectedStaff, setSelectedStaff] = useState(null);
   const [selectedStudent, setSelectedStudent] = useState(null);
   const [detailsOpen, setDetailsOpen] = useState(false);
-const companyId = localStorage.getItem("companyId");
+  const companyId = localStorage.getItem("companyId");
   let data =
-    searchTerm !== "" ? [...getStudents(companyId), ...getStaff(companyId), ...getSchools(companyId)] : [];
-  data = data.filter((item) =>
-    item.name.toLowerCase().includes(searchTerm.toLowerCase())
+    searchTerm !== ""
+      ? [
+          ...getStudents(companyId),
+          ...getStaff(companyId),
+          ...getSchools(companyId),
+        ]
+      : [];
+  data = data.filter(
+    (item) =>
+      item.name.toLowerCase().includes(searchTerm.toLowerCase()) &&
+      item.school === currentUser.school
   );
   const handleLogOut = () => {
     logOut();
@@ -45,7 +53,6 @@ const companyId = localStorage.getItem("companyId");
       : setSelectedSchool(item);
     setDetailsOpen(true);
   };
-  
 
   const handleDetailsClose = () => {
     setDetailsOpen(false);
@@ -162,7 +169,7 @@ const companyId = localStorage.getItem("companyId");
               staff={selectedStaff}
               open={detailsOpen}
               handleClose={handleDetailsClose}
-            />  
+            />
           )}
           {selectedSchool && (
             <SchoolDetails
