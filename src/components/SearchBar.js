@@ -4,6 +4,7 @@ import SearchIcon from "@mui/icons-material/Search";
 import { styled } from "@mui/system";
 import TextField from "@mui/material/TextField";
 import { SearchContext } from './SearchContext';
+import { useLocation } from 'react-router-dom';
 
 const StyledTextField = styled(TextField)({
   '& .MuiFilledInput-root': {
@@ -28,6 +29,13 @@ const StyledTextField = styled(TextField)({
 
 const SearchBar = () => {
   const [searchTerm, setSearchTerm] = useContext(SearchContext);
+  const location = useLocation();
+
+  if (location.pathname === "/login" || location.pathname === "/signup") {
+    return(
+    <div style={{ height: "64px" }}></div>
+    )
+  }
   return (
     <StyledTextField
       variant="filled"
