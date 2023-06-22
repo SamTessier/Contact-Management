@@ -49,7 +49,9 @@ const LogoutButton = () => {
   const handleLogOut = () => {
     logOut();
   };
-
+  if (!currentUser) {
+    return <Box sx={{ width: "36px" }}></Box>;
+  }
   return (
     <Box
       sx={{
