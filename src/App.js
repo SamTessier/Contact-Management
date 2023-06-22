@@ -92,6 +92,10 @@ const EmptyBackButton = () => (
   </IconButton>
 );
 
+
+
+
+
 const App = () => {
   return (
     <AuthProvider>
@@ -126,7 +130,7 @@ const LocationDependentToolbar = () => {
 
   return (
     <>
-      {location.pathname !== "/" ? <BackButton /> : <EmptyBackButton />}
+     {["/", "/login", "/signup"].includes(location.pathname) ? <EmptyBackButton /> : <BackButton />}
       <Typography variant="subtitle1">
         <CurrentPage />
       </Typography>
