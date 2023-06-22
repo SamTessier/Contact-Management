@@ -8,6 +8,8 @@ import AllStudents from "./components/students/AllStudents";
 import SearchBar from "./components/SearchBar";
 import { SearchProvider } from "./components/SearchContext";
 import ExitToAppIcon from "@mui/icons-material/ExitToApp";
+import { LoadingProvider, LoadingContext } from './LoadingContext';
+import { CircularProgress } from '@mui/material';
 import {
   BrowserRouter as Router,
   Routes,
@@ -93,6 +95,7 @@ const EmptyBackButton = () => (
 const App = () => {
   return (
     <AuthProvider>
+      <LoadingProvider>
       <Router>
         <StyledApp>
           <StyledAppBar position="static">
@@ -106,11 +109,14 @@ const App = () => {
             </Toolbar>
           </StyledAppBar>
           <SearchProvider>
+          
             <SearchBar />
             <RoutesWithAuthentication />
           </SearchProvider>
+          <LoadingScreen />
         </StyledApp>
       </Router>
+      </LoadingProvider>
     </AuthProvider>
   );
 };
@@ -168,6 +174,29 @@ const RoutesWithAuthentication = () => {
         </Routes>
       )}
     </Container>
+  );
+};
+
+const LoadingScreen = () => {
+  const { loading } = useContext(LoadingContext);
+  return (
+    loading && (
+      <Box
+        display="flex"
+        justifyContent="center"
+        alignItems="center"
+        minHeight="100vh"
+        position="fixed"
+        left={0}
+        top={0}
+        width="100vw"
+        height="100vh"
+        bgcolor="rgba(255, 255, 255, 0.7)"
+        zIndex="modal"
+      >
+        <CircularProgress />
+      </Box>
+    )
   );
 };
 

@@ -9,6 +9,7 @@ const StyledTextField = styled(TextField)({
   '& .MuiFilledInput-root': {
     borderRadius: '50px',
     backgroundColor: 'white',
+    border: '1px solid grey',
   },
   '& .MuiFilledInput-input': {
     height: '20px',
@@ -18,10 +19,10 @@ const StyledTextField = styled(TextField)({
     borderBottom: 'none',
   },
   '& .MuiFilledInput-underline:after': {
-    borderBottom: '2px solid #1E1E1E',
+    borderBottom: 'none',
   },
   '& .MuiFilledInput-underline.Mui-focused:after': {
-    borderBottom: '2px solid #1E1E1E',
+    borderBottom: 'none',
   },
 });
 
