@@ -31,7 +31,7 @@ const SignupForm = ({ onSuccess }) => {
         "Password must be 4-20 characters, contain at least 1 uppercase and 1 lowercase letter, and 1 number."
       );
     } else {
-      const role = companyId ? "staff" : "admin"; // If companyId exists, role is staff. Else, role is admin.
+      const role = companyId ? "staff" : "admin"; //
       const user = {
         email: email.value,
         password: password.value,
@@ -68,6 +68,7 @@ const SignupForm = ({ onSuccess }) => {
           fullWidth
         />
       </Box>
+      {companyId && (
       <Box mb={2}>
         <FormControl fullWidth>
           <InputLabel id="school-label">School</InputLabel>
@@ -84,6 +85,7 @@ const SignupForm = ({ onSuccess }) => {
           </Select>
         </FormControl>
       </Box>
+      )}  
       {!companyId && (
         <Box mb={2}>
           <TextField
