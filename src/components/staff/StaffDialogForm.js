@@ -23,10 +23,9 @@ const StaffDialogForm = ({ open, handleClose, onSubmit, staff, schools }) => {
   const keys = [
     "name",
     "address",
-    "phoneNumber",
+    "phone",
     "email",
     "school",
-    "contactPerson",
     "notes",
   ];
   const defaultValues = staff || createEmptyObject(keys);

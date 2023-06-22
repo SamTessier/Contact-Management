@@ -25,10 +25,9 @@ const StudentDialogForm = ({ open, handleClose, onSubmit, student, schools }) =>
     "school",
     "grade", 
     "parentName",
-    "parentPhone",
-    "parentEmail",
+    "phone",
+    "email",
     "allergies",
-    "enrollmentDates",
     "notes",
   ];
   const defaultValues = student || createEmptyObject(keys);

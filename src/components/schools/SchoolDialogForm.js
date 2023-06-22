@@ -16,7 +16,7 @@ const createEmptyObject = (keys) => {
 
 
 const SchoolDialogForm = ({ open, handleClose, onSubmit, school }) => {
-  const keys = ["name", "address", "phoneNumber", "email", "contactPerson", "notes"];
+  const keys = ["name", "address", "phone", "email", "contact", "notes"];
   const defaultValues = school || createEmptyObject(keys);
 
   const { handleSubmit, control } = useForm({ defaultValues });

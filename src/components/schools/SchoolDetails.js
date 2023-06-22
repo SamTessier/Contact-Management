@@ -1,14 +1,6 @@
-import React, { useState } from "react";
-import {
-  Button,
-  Dialog,
-  DialogContent,
-  DialogActions,
-  Typography,
-} from "@mui/material";
-import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
-import EditIcon from "@mui/icons-material/Edit";
-import SchoolDialogForm from "./SchoolDialogForm";
+import React from "react";
+import DetailsFactory from "../DetailsFactory";
+import { getSchools } from "../../localStorageDB";
 
 const SchoolDetails = ({
   open,
@@ -16,58 +8,18 @@ const SchoolDetails = ({
   school,
   handleDelete,
   handleUpdateSchool,
-}) => {
-  const [editMode, setEditMode] = useState(false);
+}) => (
+  <DetailsFactory
+    config={{
+      open,
+      handleClose,
+      item: school,
+      handleDelete,
+      handleUpdate: handleUpdateSchool,
+      itemType: "school",
+      schools: getSchools() 
+    }}
+  />
+);
 
-  const handleEditClick = () => {
-    setEditMode(true);
-  };
-
-  const handleFormSubmit = (data) => {
-    handleUpdateSchool({ ...school, ...data });
-    handleClose();
-  };
-
-  const handleDeleteClick = () => {
-    handleDelete(school.id);
-    handleClose();
-  };
-
-  return (
-    <>
-      {editMode ? (
-        <SchoolDialogForm
-          open={open}
-          handleClose={handleClose}
-          onSubmit={handleFormSubmit}
-          school={school}
-        />
-      ) : (
-        <Dialog open={open} onClose={handleClose}>
-          <DialogContent>
-            <Typography variant="h5">{school.name}</Typography>
-            <Typography variant="subtitle1">{school.address}</Typography>
-            <Typography variant="subtitle1">{school.phoneNumber}</Typography>
-            <Typography variant="subtitle1">{school.email}</Typography>
-            <Typography variant="subtitle1">
-              Contact: {school.contactPerson}
-            </Typography>
-            <Typography variant="subtitle1">Notes: {school.notes}</Typography>
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={handleEditClick} startIcon={<EditIcon />}>
-              Edit
-            </Button>
-            <Button
-              onClick={handleDeleteClick}
-              startIcon={<DeleteOutlineIcon />}
-            >
-              Delete
-            </Button>
-          </DialogActions>
-        </Dialog>
-      )}
-    </>
-  );
-};
 export default SchoolDetails;
