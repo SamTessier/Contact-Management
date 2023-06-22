@@ -1,28 +1,21 @@
 import React, { useState, useContext } from "react";
-import {
-  IconButton,
-  Grid,
-  Tooltip,
-  Typography,
-  Box,
-} from "@mui/material";
+import { IconButton, Grid, Typography, Box } from "@mui/material";
 import { Link } from "react-router-dom";
 
 import HomeIcon from "@mui/icons-material/Home";
 import WorkIcon from "@mui/icons-material/Work";
 import PeopleIcon from "@mui/icons-material/People";
 import InfoIcon from "@mui/icons-material/Info";
-import ExitToAppIcon from "@mui/icons-material/ExitToApp";
 import StaffDetails from "./staff/StaffDetails";
 import SchoolDetails from "./schools/SchoolDetails";
 import StudentDetails from "./students/StudentDetails";
 import { getStudents, getStaff, getSchools } from "../localStorageDB";
+import { SearchContext } from "./SearchContext";
 import { AuthContext } from "../AuthContext";
-import { SearchContext } from "./SearchContext"; 
 
 const MainScreen = () => {
-  const { logOut, currentUser } = useContext(AuthContext);
-  const [searchTerm] = useContext(SearchContext); 
+  const { currentUser } = useContext(AuthContext);
+  const [searchTerm] = useContext(SearchContext);
   const [selectedSchool, setSelectedSchool] = useState(null);
   const [selectedStaff, setSelectedStaff] = useState(null);
   const [selectedStudent, setSelectedStudent] = useState(null);
@@ -36,15 +29,12 @@ const MainScreen = () => {
           ...getSchools(companyId),
         ]
       : [];
-      data = data.filter(
-        (item) =>
-          item.name.toLowerCase().includes(searchTerm.toLowerCase()) &&
-          (currentUser.role !== 'staff' || item.school === currentUser.school)
-      );
-      
-  const handleLogOut = () => {
-    logOut();
-  };
+  data = data.filter(
+    (item) =>
+      item.name.toLowerCase().includes(searchTerm.toLowerCase()) &&
+      (currentUser.role !== "staff" || item.school === currentUser.school)
+  );
+
   const handleDetailsOpen = (item) => {
     item.type === "student"
       ? setSelectedStudent(item)
@@ -80,22 +70,21 @@ const MainScreen = () => {
         >
           <Grid item>
             <Grid container direction="row" spacing={2} justifyContent="center">
-            {currentUser.role !== "staff" && (
-                  <>
-              <Grid item>
-           
-                <IconButton color="primary" component={Link} to="/schools">
-                  <HomeIcon fontSize="large" />
-                </IconButton>
-                <Typography
-                  variant="caption"
-                  display="block"
-                  textAlign="center"
-                >
-                  Schools
-                </Typography>
-              </Grid>
-              </>
+              {currentUser.role !== "staff" && (
+                <>
+                  <Grid item>
+                    <IconButton color="primary" component={Link} to="/schools">
+                      <HomeIcon fontSize="large" />
+                    </IconButton>
+                    <Typography
+                      variant="caption"
+                      display="block"
+                      textAlign="center"
+                    >
+                      Schools
+                    </Typography>
+                  </Grid>
+                </>
               )}
               <Grid item>
                 <IconButton color="primary" component={Link} to="/staff">
@@ -119,20 +108,6 @@ const MainScreen = () => {
                   textAlign="center"
                 >
                   Students
-                </Typography>
-              </Grid>
-              <Grid item>
-                <Tooltip title="Log out">
-                  <IconButton color="primary" onClick={handleLogOut}>
-                    <ExitToAppIcon fontSize="large" />
-                  </IconButton>
-                </Tooltip>
-                <Typography
-                  variant="caption"
-                  display="block"
-                  textAlign="center"
-                >
-                  Log Out
                 </Typography>
               </Grid>
             </Grid>

@@ -49,14 +49,13 @@ const SchoolDetails = ({
             <Typography variant="subtitle1">{school.address}</Typography>
             <Typography variant="subtitle1">{school.phoneNumber}</Typography>
             <Typography variant="subtitle1">{school.email}</Typography>
-            <Typography variant="subtitle1">Contact: {school.contactPerson}</Typography>
+            <Typography variant="subtitle1">
+              Contact: {school.contactPerson}
+            </Typography>
             <Typography variant="subtitle1">Notes: {school.notes}</Typography>
           </DialogContent>
           <DialogActions>
-            <Button
-              onClick={handleEditClick}
-              startIcon={<EditIcon />}
-            >
+            <Button onClick={handleEditClick} startIcon={<EditIcon />}>
               Edit
             </Button>
             <Button
@@ -71,5 +70,4 @@ const SchoolDetails = ({
     </>
   );
 };
-
 export default SchoolDetails;

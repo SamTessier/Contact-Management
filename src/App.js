@@ -7,6 +7,7 @@ import AllStaff from "./components/staff/AllStaff";
 import AllStudents from "./components/students/AllStudents";
 import SearchBar from "./components/SearchBar";
 import { SearchProvider } from "./components/SearchContext";
+import ExitToAppIcon from "@mui/icons-material/ExitToApp";
 import {
   BrowserRouter as Router,
   Routes,
@@ -22,9 +23,9 @@ import {
   Container,
   Box,
 } from "@mui/material";
-import SettingsIcon from "@mui/icons-material/Settings";
 import { styled } from "@mui/system";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 
 const StyledApp = styled(Box)(({ theme }) => ({
   flexGrow: 1,
@@ -41,6 +42,54 @@ const StyledAppBar = styled(AppBar)(({ theme }) => ({
   backgroundColor: theme.palette.primary.main,
 }));
 
+const LogoutButton = () => {
+  const { logOut, currentUser } = useContext(AuthContext);
+  const handleLogOut = () => {
+    logOut();
+  };
+
+  return (
+    <Box
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "flex-end",
+      }}
+    >
+      {currentUser && (
+        <>
+          <IconButton sx={{ color: "red" }} onClick={handleLogOut}>
+            <ExitToAppIcon fontSize="small" />{" "}
+          </IconButton>
+          <Typography variant="caption" display="block" textAlign="center">
+            Log Out
+          </Typography>
+        </>
+      )}
+    </Box>
+  );
+};
+
+const BackButton = () => {
+  const navigate = useNavigate();
+  const handleBackClick = () => {
+    navigate("/");
+  };
+
+  return (
+    <IconButton onClick={handleBackClick}>
+      <ArrowBackIcon fontSize="small" />
+    </IconButton>
+  );
+};
+
+const EmptyBackButton = () => (
+  <IconButton disabled style={{ color: "transparent" }}>
+    <ArrowBackIcon fontSize="small" />
+  </IconButton>
+);
+
 const App = () => {
   return (
     <AuthProvider>
@@ -48,20 +97,12 @@ const App = () => {
         <StyledApp>
           <StyledAppBar position="static">
             <Toolbar sx={{ display: "flex", justifyContent: "space-between" }}>
+              <LogoutButton />
+              <LocationDependentToolbar />
+              <EmptyBackButton/>
               <Typography variant="h6" sx={{ marginLeft: "10px" }}>
                 EdNet
               </Typography>
-              <Typography variant="subtitle1">
-                <CurrentPage />
-              </Typography>
-              <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
-                <Typography variant="h6" sx={{ opacity: 0 }}>
-                  EdN
-                </Typography>
-                <IconButton edge="end" color="inherit" aria-label="settings">
-                  <SettingsIcon />
-                </IconButton>
-              </Box>
             </Toolbar>
           </StyledAppBar>
           <SearchProvider>
@@ -71,6 +112,19 @@ const App = () => {
         </StyledApp>
       </Router>
     </AuthProvider>
+  );
+};
+
+const LocationDependentToolbar = () => {
+  const location = useLocation();
+
+  return (
+    <>
+      {location.pathname !== "/" ? <BackButton /> : <EmptyBackButton />}
+      <Typography variant="subtitle1">
+        <CurrentPage />
+      </Typography>
+    </>
   );
 };
 
@@ -100,8 +154,12 @@ const RoutesWithAuthentication = () => {
       ) : (
         <Routes>
           <Route path="/" element={<MainScreen />} />
-          <Route path="/schools" element={<AllSchools />} />
-          <Route path="/createschool" element={<AllSchools />} />
+          {currentUser.role === "admin" && (
+            <>
+              <Route path="/schools" element={<AllSchools />} />
+              <Route path="/createschool" element={<AllSchools />} />
+            </>
+          )}
           <Route path="/staff" element={<AllStaff />} />
           <Route path="/students" element={<AllStudents />} />
           <Route path="/createstudent" element={<AllStudents />} />
