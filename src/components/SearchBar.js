@@ -3,8 +3,8 @@ import { IconButton } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import { styled } from "@mui/system";
 import TextField from "@mui/material/TextField";
-import { SearchContext } from "./SearchContext";
-import { useLocation, useNavigate } from "react-router-dom";
+import { SearchContext } from './SearchContext';
+import { useLocation } from 'react-router-dom';
 
 const StyledTextField = styled(TextField)({
   "& .MuiFilledInput-root": {
@@ -36,7 +36,6 @@ const SearchBar = () => {
     <div style={{ height: "64px" }}></div>
     )
   }
-
   return (
     <StyledTextField
       variant="filled"
@@ -50,7 +49,7 @@ const SearchBar = () => {
           </IconButton>
         ),
       }}
-      style={{ marginTop: "15px" }}
+      style={{ marginTop: "15px", marginBottom: "15px"}}
     />
   );
 };

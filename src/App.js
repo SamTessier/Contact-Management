@@ -50,9 +50,6 @@ const LogoutButton = () => {
     logOut();
   };
 
-  if (!currentUser) {
-    return <Box sx={{ width: "36px" }}></Box>;
-  }
   return (
     <Box
       sx={{
@@ -90,6 +87,10 @@ const EmptyBackButton = () => (
     <ArrowBackIcon fontSize="small" />
   </IconButton>
 );
+
+
+
+
 
 const App = () => {
   return (
