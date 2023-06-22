@@ -50,6 +50,9 @@ const LogoutButton = () => {
     logOut();
   };
 
+  if (!currentUser) {
+    return <Box sx={{ width: "36px" }}></Box>;
+  }
   return (
     <Box
       sx={{
@@ -59,16 +62,12 @@ const LogoutButton = () => {
         justifyContent: "flex-end",
       }}
     >
-      {currentUser && (
-        <>
-          <IconButton sx={{ color: "red" }} onClick={handleLogOut}>
-            <ExitToAppIcon fontSize="small" />{" "}
-          </IconButton>
-          <Typography variant="caption" display="block" textAlign="center">
-            Log Out
-          </Typography>
-        </>
-      )}
+      <IconButton sx={{ color: "red" }} onClick={handleLogOut}>
+        <ExitToAppIcon fontSize="small" />{" "}
+      </IconButton>
+      <Typography variant="caption" display="block" textAlign="center">
+        Log Out
+      </Typography>
     </Box>
   );
 };
@@ -126,7 +125,7 @@ const LocationDependentToolbar = () => {
 
   return (
     <>
-      {location.pathname !== "/" ? <BackButton /> : <EmptyBackButton />}
+     {["/", "/login", "/signup"].includes(location.pathname) ? <EmptyBackButton /> : <BackButton />}
       <Typography variant="subtitle1">
         <CurrentPage />
       </Typography>
