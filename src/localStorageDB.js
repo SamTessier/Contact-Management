@@ -106,10 +106,16 @@ export const updateStaff = (updatedStaff, companyId) => {
 };
 
 export const saveUser = (user) => {
-  const userList = JSON.parse(localStorage.getItem("users")) || [];
+  let userList = JSON.parse(localStorage.getItem("users")) || [];
+  let currentId = JSON.parse(localStorage.getItem("currentId")) || 0;
+  currentId++;
+  localStorage.setItem("currentId", JSON.stringify(currentId));
+  const newId = currentId;
+  user.id = newId;
   userList.push(user);
   localStorage.setItem("users", JSON.stringify(userList));
 };
+
 
 
 export const getUsers = () => {

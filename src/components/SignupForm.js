@@ -5,7 +5,7 @@ import Button from "@mui/material/Button";
 import Alert from "@mui/material/Alert";
 import Box from "@mui/material/Box";
 import { FormControl, MenuItem, InputLabel, Select } from "@mui/material";
-import { saveUser, getUsers, getSchools } from "../localStorageDB";
+import { getUsers, getSchools } from "../localStorageDB";
 
 const SignupForm = ({ onSuccess }) => {
   const companyId = localStorage.getItem("companyId");
@@ -16,12 +16,12 @@ const SignupForm = ({ onSuccess }) => {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    const { email, password } = event.target.elements;
+    const { username, email, password, companyId } = event.target.elements;
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{4,20}$/;
     const users = getUsers();
     const userExists = users.some((user) => user.email === email.value);
-  
+
     if (userExists) {
       setError("User with this email already exists.");
     } else if (!emailRegex.test(email.value)) {
@@ -31,24 +31,29 @@ const SignupForm = ({ onSuccess }) => {
         "Password must be 4-20 characters, contain at least 1 uppercase and 1 lowercase letter, and 1 number."
       );
     } else {
-      const role = companyId ? "staff" : "admin"; //
-      const user = {
-        email: email.value,
-        password: password.value,
-        companyId: companyId,
-        role: role,
-        school: school,
-      };
-      saveUser(user);
+      const storedCompanyId = localStorage.getItem("companyId");
+      const newCompanyId = storedCompanyId ? storedCompanyId : companyId.value;
+      if (!storedCompanyId) {
+        localStorage.setItem("companyId", newCompanyId);
+      }
       setError("");
-      signUp(email.value, password.value, companyId, school);
+      signUp(username.value, email.value, password.value, newCompanyId, school);
       onSuccess("Account created successfully. Please log in");
     }
   };
-  
 
   return (
     <form onSubmit={handleSubmit} noValidate>
+      <Box mb={2}>
+        <TextField
+          label="Full Name"
+          type="username"
+          name="username"
+          required
+          fullWidth
+          autoFocus
+        />
+      </Box>
       <Box mb={2}>
         <TextField
           label="Email"
@@ -59,6 +64,7 @@ const SignupForm = ({ onSuccess }) => {
           autoFocus
         />
       </Box>
+
       <Box mb={2}>
         <TextField
           label="Password"
@@ -69,23 +75,23 @@ const SignupForm = ({ onSuccess }) => {
         />
       </Box>
       {companyId && (
-      <Box mb={2}>
-        <FormControl fullWidth>
-          <InputLabel id="school-label">School</InputLabel>
-          <Select
-            labelId="school-label"
-            value={school}
-            onChange={(event) => setSchool(event.target.value)}
-          >
-            {schools.map((school, index) => (
-              <MenuItem key={index} value={school.name}>
-                {school.name}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
-      </Box>
-      )}  
+        <Box mb={2}>
+          <FormControl fullWidth>
+            <InputLabel id="school-label">School</InputLabel>
+            <Select
+              labelId="school-label"
+              value={school}
+              onChange={(event) => setSchool(event.target.value)}
+            >
+              {schools.map((school, index) => (
+                <MenuItem key={index} value={school.name}>
+                  {school.name}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+        </Box>
+      )}
       {!companyId && (
         <Box mb={2}>
           <TextField

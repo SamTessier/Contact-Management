@@ -1,5 +1,5 @@
 import React, { createContext, useEffect, useState } from 'react';
-import { saveUser, getUsers } from './localStorageDB';
+import { getUsers, saveUser} from './localStorageDB';
 
 export const AuthContext = createContext({});
 
@@ -23,18 +23,22 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  const signUp = (email, password, companyId, school = null) => {
-    const user = { email, password, companyId, school };
+  const signUp = (username, email, password, companyId, school = null) => {
+    const user = { userName: username, email, password, companyId, school };
     const users = getUsers();
     const companyExists = users.some(user => user.companyId === companyId);
-  
+
     if (companyExists) {
-      saveUser(user, 'staff', school);
+      user.role = "staff";
     } else {
-      saveUser(user, 'admin');
+      user.role = "admin";
+      localStorage.setItem('companyID', companyId);
     }
+    saveUser(user);
+    setCurrentUser(user);
+    localStorage.setItem('user', JSON.stringify(user));
   };
-  
+
 
   const logOut = () => {
     setCurrentUser(null);
