@@ -10,13 +10,7 @@
   <h2>How to Use</h2>
  <p> As this is currently a front-end project, it uses local storage and determines user role based on the existence of a company ID - if a company ID does not exist upon signup, the user is determined to be an admin with full permissions, and subsequent signups are determined to be staff members, and will need to select a their assigned school before successful signup. 
 <br>To start, sign up and create a company ID (any name will do). Then, you can first start adding schools, followed by staff and students as they will need to be assigned to a school. Once the data in is saved, you can search and filter based on page, or logout and create a staff account to view only filtered data.<br>
-The building of this project was made possible by the coaching styles of </p>
+The building of this project was made possible by the coaching styles of <a href="https://github.com/prcostello">Patrick Costello</a> :pray: </p>
 
 
 
-<h2>Hey there 👋</h2>
-<h3>I'm Sam.</h3>
-<P> 🏗️<s>Mobile Crane Operator</s><br>  
-<br>💻 Developer-to-be @ Get Coding<br>
-<br>👶 I recently completed my first <a href="https://samtessier.github.io/Maintenance-Planner/">project</a> ever, using Javascript, HTML and CSS. <br>
-<br>📖 Stay tuned for more languages and frameworks - coming soon!</p>
