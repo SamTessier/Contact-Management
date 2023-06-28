@@ -1,1 +1,22 @@
-This is a starter template for [Learn Next.js](https://nextjs.org/learn).
+
+
+<h2>EdNet</h2>
+<h3>(Education Network)</h3>
+<P>EdNet is my second project as a student of Get Coding
+<br>Built with React.js and MUI component Library<br></p>
+<h2>About</h2>
+<p>
+  This project was inspired by a local business that provides tutoring services after-school programs in the St. John's area. Upon rapid business growth, a solution was needed to keep track of a large number of contacts - like staff, students and their parents/guardians, and the schools in which the programs operate. EdNet is a user friendly interface where users can save, edit, search and filter contacts of different categories. The app filters data by company, and the current users role - staff member can only view the contact information of those who work at or attend the same school as them, and do not have adding/editing/deleting capabilities. </p>
+  <h2>How to Use</h2>
+ <p> As this is currently a front-end project, it uses local storage and determines user role based on the existence of a company ID - if a company ID does not exist upon signup, the user is determined to be an admin with full permissions, and subsequent signups are determined to be staff members, and will need to select a their assigned school before successful signup. 
+<br>To start, sign up and create a company ID (any name will do). Then, you can first start adding schools, followed by staff and students as they will need to be assigned to a school. Once the data in is saved, you can search and filter based on page, or logout and create a staff account to view only filtered data.<br>
+The building of this project was made possible by the coaching styles of </p>
+
+
+
+<h2>Hey there 👋</h2>
+<h3>I'm Sam.</h3>
+<P> 🏗️<s>Mobile Crane Operator</s><br>  
+<br>💻 Developer-to-be @ Get Coding<br>
+<br>👶 I recently completed my first <a href="https://samtessier.github.io/Maintenance-Planner/">project</a> ever, using Javascript, HTML and CSS. <br>
+<br>📖 Stay tuned for more languages and frameworks - coming soon!</p>
