@@ -1,5 +1,5 @@
 {
-  "homepage": "http://SamTessier.github.io/Contact-Management",
+  "homepage": "http://samtessier.github.io/Contact-Management",
   "private": false,
   "scripts": {
     "start": "react-scripts start",
