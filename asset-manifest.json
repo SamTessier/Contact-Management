@@ -1,8 +1,8 @@
 {
   "files": {
-    "main.js": "/static/js/main.ef7052fc.js",
-    "index.html": "/index.html",
-    "main.ef7052fc.js.map": "/static/js/main.ef7052fc.js.map"
+    "main.js": "/Contact-Management/static/js/main.ef7052fc.js",
+    "index.html": "/Contact-Management/index.html",
+    "main.ef7052fc.js.map": "/Contact-Management/static/js/main.ef7052fc.js.map"
   },
   "entrypoints": [
     "static/js/main.ef7052fc.js"
