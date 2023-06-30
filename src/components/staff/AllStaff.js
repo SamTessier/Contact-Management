@@ -107,7 +107,7 @@ const AllStaff = () => {
       >
         {filteredStaffMembers.length === 0 ? (
           <Typography variant="h5" align="center">
-            No Staff found!
+            No staff found
           </Typography>
         ) : (
           <StaffList

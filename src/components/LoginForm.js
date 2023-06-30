@@ -1,6 +1,5 @@
 import React, { useContext, useState } from "react";
 import { AuthContext } from "../AuthContext";
-import { FormControl, Select, InputLabel, MenuItem } from "@mui/material";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import Alert from "@mui/material/Alert";
@@ -9,16 +8,15 @@ import Dialog from "@mui/material/Dialog";
 import DialogTitle from "@mui/material/DialogTitle";
 import DialogContent from "@mui/material/DialogContent";
 import DialogActions from "@mui/material/DialogActions";
-import { getUsers, getSchools } from "../localStorageDB";
+import { getUsers } from "../localStorageDB";
 import SignupForm from "./SignupForm";
 
-const companyId = localStorage.getItem("companyId");
 
 const LoginForm = () => {
   const { logIn } = useContext(AuthContext);
   const [error, setError] = useState("");
   const [open, setOpen] = useState(false);
-  const schools = getSchools(companyId);
+
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -42,7 +40,7 @@ const LoginForm = () => {
     }
     if (user) {
       setError("");
-      localStorage.setItem("companyId", user.companyId); // save companyId to localStorage
+      localStorage.setItem("companyId", user.companyId); 
       logIn(email.value, password.value);
     } else {
       setError("Invalid email or password.");
@@ -112,7 +110,8 @@ const LoginForm = () => {
           </Button>
         </Box>
       </form>
-      <Dialog open={open} onClose={handleClose}>
+      <Box maxWidth="lg">
+      <Dialog open={open} onClose={handleClose} maxWidth="lg">
         <DialogTitle>Sign Up</DialogTitle>
         <DialogContent>
           <SignupForm onSuccess={handleSignupSuccess} />
@@ -123,6 +122,7 @@ const LoginForm = () => {
           </Button>
         </DialogActions>
       </Dialog>
+      </Box>
     </Box>
   );
 };

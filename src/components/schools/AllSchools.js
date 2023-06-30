@@ -96,7 +96,7 @@ const AllSchools = () => {
       >
         {filteredSchools.length === 0 ? (
           <Typography variant="h5" align="center">
-            No schools found!
+            No schools found
           </Typography>
         ) : (
           <SchoolList

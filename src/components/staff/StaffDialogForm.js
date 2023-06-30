@@ -49,7 +49,7 @@ const StaffDialogForm = ({ open, handleClose, onSubmit, staff, schools }) => {
               control={control}
               rules={{ required: true }}
               render={({ field }) => (
-                <TextField {...field} label="Full Name" fullWidth required />
+                <TextField {...field} label="Full Name" fullWidth required sx={{ minWidth: { xs: '100%', sm: '500px' } }}/>
               )}
             />
           </Box>
@@ -59,7 +59,7 @@ const StaffDialogForm = ({ open, handleClose, onSubmit, staff, schools }) => {
               control={control}
               rules={{ required: true }}
               render={({ field }) => (
-                <TextField {...field} label="Address" fullWidth required />
+                <TextField {...field} label="Address" fullWidth required sx={{ minWidth: { xs: '100%', sm: '500px' } }}/>
               )}
             />
           </Box>
@@ -69,7 +69,7 @@ const StaffDialogForm = ({ open, handleClose, onSubmit, staff, schools }) => {
               control={control}
               rules={{ required: true }}
               render={({ field }) => (
-                <TextField {...field} label="Phone Number" fullWidth required />
+                <TextField {...field} label="Phone Number" fullWidth required sx={{ minWidth: { xs: '100%', sm: '500px' } }}/>
               )}
             />
           </Box>
@@ -84,6 +84,7 @@ const StaffDialogForm = ({ open, handleClose, onSubmit, staff, schools }) => {
                   label="Email Address"
                   fullWidth
                   required
+                  sx={{ minWidth: { xs: '100%', sm: '500px' } }}
                 />
               )}
             />
@@ -96,7 +97,7 @@ const StaffDialogForm = ({ open, handleClose, onSubmit, staff, schools }) => {
               render={({ field }) => (
                 <FormControl fullWidth>
                   <InputLabel id="school-label">School</InputLabel>
-                  <Select {...field} labelId="school-label">
+                  <Select {...field} labelId="school-label" sx={{ minWidth: { xs: '100%', sm: '500px' } }}>
                     {schools.map((school, index) => (
                       <MenuItem key={index} value={school.name}>
                         {school.name}
@@ -112,7 +113,7 @@ const StaffDialogForm = ({ open, handleClose, onSubmit, staff, schools }) => {
               name="notes"
               control={control}
               render={({ field }) => (
-                <TextField {...field} label="Notes (Optional)" fullWidth />
+                <TextField {...field} label="Notes (Optional)" fullWidth sx={{ minWidth: { xs: '100%', sm: '500px' } }}/>
               )}
             />
           </Box>

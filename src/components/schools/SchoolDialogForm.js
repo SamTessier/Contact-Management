@@ -38,7 +38,7 @@ const SchoolDialogForm = ({ open, handleClose, onSubmit, school }) => {
               control={control}
               rules={{ required: true }}
               render={({ field }) => (
-                <TextField {...field} label="Full Name" fullWidth required />
+                <TextField {...field} label="School Name" fullWidth required sx={{ minWidth: { xs: '100%', sm: '500px' } }}/>
               )}
             />
           </Box>
@@ -48,7 +48,7 @@ const SchoolDialogForm = ({ open, handleClose, onSubmit, school }) => {
               control={control}
               rules={{ required: true }}
               render={({ field }) => (
-                <TextField {...field} label="Address" fullWidth required />
+                <TextField {...field} label="Address" fullWidth required sx={{ minWidth: { xs: '100%', sm: '500px' } }}/>
               )}
             />
           </Box>
@@ -58,7 +58,7 @@ const SchoolDialogForm = ({ open, handleClose, onSubmit, school }) => {
               control={control}
               rules={{ required: true }}
               render={({ field }) => (
-                <TextField {...field} label="Phone Number" fullWidth required />
+                <TextField {...field} label="Phone Number" fullWidth required sx={{ minWidth: { xs: '100%', sm: '500px' } }}/>
               )}
             />
           </Box>
@@ -73,6 +73,7 @@ const SchoolDialogForm = ({ open, handleClose, onSubmit, school }) => {
                   label="Email Address"
                   fullWidth
                   required
+                  sx={{ minWidth: { xs: '100%', sm: '500px' } }}
                 />
               )}
             />
@@ -86,6 +87,7 @@ const SchoolDialogForm = ({ open, handleClose, onSubmit, school }) => {
                   {...field}
                   label="Contact Person (Optional)"
                   fullWidth
+                  sx={{ minWidth: { xs: '100%', sm: '500px' } }}
                 />
               )}
             />
@@ -95,7 +97,7 @@ const SchoolDialogForm = ({ open, handleClose, onSubmit, school }) => {
               name="notes"
               control={control}
               render={({ field }) => (
-                <TextField {...field} label="Notes (Optional)" fullWidth />
+                <TextField {...field} label="Notes (Optional)" fullWidth sx={{ minWidth: { xs: '100%', sm: '500px' } }}/>
               )}
             />
           </Box>

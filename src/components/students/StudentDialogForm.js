@@ -24,6 +24,7 @@ const StudentDialogForm = ({ open, handleClose, onSubmit, student, schools }) =>
     "name",
     "school",
     "grade", 
+    "expectedAttendance",
     "parentName",
     "parentPhone",
     "parentEmail",
@@ -58,6 +59,7 @@ const StudentDialogForm = ({ open, handleClose, onSubmit, student, schools }) =>
                     fullWidth
                     required
                     onChange={(e) => field.onChange(e.target.value)}
+                    sx={{ minWidth: { xs: '100%', sm: '500px' } }}
                   />
                 )}
               />
@@ -71,7 +73,7 @@ const StudentDialogForm = ({ open, handleClose, onSubmit, student, schools }) =>
                 render={({ field }) => (
                   <FormControl fullWidth>
                     <InputLabel id="school-label">School</InputLabel>
-                    <Select {...field} labelId="school-label">
+                    <Select {...field} labelId="school-label" sx={{ minWidth: { xs: '100%', sm: '500px' } }}>
                       {schools.map((school, index) => (
                         <MenuItem key={index} value={school.name}>
                           {school.name}
@@ -91,7 +93,7 @@ const StudentDialogForm = ({ open, handleClose, onSubmit, student, schools }) =>
                 render={({ field }) => (
                   <FormControl fullWidth>
                     <InputLabel id="grade-label">Grade</InputLabel>
-                    <Select {...field} labelId="grade-label">
+                    <Select {...field} labelId="grade-label" sx={{ minWidth: { xs: '100%', sm: '500px' } }}>
                       {[...Array(12).keys()].map((_, index) => (
                         <MenuItem key={index} value={index + 1}>
                           {index + 1}
@@ -115,6 +117,7 @@ const StudentDialogForm = ({ open, handleClose, onSubmit, student, schools }) =>
                     fullWidth
                     required
                     onChange={(e) => field.onChange(e.target.value)}
+                    sx={{ minWidth: { xs: '100%', sm: '500px' } }}
                   />
                 )}
               />
@@ -132,6 +135,7 @@ const StudentDialogForm = ({ open, handleClose, onSubmit, student, schools }) =>
                     fullWidth
                     required
                     onChange={(e) => field.onChange(e.target.value)}
+                    sx={{ minWidth: { xs: '100%', sm: '500px' } }}
                   />
                 )}
               />
@@ -149,6 +153,7 @@ const StudentDialogForm = ({ open, handleClose, onSubmit, student, schools }) =>
                     fullWidth
                     required
                     onChange={(e) => field.onChange(e.target.value)}
+                    sx={{ minWidth: { xs: '100%', sm: '500px' } }}
                   />
                 )}
               />
@@ -166,6 +171,7 @@ const StudentDialogForm = ({ open, handleClose, onSubmit, student, schools }) =>
                     rows={4}
                     fullWidth
                     onChange={(e) => field.onChange(e.target.value)}
+                    sx={{ minWidth: { xs: '100%', sm: '500px' } }}
                   />
                 )}
               />
@@ -183,6 +189,7 @@ const StudentDialogForm = ({ open, handleClose, onSubmit, student, schools }) =>
                     rows={4}
                     fullWidth
                     onChange={(e) => field.onChange(e.target.value)}
+                    sx={{ minWidth: { xs: '100%', sm: '500px' } }}
                   />
                 )}
               />
@@ -200,6 +207,7 @@ const StudentDialogForm = ({ open, handleClose, onSubmit, student, schools }) =>
                     rows={4}
                     fullWidth
                     onChange={(e) => field.onChange(e.target.value)}
+                    sx={{ minWidth: { xs: '100%', sm: '500px' } }}
                   />
                 )}
               />

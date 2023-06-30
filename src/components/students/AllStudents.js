@@ -107,7 +107,7 @@ const AllStudents = () => {
       >
         {filteredStudents.length === 0 ? (
           <Typography variant="h5" align="center">
-            No Student found!
+            No students found
           </Typography>
         ) : (
           <StudentList

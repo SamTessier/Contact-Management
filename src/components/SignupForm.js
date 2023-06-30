@@ -4,7 +4,7 @@ import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import Alert from "@mui/material/Alert";
 import Box from "@mui/material/Box";
-import { FormControl, MenuItem, InputLabel, Select } from "@mui/material";
+import { FormControl, MenuItem, InputLabel, Select, } from "@mui/material";
 import { getUsers, getSchools } from "../localStorageDB";
 
 const SignupForm = ({ onSuccess }) => {
@@ -52,6 +52,7 @@ const SignupForm = ({ onSuccess }) => {
           required
           fullWidth
           autoFocus
+          sx={{ minWidth: { xs: '100%', sm: '500px' } }}
         />
       </Box>
       <Box mb={2}>
@@ -62,6 +63,7 @@ const SignupForm = ({ onSuccess }) => {
           required
           fullWidth
           autoFocus
+          sx={{ minWidth: { xs: '100%', sm: '500px' } }}
         />
       </Box>
 
@@ -72,6 +74,7 @@ const SignupForm = ({ onSuccess }) => {
           name="password"
           required
           fullWidth
+          sx={{ minWidth: { xs: '100%', sm: '500px' } }}
         />
       </Box>
       {companyId && (
@@ -82,6 +85,7 @@ const SignupForm = ({ onSuccess }) => {
               labelId="school-label"
               value={school}
               onChange={(event) => setSchool(event.target.value)}
+              sx={{ minWidth: { xs: '100%', sm: '500px' } }}
             >
               {schools.map((school, index) => (
                 <MenuItem key={index} value={school.name}>
@@ -95,11 +99,13 @@ const SignupForm = ({ onSuccess }) => {
       {!companyId && (
         <Box mb={2}>
           <TextField
+            placeholder="The name of your company"
             label="Company ID"
             type="text"
             name="companyId"
             required
             fullWidth
+            sx={{ minWidth: { xs: '100%', sm: '500px' } }}
           />
         </Box>
       )}
