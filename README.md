@@ -3,7 +3,8 @@
 <h2>EdNet</h2>
 <h3>(Education Network)</h3>
 <P>EdNet is my second project as a student of Get Coding
-<br>Built with React.js and MUI component Library<br></p>
+<br>Built with React.js and MUI component Library<br>
+<br>View the live demo <a href="https://samtessier.github.io/Contact-Management/">here<br></p>
 <h2>About</h2>
 <p>
   This project was inspired by a local business that provides tutoring services and after-school programs in the St. John's area. Upon rapid business growth, a solution was needed to keep track of a large number of contacts - like staff, students and their parents/guardians, and the schools in which the programs operate. EdNet is a user friendly interface where users can save, edit, search and filter contacts of different categories. The app filters data by company, and the current users role - staff members can only view the contact information of those who work at or attend the same school as them, and do not have adding/editing/deleting capabilities. </p>
