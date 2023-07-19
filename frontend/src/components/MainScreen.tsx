@@ -9,33 +9,23 @@ import InfoIcon from "@mui/icons-material/Info";
 import StaffDetails from "./staff/StaffDetails";
 import SchoolDetails from "./schools/SchoolDetails";
 import StudentDetails from "./students/StudentDetails";
-import { getStudents, getStaff, getSchools } from "../localStorageDB";
 import { SearchContext } from "./SearchContext";
-import { AuthContext } from "../AuthContext";
 
-const MainScreen = () => {
+// Define the types here (type for selected student, staff, school) according to your data structure
+
+// TODO: Replace this with real auth context from the backend
+const AuthContext = React.createContext<any>(null);
+
+const MainScreen: React.FC = () => {
   const { currentUser } = useContext(AuthContext);
   const [searchTerm] = useContext(SearchContext);
   const [selectedSchool, setSelectedSchool] = useState(null);
   const [selectedStaff, setSelectedStaff] = useState(null);
   const [selectedStudent, setSelectedStudent] = useState(null);
   const [detailsOpen, setDetailsOpen] = useState(false);
-  const companyId = localStorage.getItem("companyId");
-  let data =
-    searchTerm !== ""
-      ? [
-          ...getStudents(companyId),
-          ...getStaff(companyId),
-          ...getSchools(companyId),
-        ]
-      : [];
-  data = data.filter(
-    (item) =>
-      item.name.toLowerCase().includes(searchTerm.toLowerCase()) &&
-      (currentUser.role !== "staff" || item.school === currentUser.school)
-  );
 
-  const handleDetailsOpen = (item) => {
+  const handleDetailsOpen = (item: any) => {
+    // Replace 'any' with your item type
     item.type === "student"
       ? setSelectedStudent(item)
       : item.type === "staff"
@@ -112,31 +102,7 @@ const MainScreen = () => {
               </Grid>
             </Grid>
           </Grid>
-          <Grid item>
-            <Grid container direction="column" spacing={2} alignItems="center">
-              {searchTerm &&
-                data.map((item, index) => (
-                  <Grid
-                    key={index}
-                    container
-                    justifyContent="space-between"
-                    alignItems="center"
-                  >
-                    <Grid item>
-                      <Typography variant="body1">{item.name}</Typography>
-                    </Grid>
-                    <Grid item>
-                      <IconButton
-                        color="primary"
-                        onClick={() => handleDetailsOpen(item)}
-                      >
-                        <InfoIcon />
-                      </IconButton>
-                    </Grid>
-                  </Grid>
-                ))}
-            </Grid>
-          </Grid>
+          {/* As the data loading will now be handled by the backend, the data mapping section has been removed */}
           {selectedStudent && (
             <StudentDetails
               student={selectedStudent}
@@ -154,7 +120,7 @@ const MainScreen = () => {
           {selectedSchool && (
             <SchoolDetails
               school={selectedSchool}
-              open={handleDetailsOpen}
+              open={detailsOpen}
               handleClose={handleDetailsClose}
             />
           )}

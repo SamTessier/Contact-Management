@@ -9,6 +9,15 @@ import {
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import EditIcon from "@mui/icons-material/Edit";
 import SchoolDialogForm from "./SchoolDialogForm";
+import { School } from "./types";
+
+type SchoolDetailsProps = {
+  open: boolean;
+  handleClose: () => void;
+  school: School;
+  handleDelete: (id: string) => void;
+  handleUpdateSchool: (school: School) => void;
+};
 
 const SchoolDetails = ({
   open,
@@ -16,14 +25,14 @@ const SchoolDetails = ({
   school,
   handleDelete,
   handleUpdateSchool,
-}) => {
+}: SchoolDetailsProps): JSX.Element => {
   const [editMode, setEditMode] = useState(false);
 
   const handleEditClick = () => {
     setEditMode(true);
   };
 
-  const handleFormSubmit = (data) => {
+  const handleFormSubmit = (data: School) => {
     handleUpdateSchool({ ...school, ...data });
     handleClose();
   };
@@ -70,4 +79,5 @@ const SchoolDetails = ({
     </>
   );
 };
+
 export default SchoolDetails;
