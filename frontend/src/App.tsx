@@ -22,6 +22,19 @@ const StyledAppBar = styled(AppBar)(({ theme }) => ({
   backgroundColor: theme.palette.primary.main,
 }));
 
+const LogoutButton = (): JSX.Element => {
+  const navigate = useNavigate();
+  
+  const handleLogoutClick = () => {
+    navigate("/login");
+  };
+
+  return (
+    <button onClick={handleLogoutClick}>Logout</button>
+  );
+};
+
+
 const BackButton = (): JSX.Element => {
   const navigate = useNavigate();
   const handleBackClick = () => {
@@ -43,23 +56,25 @@ const EmptyBackButton = (): JSX.Element => (
 
 const App = (): JSX.Element => {
   return (
-    <Router>
-      <StyledApp>
-        <StyledAppBar position="static">
-          <Toolbar sx={{ display: "flex", justifyContent: "space-between" }}>
-            <EmptyBackButton />
-            <Typography variant="h6" sx={{ marginLeft: "10px" }}>
-              EdNet
-            </Typography>
-            <LocationDependentToolbar />
-          </Toolbar>
-        </StyledAppBar>
-        <SearchProvider>
-          <SearchBar />
-          <RoutesWithAuthentication />
-        </SearchProvider>
-      </StyledApp>
-    </Router>
+<Router>
+        <StyledApp>
+          <StyledAppBar position="static">
+            <Toolbar sx={{ display: "flex", justifyContent: "space-between" }}>
+              <LogoutButton />
+              <LocationDependentToolbar />
+              <EmptyBackButton/>
+              <Typography variant="h6" sx={{ marginLeft: "10px" }}>
+                EdNet
+              </Typography>
+            </Toolbar>
+          </StyledAppBar>
+          <SearchProvider>
+          
+            <SearchBar />
+            <RoutesWithAuthentication />
+          </SearchProvider>
+        </StyledApp>
+      </Router>
   );
 };
 
