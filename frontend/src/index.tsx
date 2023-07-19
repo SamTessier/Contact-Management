@@ -20,13 +20,15 @@ const theme = createTheme({
   },
 });
 
-const Root = () => {
-  return (
-    <ThemeProvider theme={theme}>
-      <CssBaseline />
-      <App />
-    </ThemeProvider>
+const root = document.getElementById('root');
+
+if (root !== null) {
+  ReactDOM.createRoot(root).render(
+    <React.StrictMode>
+      <ThemeProvider theme={theme}>
+        <CssBaseline />
+        <App />
+      </ThemeProvider>
+    </React.StrictMode>
   );
 }
-
-ReactDOM.render(<Root />, document.getElementById("root"));

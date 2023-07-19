@@ -9,7 +9,8 @@ import {
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import EditIcon from "@mui/icons-material/Edit";
 import SchoolDialogForm from "./SchoolDialogForm";
-import { School } from "./types";
+import { School } from "../types";
+
 
 type SchoolDetailsProps = {
   open: boolean;

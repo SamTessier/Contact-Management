@@ -1,10 +1,10 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import Button from "@mui/material/Button";
 import AddIcon from "@mui/icons-material/Add";
 import SchoolList from "./SchoolList";
 import SchoolDetails from "./SchoolDetails";
 import SchoolDialogForm from "./SchoolDialogForm";
-import { School } from "./types";
+import { School } from "../types";
 
 const AllSchools = (): JSX.Element => {
   const [schools, setSchools] = useState<School[]>([]);
