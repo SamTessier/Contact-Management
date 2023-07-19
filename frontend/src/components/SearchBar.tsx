@@ -1,8 +1,7 @@
-import React, { useContext } from 'react';
-import { IconButton } from "@mui/material";
+import { useContext } from 'react';
+import { IconButton, TextField } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import { styled } from "@mui/system";
-import TextField from "@mui/material/TextField";
 import { SearchContext } from './SearchContext';
 import { useLocation } from 'react-router-dom';
 
