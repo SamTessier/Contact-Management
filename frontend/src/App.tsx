@@ -6,6 +6,9 @@ import { BrowserRouter as Router, Routes, Route, Navigate, useLocation, useNavig
 import { AppBar, Toolbar, Typography, Container, Box, IconButton } from "@mui/material";
 import { styled } from "@mui/system";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import { QueryClient, QueryClientProvider } from 'react-query';
+
+const queryClient = new QueryClient();
 
 const StyledApp = styled(Box)(({ theme }) => ({
   flexGrow: 1,
@@ -57,6 +60,7 @@ const EmptyBackButton = (): JSX.Element => (
 const App = (): JSX.Element => {
   return (
 <Router>
+<QueryClientProvider client={queryClient}>
         <StyledApp>
           <StyledAppBar position="static">
             <Toolbar sx={{ display: "flex", justifyContent: "space-between" }}>
@@ -74,6 +78,7 @@ const App = (): JSX.Element => {
             <RoutesWithAuthentication />
           </SearchProvider>
         </StyledApp>
+        </QueryClientProvider>
       </Router>
   );
 };

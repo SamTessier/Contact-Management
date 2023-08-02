@@ -5,9 +5,41 @@ import SchoolList from "./SchoolList";
 import SchoolDetails from "./SchoolDetails";
 import SchoolDialogForm from "./SchoolDialogForm";
 import { School } from "../types";
+import { useMutation, useQuery, useQueryClient } from "react-query";
 
 const AllSchools = (): JSX.Element => {
-  const [schools, setSchools] = useState<School[]>([]);
+  const queryClient = useQueryClient();
+  const { data: schools, isLoading } = useQuery(
+    ["schools"],
+    async () =>
+      (await (await fetch("http://localhost:5000/schools")).json()) as School[]
+  );
+
+  const { mutate: createSchool } = useMutation(async (school: School) => {
+    await fetch("http://localhost:5000/schools", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(school),
+    });
+    queryClient.invalidateQueries(["schools"]);
+  });
+
+  const { mutate: updateSchool } = useMutation(async (school: School) => {
+    await fetch(`http://localhost:5000/schools/${school.id}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(school),
+    });
+    queryClient.invalidateQueries(["schools"]);
+  });
+
+  const { mutate: deleteSchool } = useMutation(async (id: string) => {
+    await fetch(`http://localhost:5000/schools/${id}`, {
+      method: "DELETE",
+    });
+    queryClient.invalidateQueries(["schools"]);
+  });
+
   const [selectedSchool, setSelectedSchool] = useState<School | null>(null);
   const [detailsOpen, setDetailsOpen] = useState(false);
   const [formOpen, setFormOpen] = useState(false);
@@ -31,28 +63,28 @@ const AllSchools = (): JSX.Element => {
   };
 
   const handleAddSchool = (school: School) => {
-    setSchools((prevSchools) => [...prevSchools, school]);
+    createSchool(school);
     handleFormClose();
   };
 
   const handleUpdateSchool = (updatedSchool: School) => {
-    setSchools((prevSchools) =>
-      prevSchools.map((school) =>
-        school.id === updatedSchool.id ? updatedSchool : school
-      )
-    );
+    updateSchool(updatedSchool);
   };
 
   const handleDeleteSchool = (id: string) => {
-    setSchools((prevSchools) => prevSchools.filter((school) => school.id !== id));
+    deleteSchool(id);
   };
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <div>
       <Button onClick={handleFormOpen} startIcon={<AddIcon />}>
         Add School
       </Button>
-      <SchoolList schools={schools} onInfo={handleInfoClick} />
+      <SchoolList schools={schools || []} onInfo={handleInfoClick} />
       {selectedSchool && (
         <SchoolDetails
           open={detailsOpen}
