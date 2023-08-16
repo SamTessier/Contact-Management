@@ -76,13 +76,13 @@ const AllSchools = (): JSX.Element => {
   };
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return <>Loading...</>;
   }
 
   return (
-    <div>
+   <>
       <Button onClick={handleFormOpen} startIcon={<AddIcon />}>
-        Add School
+        Add New School
       </Button>
       <SchoolList schools={schools || []} onInfo={handleInfoClick} />
       {selectedSchool && (
@@ -99,7 +99,7 @@ const AllSchools = (): JSX.Element => {
         handleClose={handleFormClose}
         onSubmit={handleAddSchool}
       />
-    </div>
+</>
   );
 };
 
