@@ -21,11 +21,154 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// Your API routes
-
 app.listen(port, () => {
   console.log(`Listening: http://localhost:${port}`);
 });
+
+app.get("/staff", (req, res) => {
+  const sql = 'SELECT * FROM staff';
+  connection.query(sql, (err, results) => {
+    if (err) throw err;
+    res.json(results);
+  });
+});
+
+app.post("/staff", (req, res) => {
+  const sql = 'INSERT INTO staff SET ?';
+  const newStaffMember = req.body;
+  connection.query(sql, newStaffMember, (err, result) => {
+    if (err) throw err;
+    res.json({ status: "ok" });
+  });
+});
+
+app.put("/staff/:id", (req, res) => {
+  const sql = 'UPDATE staff SET ? WHERE person_id = ?';
+  const updatedStaffMember = req.body;
+  connection.query(sql, [updatedStaffMember, req.params.id], (err, result) => {
+    if (err) throw err;
+    res.json({ status: "ok" });
+  });
+});
+
+app.delete("/staff/:id", (req, res) => {
+  const sql = 'DELETE FROM staff WHERE person_id = ?';
+  connection.query(sql, req.params.id, (err, result) => {
+    if (err) throw err;
+    res.json({ status: "ok" });
+  });
+});
+
+app.get("/students", (req, res) => {
+  const sql = 'SELECT * FROM students';
+  connection.query(sql, (err, results) => {
+    if (err) throw err;
+    res.json(results);
+  });
+});
+
+app.post("/students", (req, res) => {
+  const sql = 'INSERT INTO students SET ?';
+  const newStudent = req.body;
+  connection.query(sql, newStudent, (err, result) => {
+    if (err) throw err;
+    res.json({ status: "ok" });
+  });
+});
+
+app.put("/students/:id", (req, res) => {
+  const sql = 'UPDATE students SET ? WHERE person_id = ?';
+  const updatedStudent = req.body;
+  connection.query(sql, [updatedStudent, req.params.id], (err, result) => {
+    if (err) throw err;
+    res.json({ status: "ok" });
+  });
+});
+
+app.delete("/students/:id", (req, res) => {
+  const sql = 'DELETE FROM students WHERE person_id = ?';
+  connection.query(sql, req.params.id, (err, result) => {
+    if (err) throw err;
+    res.json({ status: "ok" });
+  });
+});
+
+app.get("/schools", (req, res) => {
+  const sql = 'SELECT * FROM schools';
+  connection.query(sql, (err, results) => {
+    if (err) throw err;
+    res.json(results);
+  });
+});
+
+app.post("/schools", (req, res) => {
+  const sql = 'INSERT INTO schools SET ?';
+  const newSchool = req.body;
+  connection.query(sql, newSchool, (err, result) => {
+    if (err) throw err;
+    res.json({ status: "ok" });
+  });
+});
+
+app.put("/schools/:id", (req, res) => {
+  const sql = 'UPDATE schools SET ? WHERE id = ?';
+  const updatedSchool = req.body;
+  connection.query(sql, [updatedSchool, req.params.id], (err, result) => {
+    if (err) throw err;
+    res.json({ status: "ok" });
+  });
+});
+
+app.delete("/schools/:id", (req, res) => {
+  const sql = 'DELETE FROM schools WHERE id = ?';
+  connection.query(sql, req.params.id, (err, result) => {
+    if (err) throw err;
+    res.json({ status: "ok" });
+  });
+});
+
+app.get("/parents", (req, res) => {
+  const sql = 'SELECT * FROM parents';
+  connection.query(sql, (err, results) => {
+    if (err) throw err;
+    res.json(results);
+  });
+});
+
+app.post("/parents", (req, res) => {
+  const sql = 'INSERT INTO parents SET ?';
+  const newParent = req.body;
+  connection.query(sql, newParent, (err, result) => {
+    if (err) throw err;
+    res.json({ status: "ok" });
+  });
+});
+
+app.put("/parents/:id", (req, res) => {
+  const sql = 'UPDATE parents SET ? WHERE person_id = ?';
+  const updatedParent = req.body;
+  connection.query(sql, [updatedParent, req.params.id], (err, result) => {
+    if (err) throw err;
+    res.json({ status: "ok" });
+  });
+});
+
+app.delete("/parents/:id", (req, res) => {
+  const sql = 'DELETE FROM parents WHERE person_id = ?';
+  connection.query(sql, req.params.id, (err, result) => {
+    if (err) throw err;
+    res.json({ status: "ok" });
+  });
+});
+
+app.get("/students/:studentId/parents", (req, res) => {
+  const sql = 'SELECT parents.* FROM parents INNER JOIN students_parents ON parents.person_id = students_parents.parent_id WHERE students_parents.student_id = ?';
+  connection.query(sql, req.params.studentId, (err, results) => {
+    if (err) throw err;
+    res.json(results);
+  });
+});
+
 
 const setupDb = () => {
     const createAddressesTable = `
@@ -33,8 +176,8 @@ const setupDb = () => {
             address_id INT PRIMARY KEY,
             street TEXT,
             city TEXT,
-            state TEXT,
-            zip_code TEXT
+            country TEXT,
+            postal_code TEXT
         );
     `;
     
