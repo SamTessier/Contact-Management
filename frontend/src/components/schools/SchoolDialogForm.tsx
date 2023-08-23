@@ -24,10 +24,8 @@ const SchoolDialogForm = ({
   const keys = [
     "name",
     "address",
-    "phoneNumber",
-    "email",
-    "contactPerson",
-    "notes",
+    "phone",
+    "email"
   ];
   const defaultValues = school || createEmptyObject(keys);
 
@@ -60,7 +58,55 @@ const SchoolDialogForm = ({
           </Box>
           <Box mb={2}>
             <Controller
-              name="address"
+              name="street"
+              control={control}
+              rules={{ required: true }}
+              render={({ field }) => (
+                <TextField
+                  {...field}
+                  label="Street Address"
+                  fullWidth
+                  required
+                  sx={{ minWidth: { xs: "100%", sm: "500px" } }}
+                />
+              )}
+            />
+          </Box>
+          <Box mb={2}>
+            <Controller
+              name="city"
+              control={control}
+              rules={{ required: true }}
+              render={({ field }) => (
+                <TextField
+                  {...field}
+                  label="City/Town"
+                  fullWidth
+                  required
+                  sx={{ minWidth: { xs: "100%", sm: "500px" } }}
+                />
+              )}
+            />
+          </Box>
+          <Box mb={2}>
+            <Controller
+              name="country"
+              control={control}
+              rules={{ required: true }}
+              render={({ field }) => (
+                <TextField
+                  {...field}
+                  label="Country"
+                  fullWidth
+                  required
+                  sx={{ minWidth: { xs: "100%", sm: "500px" } }}
+                />
+              )}
+            />
+          </Box>
+          <Box mb={2}>
+            <Controller
+              name="postalCode"
               control={control}
               rules={{ required: true }}
               render={({ field }) => (
@@ -76,7 +122,7 @@ const SchoolDialogForm = ({
           </Box>
           <Box mb={2}>
             <Controller
-              name="phoneNumber"
+              name="phone"
               control={control}
               rules={{ required: true }}
               render={({ field }) => (
@@ -101,34 +147,6 @@ const SchoolDialogForm = ({
                   label="Email Address"
                   fullWidth
                   required
-                  sx={{ minWidth: { xs: "100%", sm: "500px" } }}
-                />
-              )}
-            />
-          </Box>
-          <Box mb={2}>
-            <Controller
-              name="contactPerson"
-              control={control}
-              render={({ field }) => (
-                <TextField
-                  {...field}
-                  label="Contact Person (Optional)"
-                  fullWidth
-                  sx={{ minWidth: { xs: "100%", sm: "500px" } }}
-                />
-              )}
-            />
-          </Box>
-          <Box mb={2}>
-            <Controller
-              name="notes"
-              control={control}
-              render={({ field }) => (
-                <TextField
-                  {...field}
-                  label="Notes (Optional)"
-                  fullWidth
                   sx={{ minWidth: { xs: "100%", sm: "500px" } }}
                 />
               )}
