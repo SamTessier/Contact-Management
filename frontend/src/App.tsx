@@ -1,5 +1,7 @@
 import MainScreen from "./components/MainScreen";
 import AllSchools from "./components/schools/AllSchools";
+import AllStaff from "./components/staff/AllStaff";
+import AllStudents from "./components/students/AllStudents";
 import SearchBar from "./components/SearchBar";
 import { SearchProvider } from "./components/SearchContext";
 import { BrowserRouter as Router, Routes, Route, Navigate, useLocation, useNavigate } from "react-router-dom";
@@ -114,8 +116,8 @@ const RoutesWithAuthentication = (): JSX.Element => {
       <Routes>
         <Route path="/" element={<MainScreen />} />
         <Route path="/schools" element={<AllSchools />} />
-        {/* <Route path="/staff" element={<AllStaff />} />
-        <Route path="/students" element={<AllStudents />} /> */}
+        <Route path="/staff" element={<AllStaff />} />
+        <Route path="/students" element={<AllStudents />} />
         <Route path="*" element={<Navigate replace to="/" />} />
       </Routes>
     </Container>

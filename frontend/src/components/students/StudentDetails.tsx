@@ -1,10 +1,15 @@
 import { useState, useContext } from "react";
-import { Button, Dialog, DialogContent, DialogActions, Typography } from "@mui/material";
+import {
+  Button,
+  Dialog,
+  DialogContent,
+  DialogActions,
+  Typography,
+} from "@mui/material";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import EditIcon from "@mui/icons-material/Edit";
 import StudentDialogForm from "./StudentDialogForm";
 import { Student } from "../types";
-
 
 type StudentDetailsProps = {
   open: boolean;
@@ -12,7 +17,7 @@ type StudentDetailsProps = {
   Student: Student;
   handleDelete: (id: string) => void;
   handleUpdateStudent: (updatedStudent: Student) => void;
-  schools: any;  
+  schools: any;
 };
 
 const StudentDetails = ({
@@ -24,7 +29,6 @@ const StudentDetails = ({
   schools,
 }: StudentDetailsProps): JSX.Element => {
   const [editMode, setEditMode] = useState(false);
-  const { currentUser } = useContext(AuthContext);
 
   const handleEditClick = () => {
     setEditMode(true);
@@ -54,29 +58,27 @@ const StudentDetails = ({
         <Dialog open={open} onClose={handleClose}>
           <DialogContent>
             <Typography variant="h5">{Student.name}</Typography>
-            <Typography variant="subtitle1">{student.address}</Typography>
-            <Typography variant="subtitle1">{student.phoneNumber}</Typography>
-            <Typography variant="subtitle1">{student.email}</Typography>
-            <Typography variant="subtitle1">{student.school}</Typography>
+            <Typography variant="subtitle1">{Student.address}</Typography>
+            <Typography variant="subtitle1">{Student.phoneNumber}</Typography>
+            <Typography variant="subtitle1">{Student.email}</Typography>
+            <Typography variant="subtitle1">{Student.school}</Typography>
             <Typography variant="subtitle1">
               Contact: {Student.contactPerson}
             </Typography>
             <Typography variant="subtitle1">Notes: {Student.notes}</Typography>
           </DialogContent>
           <DialogActions>
-          {currentUser.role !== "Student" && (
             <>
-            <Button onClick={handleEditClick} startIcon={<EditIcon />}>
-              Edit
-            </Button>
-            <Button
-              onClick={handleDeleteClick}
-              startIcon={<DeleteOutlineIcon />}
-            >
-              Delete
-            </Button>
+              <Button onClick={handleEditClick} startIcon={<EditIcon />}>
+                Edit
+              </Button>
+              <Button
+                onClick={handleDeleteClick}
+                startIcon={<DeleteOutlineIcon />}
+              >
+                Delete
+              </Button>
             </>
-          )}
           </DialogActions>
         </Dialog>
       )}

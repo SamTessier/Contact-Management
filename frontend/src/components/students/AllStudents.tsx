@@ -81,26 +81,24 @@ const AllStudent = (): JSX.Element => {
 
   return (
    <>
-      {currentUser.role !== "Student" && (
+
         <Button onClick={handleFormOpen} startIcon={<AddIcon />}>
           Add New Student
         </Button>
-      )}
-      <StudentList Students={Students || []} onInfo={handleInfoClick} />
+ 
+      <StudentList students={Students || []} onInfo={handleInfoClick} />
       {selectedStudent && (
         <StudentDetails
-          open={detailsOpen}
-          handleClose={handleDetailsClose}
-          Student={selectedStudent}
-          handleDelete={handleDeleteStudent}
-          handleUpdateStudent={handleUpdateStudent}
-        />
+                  open={detailsOpen}
+                  handleClose={handleDetailsClose}
+                  Student={selectedStudent}
+                  handleDelete={handleDeleteStudent}
+                  handleUpdateStudent={handleUpdateStudent} schools={undefined}        />
       )}
       <StudentDialogForm
-        open={formOpen}
-        handleClose={handleFormClose}
-        onSubmit={handleAddStudent}
-      />
+              open={formOpen}
+              handleClose={handleFormClose}
+              onSubmit={handleAddStudent} schools={[]}      />
    </>
   );
 };

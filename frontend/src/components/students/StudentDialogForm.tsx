@@ -19,8 +19,8 @@ type StudentDialogFormProps = {
   handleClose: () => void;
   onSubmit: (data: Student) => void;
   student?: Student;
-  schools: any[]; // Modify this type based on your actual school object
-};
+  schools: any[];
+}; 
 
 const createEmptyObject = (keys: string[]): Record<string, string> => {
   return keys.reduce((obj, key) => ({ ...obj, [key]: "" }), {});

@@ -3,13 +3,13 @@ import { IconButton, Grid, Typography, Box } from "@mui/material";
 import { Link } from "react-router-dom";
 
 import HomeIcon from "@mui/icons-material/Home";
-// import WorkIcon from "@mui/icons-material/Work";
-// import PeopleIcon from "@mui/icons-material/People";
-// import InfoIcon from "@mui/icons-material/Info";
-// import StaffDetails from "./staff/StaffDetails";
+import WorkIcon from "@mui/icons-material/Work";
+import PeopleIcon from "@mui/icons-material/People";
+import InfoIcon from "@mui/icons-material/Info";
+import StaffDetails from "./staff/StaffDetails";
 import SchoolDetails from "./schools/SchoolDetails";
-// import StudentDetails from "./students/StudentDetails";
-// import { SearchContext } from "./SearchContext";
+import StudentDetails from "./students/StudentDetails";
+import { SearchContext } from "./SearchContext";
 
 // Define the types here (type for selected student, staff, school) according to your data structure
 
@@ -79,7 +79,7 @@ const MainScreen = () => {
                   </Typography>
                 </Grid>
               {/* )} */}
-              {/* <Grid item>
+              <Grid item>
                 <IconButton color="primary" component={Link} to="/staff">
                   <WorkIcon fontSize="large" />
                 </IconButton>
@@ -102,7 +102,7 @@ const MainScreen = () => {
                 >
                   Students
                 </Typography>
-              </Grid> */}
+              </Grid>
             </Grid>
           </Grid>
           {/* As the data loading will now be handled by the backend, the data mapping section has been removed */}

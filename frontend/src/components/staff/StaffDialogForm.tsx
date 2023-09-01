@@ -19,7 +19,7 @@ type StaffDialogFormProps = {
   handleClose: () => void;
   onSubmit: (data: Staff) => void;
   staff?: Staff;
-  schools: any[]; // Modify this type based on your actual school object
+  schools: any[]; 
 };
 
 const createEmptyObject = (keys: string[]): Record<string, string> => {

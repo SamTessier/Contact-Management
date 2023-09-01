@@ -9,7 +9,6 @@ import { useMutation, useQuery, useQueryClient } from "react-query";
 
 const AllStaff = (): JSX.Element => {
   const queryClient = useQueryClient();
-  const { currentUser } = useContext(AuthContext);
   const { data: staffMembers, isLoading } = useQuery(
     ["staffMembers"],
     async () =>
@@ -82,26 +81,24 @@ const AllStaff = (): JSX.Element => {
 
   return (
    <>
-      {currentUser.role !== "staff" && (
+   
         <Button onClick={handleFormOpen} startIcon={<AddIcon />}>
           Add New Staff
         </Button>
-      )}
+ 
       <StaffList staffMembers={staffMembers || []} onInfo={handleInfoClick} />
       {selectedStaff && (
         <StaffDetails
-          open={detailsOpen}
-          handleClose={handleDetailsClose}
-          staff={selectedStaff}
-          handleDelete={handleDeleteStaff}
-          handleUpdateStaff={handleUpdateStaff}
-        />
+                  open={detailsOpen}
+                  handleClose={handleDetailsClose}
+                  staff={selectedStaff}
+                  handleDelete={handleDeleteStaff}
+                  handleUpdateStaff={handleUpdateStaff} schools={undefined}        />
       )}
       <StaffDialogForm
-        open={formOpen}
-        handleClose={handleFormClose}
-        onSubmit={handleAddStaff}
-      />
+              open={formOpen}
+              handleClose={handleFormClose}
+              onSubmit={handleAddStaff} schools={[]}      />
    </>
   );
 };
