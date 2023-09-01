@@ -26,7 +26,7 @@ const setupDb = () => {
   const tablesCreationQueries = [
     `
       CREATE TABLE IF NOT EXISTS addresses (
-          address_id INT PRIMARY KEY,
+          address_id SERIAL PRIMARY KEY,
           street TEXT,
           city TEXT,
           country TEXT,
@@ -35,7 +35,7 @@ const setupDb = () => {
     `,
     `
       CREATE TABLE IF NOT EXISTS people (
-          person_id INT PRIMARY KEY,
+          person_id SERIAL PRIMARY KEY,
           name TEXT,
           phone TEXT,
           email TEXT,
@@ -48,7 +48,7 @@ const setupDb = () => {
     `,
     `
       CREATE TABLE IF NOT EXISTS schools (
-          school_id INT PRIMARY KEY,
+          school_id SERIAL PRIMARY KEY,
           name TEXT,
           address_id INT,
           phone TEXT,
@@ -67,7 +67,7 @@ const setupDb = () => {
     `,
     `
       CREATE TABLE IF NOT EXISTS staff_roles (
-          role_id INT PRIMARY KEY,
+          role_id SERIAL PRIMARY KEY,
           role_name TEXT,
           role_pay_rate TEXT
       );
@@ -84,7 +84,7 @@ const setupDb = () => {
     `,
     `
       CREATE TABLE IF NOT EXISTS parents (
-          person_id INT PRIMARY KEY,
+          person_id SERIAL PRIMARY KEY,
           FOREIGN KEY (person_id) REFERENCES people(person_id)
       );
     `,
@@ -98,7 +98,7 @@ const setupDb = () => {
     `,
     `
       CREATE TABLE IF NOT EXISTS students (
-          person_id INT PRIMARY KEY,
+          person_id SERIAL PRIMARY KEY,
           FOREIGN KEY (person_id) REFERENCES people(person_id)
       );
     `

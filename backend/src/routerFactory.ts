@@ -68,11 +68,10 @@ const routerFactory = (
             `;
             const addressData = [req.body.street, req.body.city, req.body.country, req.body.postalCode];
             const addressResult = await queryAsync(addressInsertSql, addressData);
-            const generatedAddressId = addressResult.insertId;
+
 
             const schoolData = {
                 ...req.body,         
-                address_id: generatedAddressId
             };
             delete schoolData.street; 
             delete schoolData.city;
