@@ -9,11 +9,11 @@
     "noImplicitAny": true,
     "strict": true,
     "skipLibCheck": true,
-    "typeRoots": ["./types", "./node_modules/@types"]
+    "typeRoots": ["./types"]
   },
   "include": [
-    "./*.js",
     "src/**/*.ts",
     "test/**/*.ts",
-  ],
+    "./types/**/*.d.ts"
+  ]
 }

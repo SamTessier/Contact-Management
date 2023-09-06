@@ -1,10 +1,8 @@
-// Importing required modules
 import { Router } from "express";
 import mysql from "mysql";
-import { z } from "zod"; // Import Zod for request body validation
+import { z } from "zod"; 
 require('dotenv').config();
 
-// Database connection remains the same
 export const connection = mysql.createConnection({
     host: process.env.DB_HOST,
     user: process.env.DB_USER,
@@ -12,14 +10,12 @@ export const connection = mysql.createConnection({
     database: process.env.DB_NAME
 });
 
-// User roles and result types
 type Role = "admin" | "teacher" | "student";
 type Success = { type: "success"; role: Role };
 type Failure = { type: "failure"; message: string };
 type Result = Success | Failure;
 
-// Async query function, no changes here
-const queryAsync = (sql: string, data: any = []) => {
+export const queryAsync = (sql: string, data: any = []) => {
     return new Promise((resolve, reject) => {
         connection.query(sql, data, (err, results) => {
             if (err) reject(err);
@@ -28,8 +24,6 @@ const queryAsync = (sql: string, data: any = []) => {
     });
 };
 
-// Modified routerFactory function
-// Added optional custom handler arguments for each CRUD operation
 const routerFactory = (
     table: string,
     {
@@ -48,7 +42,6 @@ const routerFactory = (
 ) => {
     const router = Router();
 
-    // GET Handler, using non-async function
     router.get("/", (req, res, next) => {
         if (customGetHandler) {
             customGetHandler(req, res, next).catch(next);
@@ -60,14 +53,12 @@ const routerFactory = (
             .catch(next);
     });
 
-    // POST Handler, using non-async function
     router.post("/", (req, res, next) => {
         if (customPostHandler) {
             customPostHandler(req, res, next).catch(next);
             return;
         }
 
-        // Your original POST logic integrated here
         const addressInsertSql = `
             INSERT INTO addresses (street, city, country, postalCode) 
             VALUES (?, ?, ?, ?);
@@ -86,7 +77,6 @@ const routerFactory = (
             .catch(next);
     });
 
-    // PUT Handler, using non-async function
     router.put("/:id", (req, res, next) => {
         if (customPutHandler) {
             customPutHandler(req, res, next).catch(next);
@@ -98,7 +88,6 @@ const routerFactory = (
             .catch(next);
     });
 
-    // DELETE Handler, using non-async function
     router.delete("/:id", (req, res, next) => {
         if (customDeleteHandler) {
             customDeleteHandler(req, res, next).catch(next);
