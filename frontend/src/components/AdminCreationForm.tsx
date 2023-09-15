@@ -1,29 +1,50 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import Alert from "@mui/material/Alert";
 import Box from "@mui/material/Box";
-import { FormControl, MenuItem, InputLabel, Select } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 
-const SignupForm = ({ onSuccess }: { onSuccess: (message: string) => void }): JSX.Element => {
+const AdminCreationForm = (): JSX.Element => {
   const navigate = useNavigate();
   const [error, setError] = useState<string>("");
-  const [school, setSchool] = useState<string>("");
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    
+    const { fullname, email, password } = event.currentTarget.elements as any;
 
-  const schools = [
-    { name: "School 1" },
-    { name: "School 2" },
-    { name: "School 3" },
-  ];
+    try {
+        const response = await fetch('http://localhost:5000/createUser', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                fullname: fullname.value,
+                email: email.value,
+                password: password.value,
+            })
+        });
+
+        const data = await response.json();
+
+        if (data.success) {
+            ("Admin account created successfully. Please log in");
+            navigate('/login');
+        } else {
+            setError(data.message || "Something went wrong");
+        }
+    } catch (error) {
+        setError("Failed to create admin account. Please try again.");
+    }
+};
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const { username, email, password, companyId } = event.currentTarget.elements as any;
 
     setError("");
-    onSuccess("Account created successfully. Please log in");
-    navigate('/login'); 
+    navigate('/login');
+  };
 
   return (
     <form onSubmit={handleSubmit} noValidate>
@@ -58,34 +79,6 @@ const SignupForm = ({ onSuccess }: { onSuccess: (message: string) => void }): JS
           sx={{ minWidth: { xs: '100%', sm: '500px' } }}
         />
       </Box>
-      <Box mb={2}>
-        <TextField
-          placeholder="The name of your company"
-          label="Company ID"
-          type="text"
-          name="companyId"
-          required
-          fullWidth
-          sx={{ minWidth: { xs: '100%', sm: '500px' } }}
-        />
-      </Box>
-      <Box mb={2}>
-        <FormControl fullWidth>
-          <InputLabel id="school-label">School</InputLabel>
-          <Select
-            labelId="school-label"
-            value={school}
-            onChange={(event) => setSchool(event.target.value as string)}
-            sx={{ minWidth: { xs: '100%', sm: '500px' } }}
-          >
-            {schools.map((school, index) => (
-              <MenuItem key={index} value={school.name}>
-                {school.name}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
-      </Box>
       {error && (
         <Box mb={2}>
           <Alert severity="error">{error}</Alert>
@@ -93,12 +86,11 @@ const SignupForm = ({ onSuccess }: { onSuccess: (message: string) => void }): JS
       )}
       <Box mb={2}>
         <Button type="submit" variant="contained" color="primary" fullWidth>
-          Sign Up
+          Create Admin
         </Button>
       </Box>
     </form>
   );
 };
-}
 
-export default SignupForm;
+export default AdminCreationForm;

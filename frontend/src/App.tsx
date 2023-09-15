@@ -1,3 +1,4 @@
+import { useQuery } from 'react-query';
 import MainScreen from "./components/MainScreen";
 import AllSchools from "./components/schools/AllSchools";
 import AllStaff from "./components/staff/AllStaff";
@@ -11,6 +12,21 @@ import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { QueryClient, QueryClientProvider } from 'react-query';
 
 const queryClient = new QueryClient();
+
+const fetchUserState = async () => {
+  const response = await fetch("http://localhost:5000/userState");
+  
+  if (!response.ok) {
+      throw new Error("Failed to fetch user state");
+  }
+  
+  const userState = await response.json();
+  return userState;
+};
+
+const useUserState = () => {
+  return useQuery('userState', fetchUserState);
+};
 
 const StyledApp = styled(Box)(({ theme }) => ({
   flexGrow: 1,
@@ -29,23 +45,19 @@ const StyledAppBar = styled(AppBar)(({ theme }) => ({
 
 const LogoutButton = (): JSX.Element => {
   const navigate = useNavigate();
-  
   const handleLogoutClick = () => {
     navigate("/login");
   };
-
   return (
     <button onClick={handleLogoutClick}>Logout</button>
   );
 };
-
 
 const BackButton = (): JSX.Element => {
   const navigate = useNavigate();
   const handleBackClick = () => {
     navigate("/");
   };
-
   return (
     <IconButton onClick={handleBackClick}>
       <ArrowBackIcon fontSize="small" />
@@ -59,10 +71,74 @@ const EmptyBackButton = (): JSX.Element => (
   </IconButton>
 );
 
-const App = (): JSX.Element => {
+const LocationDependentToolbar = (): JSX.Element => {
+  const location = useLocation();
   return (
-<Router>
-<QueryClientProvider client={queryClient}>
+    <>
+      {["/", "/login", "/signup"].includes(location.pathname) ? <EmptyBackButton /> : <BackButton />}
+      <Typography variant="subtitle1">
+        <CurrentPage />
+      </Typography>
+    </>
+  );
+};
+
+const CurrentPage = (): string => {
+  const location = useLocation();
+  let path = location.pathname.replace("/", "").toLowerCase();
+  path = path.charAt(0).toUpperCase() + path.slice(1);
+  if (path === "") {
+    path = "Main";
+  }
+  return path;
+};
+
+const renderRoutesBasedOnUserState = (userState: string): JSX.Element => {
+  switch (userState) {
+    case 'admin':
+      return (
+        <>
+          {/* routes for admin */}
+        </>
+      );
+    case 'manager':
+      return (
+        <>
+          {/* Routes for managers */}
+        </>
+      );
+    case 'staff':
+      return (
+        <>
+          {/* Routes for staff */}
+        </>
+      );
+    default:
+      return (
+        <>
+          {/* Routes for guests or non-authenticated users */}
+          <Routes>
+            <Route path="/" element={<MainScreen />} />
+            <Route path="/login-signup" element={<MainLoginSignup />} />
+            <Route path="/schools" element={<AllSchools />} />
+            <Route path="/staff" element={<AllStaff />} />
+            <Route path="/students" element={<AllStudents />} />
+            <Route path="*" element={<Navigate replace to="/" />} />
+          </Routes>
+        </>
+      );
+  }
+};
+
+const App = (): JSX.Element => {
+  const { data: userState, isLoading } = useUserState();
+  if (isLoading) {
+    return <div>Loading...</div>; 
+  }
+
+  return (
+    <Router>
+      <QueryClientProvider client={queryClient}>
         <StyledApp>
           <StyledAppBar position="static">
             <Toolbar sx={{ display: "flex", justifyContent: "space-between" }}>
@@ -75,52 +151,14 @@ const App = (): JSX.Element => {
             </Toolbar>
           </StyledAppBar>
           <SearchProvider>
-          
             <SearchBar />
-            <RoutesWithAuthentication />
+            <Container maxWidth="sm" sx={{ flexGrow: 1 }}>
+              { renderRoutesBasedOnUserState(userState) }
+            </Container>
           </SearchProvider>
         </StyledApp>
-        </QueryClientProvider>
-      </Router>
-  );
-};
-
-const LocationDependentToolbar = (): JSX.Element => {
-  const location = useLocation();
-
-  return (
-    <>
-     {["/", "/login", "/signup"].includes(location.pathname) ? <EmptyBackButton /> : <BackButton />}
-      <Typography variant="subtitle1">
-        <CurrentPage />
-      </Typography>
-    </>
-  );
-};
-
-const CurrentPage = (): string => {
-  const location = useLocation();
-
-  let path = location.pathname.replace("/", "").toLowerCase();
-  path = path.charAt(0).toUpperCase() + path.slice(1);
-  if (path === "") {
-    path = "Main";
-  }
-
-  return path;
-};
-
-const RoutesWithAuthentication = (): JSX.Element => {
-  return (
-    <Container maxWidth="sm" sx={{ flexGrow: 1 }}>
-      <Routes>
-        <Route path="/" element={<MainScreen />} />
-        <Route path="/schools" element={<AllSchools />} />
-        <Route path="/staff" element={<AllStaff />} />
-        <Route path="/students" element={<AllStudents />} />
-        <Route path="*" element={<Navigate replace to="/" />} />
-      </Routes>
-    </Container>
+      </QueryClientProvider>
+    </Router>
   );
 };
 
