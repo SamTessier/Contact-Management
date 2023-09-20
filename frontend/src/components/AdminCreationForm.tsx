@@ -4,46 +4,54 @@ import Button from "@mui/material/Button";
 import Alert from "@mui/material/Alert";
 import Box from "@mui/material/Box";
 import { useNavigate } from "react-router-dom";
+import { useMutation } from "react-query"; 
+
+const createUser = async (user: {
+  fullname: string;
+  email: string;
+  password: string;
+}) => {
+  const response = await fetch("http://localhost:5000/create-user", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(user),
+  });
+
+  if (!response.ok) {
+    const data = await response.json();
+    throw new Error(data.message || "Something went wrong");
+  }
+
+  return response.json();
+};
 
 const AdminCreationForm = (): JSX.Element => {
   const navigate = useNavigate();
   const [error, setError] = useState<string>("");
+
+  const mutation = useMutation(createUser); 
+
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    
     const { fullname, email, password } = event.currentTarget.elements as any;
 
-    try {
-        const response = await fetch('http://localhost:5000/createUser', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                fullname: fullname.value,
-                email: email.value,
-                password: password.value,
-            })
-        });
-
-        const data = await response.json();
-
-        if (data.success) {
-            ("Admin account created successfully. Please log in");
-            navigate('/login');
-        } else {
-            setError(data.message || "Something went wrong");
-        }
-    } catch (error) {
-        setError("Failed to create admin account. Please try again.");
-    }
-};
-
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-
-    setError("");
-    navigate('/login');
+    mutation.mutate(
+      {
+        fullname: fullname.value,
+        email: email.value,
+        password: password.value,
+      },
+      {
+        onSuccess: () => {
+          navigate("/login");
+        },
+        onError: (err: any) => {
+          setError(
+            err.message || "Failed to create admin account. Please try again."
+          );
+        },
+      }
+    );
   };
 
   return (
@@ -56,7 +64,7 @@ const AdminCreationForm = (): JSX.Element => {
           required
           fullWidth
           autoFocus
-          sx={{ minWidth: { xs: '100%', sm: '500px' } }}
+          sx={{ minWidth: { xs: "100%", sm: "500px" } }}
         />
       </Box>
       <Box mb={2}>
@@ -66,7 +74,7 @@ const AdminCreationForm = (): JSX.Element => {
           name="email"
           required
           fullWidth
-          sx={{ minWidth: { xs: '100%', sm: '500px' } }}
+          sx={{ minWidth: { xs: "100%", sm: "500px" } }}
         />
       </Box>
       <Box mb={2}>
@@ -76,7 +84,7 @@ const AdminCreationForm = (): JSX.Element => {
           name="password"
           required
           fullWidth
-          sx={{ minWidth: { xs: '100%', sm: '500px' } }}
+          sx={{ minWidth: { xs: "100%", sm: "500px" } }}
         />
       </Box>
       {error && (

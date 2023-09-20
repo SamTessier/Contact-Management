@@ -5,6 +5,24 @@ const authRouter = express.Router();
 
 import { queryAsync } from "./routerFactory";  
 
+const getUserById = async (userId: number) => {
+  const sql = `SELECT * FROM users WHERE user_id = ? LIMIT 1`;
+  const results: any = await queryAsync(sql, [userId]);
+  const user = results[0];
+  
+  if (!user) {
+    return null;
+  }
+
+  return {
+    id: user.user_id,
+    email: user.email,
+    hashedPassword: user.password_hash,
+    role: user.role_name
+  };
+};
+
+
 const getUserByEmail = async (email: string) => {
     const sql = `SELECT * FROM users WHERE email = ? LIMIT 1`;
     const results: any = await queryAsync(sql, [email]);

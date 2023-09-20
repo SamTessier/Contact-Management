@@ -1,6 +1,6 @@
 import express from "express";
 import cors from "cors";
-import routerFactory, { connection } from "./routerFactory";
+import routerFactory, { queryAsync } from "./routerFactory";
 import expressSession from "express-session";
 import createMemoryStore from "memorystore";
 import bcrypt from "bcrypt";
@@ -15,7 +15,7 @@ app.use(express.json());
 const MemoryStore = createMemoryStore(expressSession);
 
 const sessionStore = new MemoryStore({
-  checkPeriod: 86400000
+  checkPeriod: 86400000,
 });
 
 app.use(
@@ -32,68 +32,68 @@ app.use("/students", routerFactory("students"));
 app.use("/schools", routerFactory("schools"));
 app.use("/parents", routerFactory("parents"));
 
-app.get("/students/:studentId/parents", (req, res) => {
+app.get("/students/:student-id/parents", async (req, res) => {
   const sql =
     "SELECT parents.* FROM parents INNER JOIN students_parents ON parents.person_id = students_parents.parent_id WHERE students_parents.student_id = ?";
-  connection.query(sql, req.params.studentId, (err, results) => {
-    if (err) throw err;
+  try {
+    const results = await queryAsync(sql, [req.params.studentId]);
     res.json(results);
-  });
+  } catch (err) {
+    throw err;
+  }
 });
 
-app.post("/createUser", async (req, res) => {
+app.post("/create-user", async (req, res) => {
   try {
-      const { username, email, password, role_name } = req.body;
+    const { username, email, password, role_name } = req.body;
 
-      const hashedPassword = await bcrypt.hash(password, 10);
+    const hashedPassword = await bcrypt.hash(password, 10);
 
-      const sql = `
+    const sql = `
           INSERT INTO users (username, email, password_hash, role_name)
           VALUES (?, ?, ?, ?)
       `;
 
-      await queryAsync(sql, [username, email, hashedPassword, role_name]);
-      
-      res.json({ success: true, message: 'User created successfully' });
+    await queryAsync(sql, [username, email, hashedPassword, role_name]);
 
+    res.json({ success: true, message: "User created successfully" });
   } catch (error) {
-      res.status(500).json({ success: false, message: "Something went wrong" });
+    res.status(500).json({ success: false, message: "Something went wrong" });
   }
 });
 
-app.get("/userState", (req, res) => {
-    const userId = req.session.userId; 
+app.get("/user-state", async (req, res) => {
+  const userId = req.session.userId;
 
-    if (!userId) {
-        res.status(401).json({ error: "User not logged in" });
-        return;
-    }
+  if (!userId) {
+    res.status(401).json({ error: "User not logged in" });
+    return;
+  }
 
-    const sql = `
+  const sql = `
         SELECT role_name FROM users 
         WHERE user_id = ?
     `;
 
-    connection.query(sql, userId, (err, results) => {
-        if (err) {
-            res.status(500).json({ error: "Internal Server Error" });
-            return;
-        }
+  try {
+    const results = await queryAsync(sql, [userId]);
 
-        if (results.length === 0) {
-            res.status(404).json({ error: "User not found" });
-            return;
-        }
+    if (results.length === 0) {
+      res.status(404).json({ error: "User not found" });
+      return;
+    }
 
-        const { role_name } = results[0];
-        res.json({ role: role_name });
-    });
+    const { role_name } = results[0];
+    res.json({ role: role_name });
+  } catch (err) {
+    res.status(500).json({ error: "Internal Server Error" });
+  }
 });
 
-const setupDb = () => {
+const setupDb = async () => {
   const tablesCreationQueries = [
     `CREATE TABLE IF NOT EXISTS roles (
-      role_name TEXT PRIMARY KEY
+      role_name VARCHAR(10) PRIMARY KEY
     );`,
     `INSERT INTO roles (role_name) VALUES ('admin'), ('manager'), ('staff');`,
     `CREATE TABLE IF NOT EXISTS users (
@@ -101,16 +101,10 @@ const setupDb = () => {
       username VARCHAR(255) UNIQUE,
       email VARCHAR(255) UNIQUE,
       password_hash TEXT,
-      role_name TEXT,
+      role_name VARCHAR(10),
       FOREIGN KEY (role_name) REFERENCES roles(role_name)
     );`,
 
-    `CREATE TABLE IF NOT EXISTS user_roles (
-      user_id BIGINT UNSIGNED,
-      role_id BIGINT UNSIGNED,
-      FOREIGN KEY (user_id) REFERENCES users(user_id),
-      FOREIGN KEY (role_id) REFERENCES roles(role_id)
-    );`,
     `
       CREATE TABLE IF NOT EXISTS addresses (
           address_id SERIAL PRIMARY KEY,
@@ -153,13 +147,6 @@ const setupDb = () => {
       );
     `,
     `
-      CREATE TABLE IF NOT EXISTS staff_roles (
-          role_id SERIAL PRIMARY KEY,
-          role_name TEXT,
-          role_pay_rate TEXT
-      );
-    `,
-    `
       CREATE TABLE IF NOT EXISTS staff (
           person_id BIGINT UNSIGNED,
           role_id BIGINT UNSIGNED,
@@ -176,6 +163,12 @@ const setupDb = () => {
       );
     `,
     `
+    CREATE TABLE IF NOT EXISTS students (
+        person_id SERIAL PRIMARY KEY,
+        FOREIGN KEY (person_id) REFERENCES people(person_id)
+    );
+  `,
+    `
       CREATE TABLE IF NOT EXISTS students_parents (
           student_id BIGINT UNSIGNED,
           parent_id BIGINT UNSIGNED,
@@ -183,53 +176,52 @@ const setupDb = () => {
           FOREIGN KEY (parent_id) REFERENCES parents(person_id)
       );
     `,
-    `
-      CREATE TABLE IF NOT EXISTS students (
-          person_id SERIAL PRIMARY KEY,
-          FOREIGN KEY (person_id) REFERENCES people(person_id)
-      );
-    `,
   ];
 
-tablesCreationQueries.forEach((query) => {
-  connection.query(query, (err) => {
-    if (err) throw err;
-    console.log("Database table created");
-  });
-});
+  for (const query of tablesCreationQueries) {
+    try {
+      await queryAsync(query);
+      console.log("Database table created");
+    } catch (err) {
+      throw err;
+    }
+  }
 };
 
 setupDb();
 
 const initializeGodUser = async () => {
   try {
-      const sqlCheckUsers = 'SELECT COUNT(*) as count FROM users';
-      const results: any = await queryAsync(sqlCheckUsers);
+    const sqlCheckUsers = "SELECT COUNT(*) as count FROM users";
+    const results: any = await queryAsync(sqlCheckUsers);
 
-      if (results[0].count === 0) {
-          console.log("No users found. Initializing god user...");
+    if (results[0].count === 0) {
+      console.log("No users found. Initializing god user...");
 
-          const godUsername = "goduser"; 
-          const godEmail = "goduser@sammysapp.com"; 
-          const godPassword = "password"; 
-          const hashedPassword = await bcrypt.hash(godPassword, 10);
+      const godUsername = "goduser";
+      const godEmail = "goduser@sammysapp.com";
+      const godPassword = "password";
+      const hashedPassword = await bcrypt.hash(godPassword, 10);
 
-          const sqlInsertGodUser = `
+      const sqlInsertGodUser = `
               INSERT INTO users (username, email, password_hash, role_name)
               VALUES (?, ?, ?, 'admin')
           `;
 
-          await queryAsync(sqlInsertGodUser, [godUsername, godEmail, hashedPassword]);
-          console.log("God user initialized!");
-      }
+      await queryAsync(sqlInsertGodUser, [
+        godUsername,
+        godEmail,
+        hashedPassword,
+      ]);
+      console.log("God user initialized!");
+    }
   } catch (error) {
-      console.error("Error initializing god user:", error);
+    console.error("Error initializing god user:", error);
   }
 };
 
 initializeGodUser();
 
-
 app.listen(port, () => {
-console.log(`Server listening on port ${port}`);
+  console.log(`Server listening on port ${port}`);
 });

@@ -3,6 +3,7 @@ import MainScreen from "./components/MainScreen";
 import AllSchools from "./components/schools/AllSchools";
 import AllStaff from "./components/staff/AllStaff";
 import AllStudents from "./components/students/AllStudents";
+import MainLoginSignup from "./components/MainLoginSignup";
 import SearchBar from "./components/SearchBar";
 import { SearchProvider } from "./components/SearchContext";
 import { BrowserRouter as Router, Routes, Route, Navigate, useLocation, useNavigate } from "react-router-dom";
@@ -14,7 +15,7 @@ import { QueryClient, QueryClientProvider } from 'react-query';
 const queryClient = new QueryClient();
 
 const fetchUserState = async () => {
-  const response = await fetch("http://localhost:5000/userState");
+  const response = await fetch("http://localhost:5000/user-state");
   
   if (!response.ok) {
       throw new Error("Failed to fetch user state");
@@ -25,7 +26,7 @@ const fetchUserState = async () => {
 };
 
 const useUserState = () => {
-  return useQuery('userState', fetchUserState);
+  return useQuery('user-state', fetchUserState);
 };
 
 const StyledApp = styled(Box)(({ theme }) => ({
@@ -93,8 +94,8 @@ const CurrentPage = (): string => {
   return path;
 };
 
-const renderRoutesBasedOnUserState = (userState: string): JSX.Element => {
-  switch (userState) {
+const RoleRoutes = (userRole: string): JSX.Element => {
+  switch (userRole) {
     case 'admin':
       return (
         <>
@@ -153,7 +154,7 @@ const App = (): JSX.Element => {
           <SearchProvider>
             <SearchBar />
             <Container maxWidth="sm" sx={{ flexGrow: 1 }}>
-              { renderRoutesBasedOnUserState(userState) }
+              { RoleRoutes(userState) }
             </Container>
           </SearchProvider>
         </StyledApp>
