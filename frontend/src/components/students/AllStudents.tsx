@@ -1,4 +1,4 @@
-import { useState, useContext } from "react";
+import { useState } from "react";
 import Button from "@mui/material/Button";
 import AddIcon from "@mui/icons-material/Add";
 import StudentList from "./StudentList";
@@ -7,34 +7,34 @@ import StudentDialogForm from "./StudentDialogForm";
 import { Student } from "../types";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 
-const AllStudent = (): JSX.Element => {
+const AllStudents = (): JSX.Element => {
   const queryClient = useQueryClient();
   const { data: Students, isLoading } = useQuery(
     ["Students"],
     async () =>
-      (await (await fetch("http://localhost:5000/Students")).json()) as Student[]
+      (await (await fetch("http://localhost:5000/students")).json()) as Student[]
   );
 
-  const { mutate: createStudent } = useMutation(async (Student: Student) => {
-    await fetch("http://localhost:5000/Students", {
+  const { mutate: createStudent } = useMutation(async (student: Student) => {
+    await fetch("http://localhost:5000/students", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(Student),
+      body: JSON.stringify(student),
     });
     queryClient.invalidateQueries(["Students"]);
   });
 
-  const { mutate: updateStudent } = useMutation(async (Student: Student) => {
-    await fetch(`http://localhost:5000/Students/${Student.id}`, {
+  const { mutate: updateStudent } = useMutation(async (student: Student) => {
+    await fetch(`http://localhost:5000/students/${student.id}`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(Student),
+      body: JSON.stringify(student),
     });
     queryClient.invalidateQueries(["Students"]);
   });
 
   const { mutate: deleteStudent } = useMutation(async (id: string) => {
-    await fetch(`http://localhost:5000/Students/${id}`, {
+    await fetch(`http://localhost:5000/students/${id}`, {
       method: "DELETE",
     });
     queryClient.invalidateQueries(["Students"]);
@@ -44,8 +44,8 @@ const AllStudent = (): JSX.Element => {
   const [detailsOpen, setDetailsOpen] = useState(false);
   const [formOpen, setFormOpen] = useState(false);
 
-  const handleInfoClick = (Student: Student) => {
-    setSelectedStudent(Student);
+  const handleInfoClick = (student: Student) => {
+    setSelectedStudent(student);
     setDetailsOpen(true);
   };
 
@@ -62,8 +62,8 @@ const AllStudent = (): JSX.Element => {
     setFormOpen(false);
   };
 
-  const handleAddStudent = (Student: Student) => {
-    createStudent(Student);
+  const handleAddStudent = (student: Student) => {
+    createStudent(student);
     handleFormClose();
   };
 
@@ -103,4 +103,4 @@ const AllStudent = (): JSX.Element => {
   );
 };
 
-export default AllStudent;
+export default AllStudents;

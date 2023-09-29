@@ -1,4 +1,3 @@
-import { useState } from "react";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import Alert from "@mui/material/Alert";
@@ -27,7 +26,6 @@ const createUser = async (user: {
 
 const AdminCreationForm = (): JSX.Element => {
   const navigate = useNavigate();
-  const [error, setError] = useState<string>("");
 
   const mutation = useMutation(createUser); 
 
@@ -44,11 +42,6 @@ const AdminCreationForm = (): JSX.Element => {
       {
         onSuccess: () => {
           navigate("/login");
-        },
-        onError: (err: any) => {
-          setError(
-            err.message || "Failed to create admin account. Please try again."
-          );
         },
       }
     );
@@ -87,11 +80,13 @@ const AdminCreationForm = (): JSX.Element => {
           sx={{ minWidth: { xs: "100%", sm: "500px" } }}
         />
       </Box>
-      {error && (
+      {mutation.isError ? (
         <Box mb={2}>
-          <Alert severity="error">{error}</Alert>
+          <Alert severity="error">
+            {(mutation.error as { message?: string })?.message || "Failed to create admin account. Please try again."}
+          </Alert>
         </Box>
-      )}
+      ) : null}
       <Box mb={2}>
         <Button type="submit" variant="contained" color="primary" fullWidth>
           Create Admin

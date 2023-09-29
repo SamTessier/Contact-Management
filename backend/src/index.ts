@@ -32,7 +32,7 @@ app.use("/students", routerFactory("students"));
 app.use("/schools", routerFactory("schools"));
 app.use("/parents", routerFactory("parents"));
 
-app.get("/students/:student-id/parents", async (req, res) => {
+app.get("/students/:studentId/parents", async (req, res) => {
   const sql =
     "SELECT parents.* FROM parents INNER JOIN students_parents ON parents.person_id = students_parents.parent_id WHERE students_parents.student_id = ?";
   try {
@@ -43,12 +43,45 @@ app.get("/students/:student-id/parents", async (req, res) => {
   }
 });
 
-app.post("/create-user", async (req, res) => {
+const authorizeAdmin = async (req, res, next) => {
+  const userId = req.session.userId;
+  if (!userId) {
+    return res
+      .status(401)
+      .json({ error: { code: 401, message: "User not logged in" } });
+  }
+
+  const roleCheckSql = `
+        SELECT role_name FROM users 
+        WHERE user_id = ?
+    `;
+  try {
+    const results: { role_name: string }[] = (await queryAsync(roleCheckSql, [
+      userId,
+    ])) as any;
+    if (results.length === 0) {
+      return res
+        .status(404)
+        .json({ error: { code: 404, message: "User not found" } });
+    }
+    const role = results[0].role_name;
+    if (role !== "admin") {
+      return res
+        .status(403)
+        .json({ error: { code: 403, message: "Unauthorized" } });
+    }
+    next();
+  } catch (err) {
+    return res
+      .status(500)
+      .json({ error: { code: 500, message: "Internal Server Error" } });
+  }
+};
+
+app.post("/user", authorizeAdmin, async (req, res) => {
   try {
     const { username, email, password, role_name } = req.body;
-
     const hashedPassword = await bcrypt.hash(password, 10);
-
     const sql = `
           INSERT INTO users (username, email, password_hash, role_name)
           VALUES (?, ?, ?, ?)
@@ -56,9 +89,13 @@ app.post("/create-user", async (req, res) => {
 
     await queryAsync(sql, [username, email, hashedPassword, role_name]);
 
-    res.json({ success: true, message: "User created successfully" });
+    res
+      .status(201)
+      .json({ success: true, message: "User created successfully" });
   } catch (error) {
-    res.status(500).json({ success: false, message: "Something went wrong" });
+    res
+      .status(500)
+      .json({ error: { code: 500, message: "Something went wrong" } });
   }
 });
 
@@ -66,7 +103,7 @@ app.get("/user-state", async (req, res) => {
   const userId = req.session.userId;
 
   if (!userId) {
-    res.status(401).json({ error: "User not logged in" });
+    res.status(200).json({ error: "User not logged in" });
     return;
   }
 
@@ -76,13 +113,9 @@ app.get("/user-state", async (req, res) => {
     `;
 
   try {
-    const results = await queryAsync(sql, [userId]);
-
-    if (results.length === 0) {
-      res.status(404).json({ error: "User not found" });
-      return;
-    }
-
+    const results: { role_name: string }[] = (await queryAsync(sql, [
+      userId,
+    ])) as any;
     const { role_name } = results[0];
     res.json({ role: role_name });
   } catch (err) {
@@ -219,6 +252,13 @@ const initializeGodUser = async () => {
     console.error("Error initializing god user:", error);
   }
 };
+
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res
+    .status(500)
+    .json({ error: { code: 500, message: "Internal Server Error" } });
+});
 
 initializeGodUser();
 
