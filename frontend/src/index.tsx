@@ -1,5 +1,7 @@
 import { createTheme, ThemeProvider, CssBaseline } from '@mui/material';
 import ReactDOM from 'react-dom/client';
+import { QueryClient, QueryClientProvider } from 'react-query';
+const queryClient = new QueryClient();
 import App from './App';
 
 const theme = createTheme({
@@ -27,7 +29,9 @@ if (root !== null) {
     <React.StrictMode>
       <ThemeProvider theme={theme}>
         <CssBaseline />
-        <App />
+        <QueryClientProvider client={queryClient}>
+          <App />
+        </QueryClientProvider>
       </ThemeProvider>
     </React.StrictMode>
   );

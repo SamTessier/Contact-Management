@@ -1,10 +1,16 @@
-import express from "express";
+import express, { Request, Response, NextFunction } from "express";
 import cors from "cors";
 import routerFactory, { queryAsync } from "./routerFactory";
-import expressSession from "express-session";
+import expressSession, { SessionData } from "express-session";
 import createMemoryStore from "memorystore";
 import bcrypt from "bcrypt";
 require("dotenv").config();
+
+declare module "express-session" {
+  interface SessionData {
+    userId?: number;  
+  }
+}
 
 const port = process.env.PORT || 5000;
 const app = express();
@@ -32,7 +38,7 @@ app.use("/students", routerFactory("students"));
 app.use("/schools", routerFactory("schools"));
 app.use("/parents", routerFactory("parents"));
 
-app.get("/students/:studentId/parents", async (req, res) => {
+app.get("/students/:studentId/parents", async (req: Request, res: Response) => {
   const sql =
     "SELECT parents.* FROM parents INNER JOIN students_parents ON parents.person_id = students_parents.parent_id WHERE students_parents.student_id = ?";
   try {
@@ -43,7 +49,7 @@ app.get("/students/:studentId/parents", async (req, res) => {
   }
 });
 
-const authorizeAdmin = async (req, res, next) => {
+const authorizeAdmin = async (req: Request, res: Response, next: NextFunction) => {
   const userId = req.session.userId;
   if (!userId) {
     return res
@@ -51,14 +57,9 @@ const authorizeAdmin = async (req, res, next) => {
       .json({ error: { code: 401, message: "User not logged in" } });
   }
 
-  const roleCheckSql = `
-        SELECT role_name FROM users 
-        WHERE user_id = ?
-    `;
+  const roleCheckSql = "SELECT role_name FROM users WHERE user_id = ?";
   try {
-    const results: { role_name: string }[] = (await queryAsync(roleCheckSql, [
-      userId,
-    ])) as any;
+    const results = (await queryAsync(roleCheckSql, [userId])) as { role_name: string }[];
     if (results.length === 0) {
       return res
         .status(404)
@@ -78,44 +79,28 @@ const authorizeAdmin = async (req, res, next) => {
   }
 };
 
-app.post("/user", authorizeAdmin, async (req, res) => {
+app.post("/user", authorizeAdmin, async (req: Request, res: Response) => {
   try {
     const { username, email, password, role_name } = req.body;
     const hashedPassword = await bcrypt.hash(password, 10);
-    const sql = `
-          INSERT INTO users (username, email, password_hash, role_name)
-          VALUES (?, ?, ?, ?)
-      `;
-
+    const sql = "INSERT INTO users (username, email, password_hash, role_name) VALUES (?, ?, ?, ?)";
     await queryAsync(sql, [username, email, hashedPassword, role_name]);
-
-    res
-      .status(201)
-      .json({ success: true, message: "User created successfully" });
+    res.status(201).json({ success: true, message: "User created successfully" });
   } catch (error) {
-    res
-      .status(500)
-      .json({ error: { code: 500, message: "Something went wrong" } });
+    res.status(500).json({ error: { code: 500, message: "Something went wrong" } });
   }
 });
 
-app.get("/user-state", async (req, res) => {
+app.get("/user-state", async (req: Request, res: Response) => {
   const userId = req.session.userId;
-
   if (!userId) {
     res.status(200).json({ error: "User not logged in" });
     return;
   }
 
-  const sql = `
-        SELECT role_name FROM users 
-        WHERE user_id = ?
-    `;
-
+  const sql = "SELECT role_name FROM users WHERE user_id = ?";
   try {
-    const results: { role_name: string }[] = (await queryAsync(sql, [
-      userId,
-    ])) as any;
+    const results = (await queryAsync(sql, [userId])) as { role_name: string }[];
     const { role_name } = results[0];
     res.json({ role: role_name });
   } catch (err) {
@@ -137,18 +122,14 @@ const setupDb = async () => {
       role_name VARCHAR(10),
       FOREIGN KEY (role_name) REFERENCES roles(role_name)
     );`,
-
-    `
-      CREATE TABLE IF NOT EXISTS addresses (
+    `CREATE TABLE IF NOT EXISTS addresses (
           address_id SERIAL PRIMARY KEY,
           street TEXT,
           city TEXT,
           country TEXT,
           postal_code TEXT
-      );
-    `,
-    `
-      CREATE TABLE IF NOT EXISTS people (
+      );`,
+    `CREATE TABLE IF NOT EXISTS people (
           person_id SERIAL PRIMARY KEY,
           name TEXT,
           phone TEXT,
@@ -158,10 +139,8 @@ const setupDb = async () => {
           created_at TIMESTAMP,
           updated_at TIMESTAMP,
           FOREIGN KEY (address_id) REFERENCES addresses(address_id)
-      );
-    `,
-    `
-      CREATE TABLE IF NOT EXISTS schools (
+      );`,
+    `CREATE TABLE IF NOT EXISTS schools (
           school_id SERIAL PRIMARY KEY,
           name TEXT,
           address_id BIGINT UNSIGNED,
@@ -169,46 +148,35 @@ const setupDb = async () => {
           email TEXT,
           created_at TIMESTAMP,
           FOREIGN KEY (address_id) REFERENCES addresses(address_id)
-      );
-    `,
-    `
-      CREATE TABLE IF NOT EXISTS people_schools (
+      );`,
+    `CREATE TABLE IF NOT EXISTS people_schools (
           person_id BIGINT UNSIGNED,
           school_id BIGINT UNSIGNED,
           FOREIGN KEY (person_id) REFERENCES people(person_id),
           FOREIGN KEY (school_id) REFERENCES schools(school_id)
-      );
-    `,
-    `
-      CREATE TABLE IF NOT EXISTS staff (
+      );`,
+    `CREATE TABLE IF NOT EXISTS staff (
           person_id BIGINT UNSIGNED,
-          role_id BIGINT UNSIGNED,
+          role_name VARCHAR(10),
           primary_location_id BIGINT UNSIGNED,
           FOREIGN KEY (person_id) REFERENCES people(person_id),
-          FOREIGN KEY (role_id) REFERENCES staff_roles(role_id),
+          FOREIGN KEY (role_name) REFERENCES roles(role_name),
           FOREIGN KEY (primary_location_id) REFERENCES addresses(address_id)
-      );
-    `,
-    `
-      CREATE TABLE IF NOT EXISTS parents (
+      );`,
+    `CREATE TABLE IF NOT EXISTS parents (
           person_id SERIAL PRIMARY KEY,
           FOREIGN KEY (person_id) REFERENCES people(person_id)
-      );
-    `,
-    `
-    CREATE TABLE IF NOT EXISTS students (
+      );`,
+    `CREATE TABLE IF NOT EXISTS students (
         person_id SERIAL PRIMARY KEY,
         FOREIGN KEY (person_id) REFERENCES people(person_id)
-    );
-  `,
-    `
-      CREATE TABLE IF NOT EXISTS students_parents (
+    );`,
+    `CREATE TABLE IF NOT EXISTS students_parents (
           student_id BIGINT UNSIGNED,
           parent_id BIGINT UNSIGNED,
           FOREIGN KEY (student_id) REFERENCES students(person_id),
           FOREIGN KEY (parent_id) REFERENCES parents(person_id)
-      );
-    `,
+      );`,
   ];
 
   for (const query of tablesCreationQueries) {
@@ -253,11 +221,9 @@ const initializeGodUser = async () => {
   }
 };
 
-app.use((err, req, res, next) => {
+app.use((err: any, req: Request, res: Response, next: NextFunction) => {
   console.error(err.stack);
-  res
-    .status(500)
-    .json({ error: { code: 500, message: "Internal Server Error" } });
+  res.status(500).json({ error: { code: 500, message: "Internal Server Error" } });
 });
 
 initializeGodUser();
