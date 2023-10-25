@@ -12,7 +12,7 @@ declare module "express-session" {
   }
 }
 
-const port = process.env.PORT || 5000;
+const port = process.env.PORT || 8080;
 const app = express();
 
 app.use(cors());

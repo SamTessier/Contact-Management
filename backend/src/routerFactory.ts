@@ -4,10 +4,11 @@ import { z } from "zod";
 require("dotenv").config();
 
 export const connection = mysql.createConnection({
-  host: process.env.DB_HOST,
-  user: process.env.DB_USER,
-  password: process.env.DB_PASS,
-  database: process.env.DB_NAME,
+  host: process.env.DB_HOST || process.env.RDS_HOSTNAME, 
+  port: parseInt(process.env.DB_PORT || process.env.RDS_PORT || "3306", 10),
+  user: process.env.DB_USER || process.env.RDS_USERNAME,
+  password: process.env.DB_PASS || process.env.RDS_PASSWORD,
+  database: process.env.DB_NAME || process.env.RDS_DB_NAME
 });
 
 type Role = "admin" | "teacher" | "student";
