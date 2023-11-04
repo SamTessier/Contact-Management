@@ -12,11 +12,11 @@ const AllStudents = (): JSX.Element => {
   const { data: Students, isLoading } = useQuery(
     ["Students"],
     async () =>
-      (await (await fetch("http://localhost:5000/api/students")).json()) as Student[]
+      (await (await fetch("http://${import.meta.env.VITE_API_URL}api/students")).json()) as Student[]
   );
 
   const { mutate: createStudent } = useMutation(async (student: Student) => {
-    await fetch("http://localhost:5000/api/students", {
+    await fetch("http://${import.meta.env.VITE_API_URL}api/students", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(student),
@@ -25,7 +25,7 @@ const AllStudents = (): JSX.Element => {
   });
 
   const { mutate: updateStudent } = useMutation(async (student: Student) => {
-    await fetch(`http://localhost:5000/api/students/${student.id}`, {
+    await fetch(`http://${import.meta.env.VITE_API_URL}api/students/${student.id}`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(student),
@@ -34,7 +34,7 @@ const AllStudents = (): JSX.Element => {
   });
 
   const { mutate: deleteStudent } = useMutation(async (id: string) => {
-    await fetch(`http://localhost:5000/api/students/${id}`, {
+    await fetch(`http://${import.meta.env.VITE_API_URL}api/students/${id}`, {
       method: "DELETE",
     });
     queryClient.invalidateQueries(["Students"]);
