@@ -1,11 +1,11 @@
-import express from 'express';
+import express, { Request, Response } from 'express';
 import path from 'path';
 
 const app = express();
 
 app.use(express.static(path.join(__dirname, 'build')));
 
-app.get('*', (req, res) => {
+app.get('*', (_req: Request, res: Response) => {
     res.sendFile(path.join(__dirname, 'build/index.html'));
 });
 

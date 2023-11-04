@@ -14,7 +14,7 @@ import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 
 
 const fetchUserState = async () => {
-  const response = await fetch("http://localhost:5000/user-state");
+  const response = await fetch("http://localhost:5000/api/user-state");
   
   if (!response.ok) {
       throw new Error("Failed to fetch user state");

@@ -3,6 +3,7 @@ import cors from "cors";
 import routerFactory, { queryAsync } from "./routerFactory";
 import expressSession, { SessionData } from "express-session";
 import createMemoryStore from "memorystore";
+import path from 'path';
 import bcrypt from "bcrypt";
 require("dotenv").config();
 
@@ -33,12 +34,12 @@ app.use(
   })
 );
 
-app.use("/staff", routerFactory("staff"));
-app.use("/students", routerFactory("students"));
-app.use("/schools", routerFactory("schools"));
-app.use("/parents", routerFactory("parents"));
+app.use("/api/staff", routerFactory("staff"));
+app.use("/api/students", routerFactory("students"));
+app.use("/api/schools", routerFactory("schools"));
+app.use("/api/parents", routerFactory("parents"));
 
-app.get("/students/:studentId/parents", async (req: Request, res: Response) => {
+app.get("/api/students/:studentId/parents", async (req: Request, res: Response) => {
   const sql =
     "SELECT parents.* FROM parents INNER JOIN students_parents ON parents.person_id = students_parents.parent_id WHERE students_parents.student_id = ?";
   try {
@@ -79,7 +80,7 @@ const authorizeAdmin = async (req: Request, res: Response, next: NextFunction) =
   }
 };
 
-app.post("/user", authorizeAdmin, async (req: Request, res: Response) => {
+app.post("/api/user", authorizeAdmin, async (req: Request, res: Response) => {
   try {
     const { username, email, password, role_name } = req.body;
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -91,7 +92,7 @@ app.post("/user", authorizeAdmin, async (req: Request, res: Response) => {
   }
 });
 
-app.get("/user-state", async (req: Request, res: Response) => {
+app.get("/api/user-state", async (req: Request, res: Response) => {
   const userId = req.session.userId;
   if (!userId) {
     res.status(200).json({ error: "User not logged in" });
@@ -113,7 +114,7 @@ const setupDb = async () => {
     `CREATE TABLE IF NOT EXISTS roles (
       role_name VARCHAR(10) PRIMARY KEY
     );`,
-    `INSERT INTO roles (role_name) VALUES ('admin'), ('manager'), ('staff');`,
+    `INSERT IGNORE INTO roles (role_name) VALUES ('admin'), ('manager'), ('staff');`,
     `CREATE TABLE IF NOT EXISTS users (
       user_id SERIAL PRIMARY KEY,
       username VARCHAR(255) UNIQUE,
@@ -220,6 +221,12 @@ const initializeGodUser = async () => {
     console.error("Error initializing god user:", error);
   }
 };
+
+app.use(express.static(path.join(__dirname, '../frontend-build')));
+
+app.get('*', (_req: Request, res: Response) => {
+    res.sendFile(path.join(__dirname, '../frontend-build/index.html'));
+});
 
 app.use((err: any, req: Request, res: Response, next: NextFunction) => {
   console.error(err.stack);

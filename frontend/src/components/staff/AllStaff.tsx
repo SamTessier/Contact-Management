@@ -12,11 +12,11 @@ const AllStaff = (): JSX.Element => {
   const { data: staffMembers, isLoading } = useQuery(
     ["staffMembers"],
     async () =>
-      (await (await fetch("http://localhost:5000/staff")).json()) as Staff[]
+      (await (await fetch("http://localhost:5000/api/staff")).json()) as Staff[]
   );
 
   const { mutate: createStaff } = useMutation(async (staff: Staff) => {
-    await fetch("http://localhost:5000/staff", {
+    await fetch("http://localhost:5000/api/staff", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(staff),
@@ -25,7 +25,7 @@ const AllStaff = (): JSX.Element => {
   });
 
   const { mutate: updateStaff } = useMutation(async (staff: Staff) => {
-    await fetch(`http://localhost:5000/staff/${staff.id}`, {
+    await fetch(`http://localhost:5000/api/staff/${staff.id}`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(staff),
@@ -34,7 +34,7 @@ const AllStaff = (): JSX.Element => {
   });
 
   const { mutate: deleteStaff } = useMutation(async (id: string) => {
-    await fetch(`http://localhost:5000/staff/${id}`, {
+    await fetch(`http://localhost:5000/api/staff/${id}`, {
       method: "DELETE",
     });
     queryClient.invalidateQueries(["staff"]);

@@ -12,11 +12,11 @@ const AllSchools = (): JSX.Element => {
   const { data: schools, isLoading } = useQuery(
     ["schools"],
     async () =>
-      (await (await fetch("http://localhost:5000/schools")).json()) as School[]
+      (await (await fetch("http://localhost:5000/api/schools")).json()) as School[]
   );
 
   const { mutate: createSchool } = useMutation(async (school: School) => {
-    await fetch("http://localhost:5000/schools", {
+    await fetch("http://localhost:5000/api/schools", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(school),
@@ -25,7 +25,7 @@ const AllSchools = (): JSX.Element => {
   });
 
   const { mutate: updateSchool } = useMutation(async (school: School) => {
-    await fetch(`http://localhost:5000/schools/${school.id}`, {
+    await fetch(`http://localhost:5000/api/schools/${school.id}`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(school),
@@ -34,7 +34,7 @@ const AllSchools = (): JSX.Element => {
   });
 
   const { mutate: deleteSchool } = useMutation(async (id: string) => {
-    await fetch(`http://localhost:5000/schools/${id}`, {
+    await fetch(`http://localhost:5000/api/schools/${id}`, {
       method: "DELETE",
     });
     queryClient.invalidateQueries(["schools"]);

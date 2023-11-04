@@ -10,7 +10,7 @@ const createUser = async (user: {
   email: string;
   password: string;
 }) => {
-  const response = await fetch("http://localhost:5000/create-user", {
+  const response = await fetch("http://localhost:5000/api/user", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(user),
