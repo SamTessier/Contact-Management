@@ -1,13 +1,11 @@
 
-
 <h2>EdNet</h2>
 <h3>(Education Network)</h3>
 <P>EdNet is my second project as a student of Get Coding
-<br>Built with React.js and MUI component Library<br>
 <br>Check it out <a href="https://contactmanagement.app/">here<br></p>
 <h2>About</h2>
 
-EdNet is a comprehensive contact and profile management platform designed for educational institutions, created as a project during my tenure as a student at Get Coding. The platform provides an intuitive, mobile-friendly user interface for managing contact information of students, staff, and other stakeholders in an educational setting.
+EdNet is a comprehensive contact and profile management platform designed for educational institutions, created as a project as a student of Get Coding. The platform provides an intuitive, mobile-friendly user interface for managing contact information of students, staff, and other stakeholders in an educational setting.
 
 
 ## Technologies Used
@@ -47,7 +45,7 @@ EdNet was inspired by a local business providing tutoring services and after-sch
   
 ## Acknowledgements
 
-A special thanks to Patrick Costello for his invaluable guidance and coaching throughout the project.
+A special thanks to Jack Harrhy and Patrick Costello for their invaluable guidance and coaching throughout the project.
 
 ## License
 
@@ -55,6 +53,4 @@ This project is licensed under the MIT License.
 
 ## Contact
 
-For more information, feel free to contact me at <your email>.
-
-
+For more information, feel free to contact me at samcjtessier@gmail.com
