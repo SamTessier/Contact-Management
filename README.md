@@ -47,10 +47,6 @@ EdNet was inspired by a local business providing tutoring services and after-sch
 
 A special thanks to Jack Harrhy and Patrick Costello for their invaluable guidance and coaching throughout the project.
 
-## License
-
-This project is licensed under the MIT License.
-
 ## Contact
 
 For more information, feel free to contact me at samcjtessier@gmail.com
